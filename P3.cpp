@@ -1,9 +1,10 @@
 #include <iostream>
 #include <fstream>
+#include <vector>
 using namespace std;
 
 //I use flood fill algorithm for this function
-bool searchAdjacent(vector<vector<int>> map,string word,vector<vector<char>> table[5][5],int x = 3,int y = 1, int index = 0)
+bool searchAdjacent(vector< vector<int> > &map,string word,vector< vector<char> > &table,int x = 3,int y = 1, int index = 0)
 {
 	//Base Case
 	if(x > (table.size()-1) || y > (table.size() - 1))
@@ -42,45 +43,60 @@ bool searchAdjacent(vector<vector<int>> map,string word,vector<vector<char>> tab
 	
 }
 
-//Finding the first letter of given word
-void findTheFirstLetter()
-{
-	for(int i = 0 ;i < 5;i++)
-	{
-		for(int j = 0 ;j < 5;j++)
-		{
-			f >> table[i][j];
-		}
-	}
-}
-
 int main()
 {
-	ifstream f;
-	f.open("P3/2.in");
+	string word;
+	cin >> word;
+	
+	int dim;
+	cin >> dim;
 
-	char table[5][5];
+	vector< vector<int> > map( dim , vector<int> (dim, 0)); 
 
-	for(int i = 0 ;i < 5;i++)
+	vector< vector<char> > table( dim , vector<char> (dim, 0));  
+
+
+	for(int i = 0 ;i < dim;i++)
 	{
-		for(int j = 0 ;j < 5;j++)
+		for(int j = 0 ;j < dim;j++)
 		{
-			f >> table[i][j];
+			cin >> table[i][j];
 		}
 	}
 
-
-	f.close();
-
-	searchAdjacent("secret",table);
-
-	for(int i = 0 ;i < 5;i++)
+	bool found = false;
+	for(int i = 0 ;i < table.size();i++)
 	{
-		for(int j = 0 ;j < 5;j++)
+		for(int j = 0 ;j < table.size();j++)
 		{
-			cout << map[i][j] << " ";
+			if(table[i][j] == word[0])
+			{
+				if(searchAdjacent(map,word,table,i,j) == true)
+				{
+					found = true;
+					break;
+				}
+			}
 		}
-		cout << endl;
 	}
+
+	//Saving the results
+
+	if(found)
+	{
+		cout << "Yes" << endl;
+
+		for(int i = 0 ;i < map.size();i++)
+		{
+			for(int j = 0 ;j < map.size();j++)
+			{
+				cout << map[i][j];
+
+				if(j != map.size()-1) cout << " ";
+			}
+			cout << endl;
+		}
+	}
+	else cout << "No" << endl;
 	return 0;
 }
