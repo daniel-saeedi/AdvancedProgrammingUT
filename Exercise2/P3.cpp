@@ -3,16 +3,17 @@
 #include <vector>
 using namespace std;
 
-//I use flood fill algorithm for this function
+/*I use flood fill idea for checking adjacent cells
+*/
 bool searchAdjacent(vector< vector<int> > &map,string word,vector< vector<char> > &table,int x = 3,int y = 1, int index = 0)
 {
 	//Base Case
-	if(x > (table.size()-1) || y > (table.size() - 1))
+
+	//checking if x and y are invalid
+	if(x > (table.size()-1) || y > (table.size() - 1) || x < 0 || y < 0)
 	{
 		return false;
 	}
-
-	if(x < 0 || y < 0) return false;
 
 	if((index) == word.size())return true;
 
@@ -64,14 +65,25 @@ int main()
 		}
 	}
 
+	//First I find the first letter of the given word and then search around that
 	bool found = false;
 	for(int i = 0 ;i < table.size();i++)
 	{
 		for(int j = 0 ;j < table.size();j++)
 		{
+
+			//Reseting Map
+			for(int k = 0 ;k < table.size();k++)
+			{
+				for(int l = 0 ;l < table.size();l++)
+				{
+					map[k][l] = 0;
+				}
+			}
+
 			if(table[i][j] == word[0])
 			{
-				if(searchAdjacent(map,word,table,i,j) == true)
+				if(searchAdjacent(map,word,table,i,j))
 				{
 					found = true;
 					break;
