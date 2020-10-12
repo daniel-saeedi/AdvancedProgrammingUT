@@ -5,7 +5,7 @@ using namespace std;
 
 /*I use flood fill idea for checking adjacent cells
 */
-bool searchAdjacent(vector< vector<int> > &map,string word,vector< vector<char> > &table,int x = 3,int y = 1, int index = 0)
+bool searchAdjacent(vector< vector<int> > &map,string word,vector< vector<char> > &table,int x = 0,int y = 0, int index = 0)
 {
 	//Base Case
 
