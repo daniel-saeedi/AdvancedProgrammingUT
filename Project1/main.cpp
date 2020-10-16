@@ -294,7 +294,7 @@ void constructHTML(vector<vector<Movie*> > selected)
 
 			int diffTime = (finishH*60+ finishM)-(startH*60+ startM);
 			width = 50 * (diffTime/30);
-			left = 100 + 50 * (((startH)*60+ startM)/30);
+			left = 100 + 50 * (((startH-8)*60+ startM)/30);
 			top = 60 + i*50;
 			web << "<div class='record-box' style='" << "width: "<< width <<"px; left: "<< left<<"; top:"<< top <<"; '>"<< selected[i][j]->CinemaName<<"</div>";
 		}
