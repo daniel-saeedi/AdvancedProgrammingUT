@@ -199,55 +199,6 @@ void findOverlappingTime(vector<vector<Movie*> > &plan,int day,vector<vector<Mov
 			}
 		}
 
-
-		// if(end == start)
-		// {
-		// 	selected[day].push_back(selectedMovie);
-		// }
-
-		// else
-		// {
-		// 	bool foundBestPlan = true;
-		// 	string startingTime = plan[day][0]->StartingTime;
-
-		// 	int level = 0;
-
-		// 	while(foundBestPlan)
-		// 	{
-		// 		for(int k = start+1;k <= end;k++)
-		// 		{
-		// 			if(startingTime == plan[day][k]->StartingTime) foundBestPlan = false;
-		// 		}
-		// 		if(!foundBestPlan)level++;
-
-		// 		if(!foundBestPlan && level == 1)
-		// 		{
-		// 			for(int k = start+1;k <= end;k++)
-		// 			{
-		// 				if(plan[day][start]->StartingTime == plan[day][k]->StartingTime) endSame = k;
-		// 			}
-		// 			sort(plan[day].begin()+start,plan[day].begin()+endSame,compareByNumber);
-		// 		}
-
-		// 		if(!foundBestPlan && level == 2)
-		// 		{
-		// 			for(int k = start+1;k <= end;k++)
-		// 			{
-		// 				if(plan[day][start]->Price == plan[day][k]->Price) endSame = k;
-		// 			}
-		// 			sort(plan[day].begin()+start,plan[day].begin()+endSame,compareByWord);
-
-		// 		}
-
-		// 		if(foundBestPlan || level == 2)
-		// 		{
-		// 			selected[day].push_back(plan[day][start]);
-		// 			//cout << "Test" << endl;
-		// 			break;
-		// 		}
-		// 	}
-		// }
-
 		i = end + 1;
 	}
 }
@@ -320,6 +271,40 @@ void constructPlan(vector<vector<Movie*> > &plan,vector<Movie*>& movies,string m
 	}
 }
 
+void constructHTML(vector<vector<Movie*> > selected)
+{
+	ofstream web("web.html");
+	ifstream ifs("header.html");
+
+	string header((istreambuf_iterator<char>(ifs)),(istreambuf_iterator<char>()));
+
+	web << header;
+	int width = 0,left = 0,top = 0;
+
+	int startH = 0,startM = 0;
+	int finishH = 0,finishM = 0;
+	for(int i = 0; i < selected.size();i++)
+	{
+		for(int j = 0; j < selected[i].size();j++)
+		{
+			
+
+			extractTime(selected[i][j]->StartingTime,startH,startM);
+			extractTime(selected[i][j]->FinishingTime,finishH,finishM);
+
+			int diffTime = (finishH*60+ finishM)-(startH*60+ startM);
+			width = 50 * (diffTime/30);
+			left = 100 + 50 * (((startH)*60+ startM)/30);
+			top = 60 + i*50;
+			web << "<div class='record-box' style='" << "width: "<< width <<"px; left: "<< left<<"; top:"<< top <<"; '>"<< selected[i][j]->CinemaName<<"</div>";
+		}
+	}
+	web << "</body></html>";
+
+	ifs.close();
+	web.close();
+}
+
 int main()
 {
 	string userCommand;
@@ -342,6 +327,8 @@ int main()
 		vector<vector<Movie*> > selected;
 
 		constructPlan(plan,movies,movieName,selected);
+
+		constructHTML(selected);
 	}
 
 	return 0;
