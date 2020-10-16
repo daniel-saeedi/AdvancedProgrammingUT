@@ -112,22 +112,21 @@ void sortByName(vector<Movie*>& movies)
    } 
 }
 
-bool compare_by_word(Movie* lhs,Movie* rhs) {
+bool compareByWord(Movie* lhs,Movie* rhs) {
     return lhs->MovieName < rhs->MovieName;
 }
   
-void showAllMovies(vector<Movie*>& movies)
+void printAllMovies(vector<Movie*>& movies)
 {
-	//sortByName(movies);
-	sort(movies.begin(), movies.end(), compare_by_word);
+	sort(movies.begin(), movies.end(), compareByWord);
 	string currentMovie = "";
+
 	for(int i = 0;i < movies.size();i++)
 	{
 		
 		if(currentMovie != movies[i]->MovieName)
 		{
 			cout << movies[i]->MovieName << endl;
-
 			currentMovie = movies[i]->MovieName;
 		}
 	}
@@ -143,11 +142,18 @@ int main()
 
 	cout << "If you want to get the list of movies enter : 1" << endl;
 	cin >> userCommand;
-	switch(userCommand)
+	if(userCommand == 1)
 	{
-		case 1: showAllMovies(movies);
-		case 2: showAllMovies(movies);
-		default: cout << "Wrong Command";
+		printAllMovies(movies);
+	}
+	else if(userCommand == 2)
+	{
+
+	}
+
+	else
+	{
+		cout << "Wrong Command!";
 	}
 	return 0;
 }
