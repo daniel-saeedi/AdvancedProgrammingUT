@@ -1,7 +1,6 @@
 /*
 * Daniel Saeedi
 * Advanced Programming Project 1
-* fucking 2020
 */
 #include<iostream>
 #include<vector>
@@ -259,16 +258,16 @@ void constructPlan(vector<vector<Movie*> > &plan,vector<Movie*>& movies,string m
 	// 	}
 	// 	cout << endl;
 	// }
-	cout << endl << endl << endl;
-	for(int i = 0;i < selected.size();i++)
-	{
-		cout << "Day : " <<i + 1 << endl;
-		for(int j = 0;j < selected[i].size();j++)
-		{
-			cout << selected[i][j]->StartingTime << " to " << selected[i][j]->FinishingTime << " Price : " << selected[i][j]->Price << " Cinema :" << selected[i][j]->CinemaName << endl;
-		}
-		cout << endl;
-	}
+	// cout << endl << endl << endl;
+	// for(int i = 0;i < selected.size();i++)
+	// {
+	// 	cout << "Day : " <<i + 1 << endl;
+	// 	for(int j = 0;j < selected[i].size();j++)
+	// 	{
+	// 		cout << selected[i][j]->StartingTime << " to " << selected[i][j]->FinishingTime << " Price : " << selected[i][j]->Price << " Cinema :" << selected[i][j]->CinemaName << endl;
+	// 	}
+	// 	cout << endl;
+	// }
 }
 
 void constructHTML(vector<vector<Movie*> > selected)
@@ -305,6 +304,130 @@ void constructHTML(vector<vector<Movie*> > selected)
 	web.close();
 }
 
+void printSpace(int space = 1)
+{
+	for(int i = 0;i < space;i++)
+	{
+		cout << " ";
+	}
+}
+
+void printDash(int quantity = 1)
+{
+	for(int i = 0;i < quantity;i++)
+	{
+		cout << "-";
+	}
+}
+
+
+void printLeftWall(int startH,int startM,int &column,int width)
+{
+	int space = (((startH-8)*60+ startM)/30)*5;
+
+	printSpace(space-column-width - 1);
+	//cout << "\t" << space-column-width << "\t";
+	if((space-column-width) != 0)cout<< "|";
+	column = space;
+
+	
+	
+}
+
+void printRightWall(string cinemaName,int startH,int startM,int finishH,int finishM,int &width)
+{
+	int diffTime = (finishH*60+ finishM)-(startH*60+ startM);
+	int space =(diffTime/30)*5 - 1;
+
+	width = space + 1;
+	printSpace(space - cinemaName.length());
+	cout<< "|";
+}
+
+void printUpperWall(int startH,int startM,int finishH,int finishM,int &column,int &width)
+{
+	int space =  (((startH-8)*60+ startM)/30)*5;
+	int diffTime = (finishH*60+ finishM)-(startH*60+ startM);
+	int dashes =(diffTime/30)*5;
+
+	printSpace(space-column-width);
+	//cout << "\t" << space-column-width << "\t";
+	printDash(dashes);
+	column = space;
+	width = dashes;
+	
+	
+}
+
+void printTable(vector<vector<Movie*> > selected)
+{
+	int startH = 0,startM = 0;
+	int finishH = 0,finishM = 0;
+
+	int column = 0;
+
+	int width = 0;
+
+	cout << "          08:00               10:00               12:00               14:00               16:00               18:00               20:00               22:00               00:00" << endl;
+	cout << endl;
+	for(int i = 0; i < selected.size();i++)
+	{
+		cout << "          ";
+		for(int j = 0; j < selected[i].size();j++)
+		{
+			extractTime(selected[i][j]->StartingTime,startH,startM);
+			extractTime(selected[i][j]->FinishingTime,finishH,finishM);
+
+			printUpperWall(startH,startM,finishH,finishM,column,width);
+		}
+
+		cout << endl;
+
+		column = 0;
+		width = 0;
+
+		if(i == 0) cout << "Saturday  ";
+		else if(i == 1) cout << "Sunday    ";
+		else if(i== 2) cout << "Monday    ";
+		else if(i == 3) cout << "Tuesday   ";
+		else if(i == 4) cout << "Wednesday ";
+		else if(i == 5) cout << "Thursday  ";
+		else if(i == 6) cout << "Friday    ";
+
+		for(int j = 0; j < selected[i].size();j++)
+		{
+			
+
+			extractTime(selected[i][j]->StartingTime,startH,startM);
+			extractTime(selected[i][j]->FinishingTime,finishH,finishM);
+
+			printLeftWall(startH,startM,column,width);
+			cout << selected[i][j]->CinemaName;
+			printRightWall(selected[i][j]->CinemaName,startH,startM,finishH,finishM,width);
+		}
+
+
+		column = 0;
+		width = 0;
+
+		cout <<endl;
+
+		cout << "          ";
+		for(int j = 0; j < selected[i].size();j++)
+		{
+			extractTime(selected[i][j]->StartingTime,startH,startM);
+			extractTime(selected[i][j]->FinishingTime,finishH,finishM);
+
+			printUpperWall(startH,startM,finishH,finishM,column,width);
+		}
+
+		cout << endl;
+
+		column = 0;
+		width = 0;
+	}
+}
+
 int main()
 {
 	string userCommand;
@@ -319,17 +442,17 @@ int main()
 	{
 		printAllMovies(movies);
 	}
-	else
-	{
-		string movieName = userCommand;
 
-		vector<vector<Movie*> > plan;
-		vector<vector<Movie*> > selected;
+	string movieName = "Braveheart";
 
-		constructPlan(plan,movies,movieName,selected);
+	vector<vector<Movie*> > plan;
+	vector<vector<Movie*> > selected;
 
-		constructHTML(selected);
-	}
+	constructPlan(plan,movies,movieName,selected);
+
+	constructHTML(selected);
+
+	printTable(selected);
 
 	return 0;
 }
