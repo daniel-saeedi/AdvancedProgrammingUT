@@ -21,6 +21,8 @@ struct Movie
 	string Hall;
 };
 
+typedef vector<Movie* > MovieList;
+
 //This function extract hour and minute from HH:MM format
 void extractTime(string time,int &hour,int &minute)
 {
@@ -64,7 +66,7 @@ bool compareByTimeString(string time1,string time2) {
 }
 
 //Prints All movies in alphabetic order
-void printAllMovies(vector<Movie*>& movies)
+void printAllMovies(MovieList & movies)
 {
 	sort(movies.begin(), movies.end(), compareByWord);
 	string currentMovie = "";
@@ -90,7 +92,7 @@ void printAllMovies(vector<Movie*>& movies)
 * Whiplash
 * start = 2, end = 3
 */
-void findStartAndEnd(vector<Movie*>& movies,int &start,int &end,string movieName)
+void findStartAndEnd(MovieList & movies,int &start,int &end,string movieName)
 {
 	bool find = false;
 	for(int i = 0;i < movies.size();i++)
@@ -115,7 +117,7 @@ void findStartAndEnd(vector<Movie*>& movies,int &start,int &end,string movieName
 	}
 }
 
-void findOverlappingTime(vector<vector<Movie*> > &plan,int day,vector<vector<Movie*> > &selected)
+void findOverlappingTime(vector<MovieList  > &plan,int day,vector<MovieList  > &selected)
 {
 	int start = 0,end = 0;
 	string finishingTime;
@@ -125,7 +127,7 @@ void findOverlappingTime(vector<vector<Movie*> > &plan,int day,vector<vector<Mov
 		//start = i;
 		end = i;
 
-		vector<Movie*> selectedMovie;
+		MovieList  selectedMovie;
 		selectedMovie.push_back(plan[day][i]);
 		for(int j = i+1;j < plan[day].size();j++)
 		{
@@ -145,7 +147,7 @@ void findOverlappingTime(vector<vector<Movie*> > &plan,int day,vector<vector<Mov
 		{
 			
 			sort(selectedMovie.begin(), selectedMovie.end(), compareByNumber);
-			vector<Movie*> selectedMovie2;
+			MovieList  selectedMovie2;
 			selectedMovie2.push_back(selectedMovie[0]);
 			for(int j = 1;j < selectedMovie.size();j++)
 			{
@@ -169,9 +171,9 @@ void findOverlappingTime(vector<vector<Movie*> > &plan,int day,vector<vector<Mov
 	}
 }
 
-void constructPlan(vector<vector<Movie*> > &plan,vector<Movie*>& movies,string movieName,vector<vector<Movie*> > &selected)
+void constructPlan(vector<MovieList  > &plan,MovieList & movies,string movieName,vector<MovieList  > &selected)
 {
-	vector<Movie*> movie;
+	MovieList  movie;
 	/*
 	Initializing plan vector
 	Row 0: Saturday,1 : Sunday .... 6:Friday*/
@@ -214,7 +216,7 @@ void constructPlan(vector<vector<Movie*> > &plan,vector<Movie*>& movies,string m
 	}
 }
 
-void constructHTML(vector<vector<Movie*> > selected,string movieName)
+void constructHTML(vector<MovieList  > selected,string movieName)
 {
 	ofstream web(movieName+".html");
 	ifstream ifs("header.html");
@@ -300,7 +302,7 @@ string buildUpperWall(string line,int startH,int startM,int finishH,int finishM)
 }
 
 //Print Table of movies
-void printTable(vector<vector<Movie*> > selected)
+void printTable(vector<MovieList  > selected)
 {
 	vector<string> lines;
 
@@ -432,7 +434,7 @@ Movie* readMovieInfo(string info,map<string,int> &header)
 }
 
 //This function reads schedule file and puts the data on movies vector
-void readSchedule(vector<Movie*>& movies,string dir)
+void readSchedule(MovieList & movies,string dir)
 {
 	int lineNumber = 1;
 	string line;
@@ -476,7 +478,7 @@ int main(int argc, char *argv[])
 	{
 		string userCommand;
 
-		vector<Movie*> movies;
+		MovieList  movies;
 
 
 		readSchedule(movies,argv[1]);
@@ -495,8 +497,8 @@ int main(int argc, char *argv[])
 			string movieName;
 			extractMovieName(userCommand,movieName);
 
-			vector<vector<Movie*> > plan;
-			vector<vector<Movie*> > selected;
+			vector<MovieList  > plan;
+			vector<MovieList  > selected;
 
 			constructPlan(plan,movies,movieName,selected);
 
