@@ -7,6 +7,7 @@
 #include <sstream>
 #include <string>
 #include<fstream>
+#include<map>
 using namespace std;
 
 struct Movie
@@ -20,7 +21,7 @@ struct Movie
 	string Hall;
 };
 
-Movie* readMovieInfo(string info)
+Movie* readMovieInfo(string info,map<string,int> &header)
 {
 	Movie *newMovie = new Movie;
 	stringstream ss(info);
@@ -28,20 +29,19 @@ Movie* readMovieInfo(string info)
 	Movie *next;
 
 	int index = 1;
+	
 	while( ss.good() )
 	{
 		string substr;
 		getline( ss, substr,',');
-		switch(index)
-		{
-			case 1: newMovie->CinemaName = substr;
-			case 2: newMovie->MovieName = substr;
-			case 3: newMovie->Day = substr;
-			case 4: newMovie->StartingTime = substr;
-			case 5: newMovie->FinishingTime = substr;
-			case 6: newMovie->Price = substr;
-			case 7: newMovie->Hall = substr;
-		}
+
+		if(header["CinemaName"] == index)newMovie->CinemaName = substr;
+		if(header["MovieName"] == index)newMovie->MovieName = substr;
+		if(header["Day"] == index)newMovie->Day = substr;
+		if(header["StartingTime"] == index)newMovie->StartingTime = substr;
+		if(header["FinishingTime"] == index)newMovie->FinishingTime = substr;
+		if(header["Price"] == index)newMovie->Price = substr;
+		if(header["Hall"] == index)newMovie->Hall = substr;
 		index++;
 	}
 	
@@ -54,12 +54,28 @@ void readSchedule(vector<Movie*>& movies,string dir)
 	string line;
 	ifstream file(dir);
 
+	map<string,int> header;
 	while (getline(file, line))
 	{
+	
 		if(lineNumber > 1)
 		{
-			movies.push_back(readMovieInfo(line));
+			movies.push_back(readMovieInfo(line,header));
 		}
+		else
+		{
+			stringstream ss(line);
+			int index = 1;
+	
+			while(ss.good())
+			{
+				string substr;
+				getline( ss, substr,',');
+				header[substr] = index;
+				index++;
+			}
+		}
+
 		lineNumber++;
 	}
 
@@ -113,10 +129,9 @@ void printAllMovies(vector<Movie*>& movies)
 
 	for(int i = 0;i < movies.size();i++)
 	{
-		cout << movies[i]->MovieName << endl;
 		if(currentMovie != movies[i]->MovieName)
 		{
-			
+			cout << movies[i]->MovieName << endl;
 			currentMovie = movies[i]->MovieName;
 		}
 	}
@@ -355,24 +370,6 @@ string buildUpperWall(string line,int startH,int startM,int finishH,int finishM)
 	return line;
 }
 
-
-
-
-// void printUpperWall(int startH,int startM,int finishH,int finishM,int &column,int &width)
-// {
-// 	int space =  (((startH-8)*60+ startM)/30)*5;
-// 	int diffTime = (finishH*60+ finishM)-(startH*60+ startM);
-// 	int dashes =(diffTime/30)*5;
-
-// 	printSpace(space-column-width);
-// 	//cout << "\t" << space-column-width << "\t";
-// 	printDash(dashes);
-// 	column = space;
-// 	width = dashes;
-	
-	
-// }
-
 void printTable(vector<vector<Movie*> > selected)
 {
 	vector<string> lines;
@@ -431,7 +428,6 @@ void printTable(vector<vector<Movie*> > selected)
 			extractTime(selected[i][j]->StartingTime,startH,startM);
 			extractTime(selected[i][j]->FinishingTime,finishH,finishM);
 
-			//cout << selected[i][j]->CinemaName;
 			if((2*i+2) < lines.size())
 			{
 				lines[2*i+2] = buildLeftAndRightWall(selected[i][j]->CinemaName,lines[2*i+2],startH,startM,finishH,finishM);
@@ -488,7 +484,9 @@ int main(int argc, char *argv[])
 
 		vector<Movie*> movies;
 
+
 		readSchedule(movies,argv[1]);
+
 
 		cout << "If you want to get the list of movies enter : GET ALL MOVIES" << endl;
 		cout << "If you want to get schedule of a movie enter: GET SCHEDULE <MOVIE NAME>" << endl;
