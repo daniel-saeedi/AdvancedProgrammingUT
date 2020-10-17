@@ -21,67 +21,7 @@ struct Movie
 	string Hall;
 };
 
-Movie* readMovieInfo(string info,map<string,int> &header)
-{
-	Movie *newMovie = new Movie;
-	stringstream ss(info);
-
-	Movie *next;
-
-	int index = 1;
-	
-	while( ss.good() )
-	{
-		string substr;
-		getline( ss, substr,',');
-
-		if(header["CinemaName"] == index)newMovie->CinemaName = substr;
-		if(header["MovieName"] == index)newMovie->MovieName = substr;
-		if(header["Day"] == index)newMovie->Day = substr;
-		if(header["StartingTime"] == index)newMovie->StartingTime = substr;
-		if(header["FinishingTime"] == index)newMovie->FinishingTime = substr;
-		if(header["Price"] == index)newMovie->Price = substr;
-		if(header["Hall"] == index)newMovie->Hall = substr;
-		index++;
-	}
-	
-	return newMovie;
-}
-
-void readSchedule(vector<Movie*>& movies,string dir)
-{
-	int lineNumber = 1;
-	string line;
-	ifstream file(dir);
-
-	map<string,int> header;
-	while (getline(file, line))
-	{
-	
-		if(lineNumber > 1)
-		{
-			movies.push_back(readMovieInfo(line,header));
-		}
-		else
-		{
-			stringstream ss(line);
-			int index = 1;
-	
-			while(ss.good())
-			{
-				string substr;
-				getline( ss, substr,',');
-				header[substr] = index;
-				index++;
-			}
-		}
-
-		lineNumber++;
-	}
-
-	file.close();
-}
-
+//This function extract hour and minute from HH:MM format
 void extractTime(string time,int &hour,int &minute)
 {
 	stringstream ss(time);
@@ -98,6 +38,7 @@ void extractTime(string time,int &hour,int &minute)
 	}
 }
 
+//These functions are for sorting
 bool compareByWord(Movie* lhs,Movie* rhs) {
     return lhs->MovieName < rhs->MovieName;
 }
@@ -121,7 +62,8 @@ bool compareByTimeString(string time1,string time2) {
 	extractTime(time2,hour2,minute2);
 	return hour1*60 + minute1 > hour2*60 + minute2;
 }
-  
+
+//Prints All movies in alphabetic order
 void printAllMovies(vector<Movie*>& movies)
 {
 	sort(movies.begin(), movies.end(), compareByWord);
@@ -137,7 +79,17 @@ void printAllMovies(vector<Movie*>& movies)
 	}
 }
 
-//This function finds start and end of movie x in movies vector(sorted by alphabetical order)
+//This function finds start and end of the same movies in movies vector(sorted by alphabetical order)
+/*
+* For example:
+* movieName = Whiplash
+* Movies vector:
+* 12 angry men
+* 12 angry men
+* Whiplash
+* Whiplash
+* start = 2, end = 3
+*/
 void findStartAndEnd(vector<Movie*>& movies,int &start,int &end,string movieName)
 {
 	bool find = false;
@@ -260,34 +212,11 @@ void constructPlan(vector<vector<Movie*> > &plan,vector<Movie*>& movies,string m
 		sort(plan[i].begin(), plan[i].end(), compareByTime);
 		findOverlappingTime(plan,i,selected);
 	}
-
-
-	// cout << endl << endl << endl;
-
-	// for(int i = 0;i < plan.size();i++)
-	// {
-	// 	cout << "Day : " <<i + 1 << endl;
-	// 	for(int j = 0;j < plan[i].size();j++)
-	// 	{
-	// 		cout << plan[i][j]->StartingTime << " to " << plan[i][j]->FinishingTime << " Price : " << plan[i][j]->Price << " Cinema :" << plan[i][j]->CinemaName << endl;
-	// 	}
-	// 	cout << endl;
-	// }
-	// cout << endl << endl << endl;
-	// for(int i = 0;i < selected.size();i++)
-	// {
-	// 	cout << "Day : " <<i + 1 << endl;
-	// 	for(int j = 0;j < selected[i].size();j++)
-	// 	{
-	// 		cout << selected[i][j]->StartingTime << " to " << selected[i][j]->FinishingTime << " Price : " << selected[i][j]->Price << " Cinema :" << selected[i][j]->CinemaName << endl;
-	// 	}
-	// 	cout << endl;
-	// }
 }
 
-void constructHTML(vector<vector<Movie*> > selected)
+void constructHTML(vector<vector<Movie*> > selected,string movieName)
 {
-	ofstream web("web.html");
+	ofstream web(movieName+".html");
 	ifstream ifs("header.html");
 
 	string header((istreambuf_iterator<char>(ifs)),(istreambuf_iterator<char>()));
@@ -319,6 +248,7 @@ void constructHTML(vector<vector<Movie*> > selected)
 	web.close();
 }
 
+//These functions are used for printing table
 string charProducer(int quantity,string c)
 {
 	string s;
@@ -330,7 +260,6 @@ string charProducer(int quantity,string c)
 
 	return s;
 }
-
 
 string buildLeftAndRightWall(string cinemaName,string line,int startH,int startM,int finishH,int finishM)
 {
@@ -355,7 +284,7 @@ string buildUpperWall(string line,int startH,int startM,int finishH,int finishM)
 {
 	int diffTime = (finishH*60+ finishM)-(startH*60+ startM);
 	int width =(diffTime/30)*5 - 1;
-	int leftDistance =10 + (((startH-8)*60+ startM)/30)*5;
+	int leftDistance = 10 + (((startH-8)*60+ startM)/30)*5;
 
 	//Left Wall
 	line[leftDistance - 1] = '+';
@@ -370,6 +299,7 @@ string buildUpperWall(string line,int startH,int startM,int finishH,int finishM)
 	return line;
 }
 
+//Print Table of movies
 void printTable(vector<vector<Movie*> > selected)
 {
 	vector<string> lines;
@@ -453,6 +383,7 @@ void printTable(vector<vector<Movie*> > selected)
 	}
 }
 
+//This function extracts movie name from GET SCHEDULE <MOVIE NAME>
 void extractMovieName(string text,string &movieName)
 {
 	stringstream ss(text);
@@ -472,6 +403,69 @@ void extractMovieName(string text,string &movieName)
 	}
 }
 
+//I use map for solving not constant column
+Movie* readMovieInfo(string info,map<string,int> &header)
+{
+	Movie *newMovie = new Movie;
+	stringstream ss(info);
+
+	Movie *next;
+
+	int index = 1;
+	
+	while( ss.good() )
+	{
+		string substr;
+		getline( ss, substr,',');
+
+		if(header["CinemaName"] == index)newMovie->CinemaName = substr;
+		if(header["MovieName"] == index)newMovie->MovieName = substr;
+		if(header["Day"] == index)newMovie->Day = substr;
+		if(header["StartingTime"] == index)newMovie->StartingTime = substr;
+		if(header["FinishingTime"] == index)newMovie->FinishingTime = substr;
+		if(header["Price"] == index)newMovie->Price = substr;
+		if(header["Hall"] == index)newMovie->Hall = substr;
+		index++;
+	}
+	
+	return newMovie;
+}
+
+//This function reads schedule file and puts the data on movies vector
+void readSchedule(vector<Movie*>& movies,string dir)
+{
+	int lineNumber = 1;
+	string line;
+	ifstream file(dir);
+
+	map<string,int> header;
+	while (getline(file, line))
+	{
+	
+		if(lineNumber > 1)
+		{
+			movies.push_back(readMovieInfo(line,header));
+		}
+		else
+		{
+			stringstream ss(line);
+			int index = 1;
+	
+			while(ss.good())
+			{
+				string substr;
+				getline( ss, substr,',');
+				header[substr] = index;
+				index++;
+			}
+		}
+
+		lineNumber++;
+	}
+
+	file.close();
+}
+
 int main(int argc, char *argv[])
 {
 	if(argc < 1)
@@ -487,10 +481,10 @@ int main(int argc, char *argv[])
 
 		readSchedule(movies,argv[1]);
 
-
 		cout << "If you want to get the list of movies enter : GET ALL MOVIES" << endl;
 		cout << "If you want to get schedule of a movie enter: GET SCHEDULE <MOVIE NAME>" << endl;
 		getline(cin,userCommand);
+
 		if(userCommand == "GET ALL MOVIES")
 		{
 			printAllMovies(movies);
@@ -506,12 +500,10 @@ int main(int argc, char *argv[])
 
 			constructPlan(plan,movies,movieName,selected);
 
-			constructHTML(selected);
+			constructHTML(selected,movieName);
 
 			printTable(selected);
-		}
-
-		
+		}		
 	}
 
 	return 0;
