@@ -48,11 +48,11 @@ Movie* readMovieInfo(string info)
 	return newMovie;
 }
 
-void readSchedule(vector<Movie*>& movies)
+void readSchedule(vector<Movie*>& movies,string dir)
 {
 	int lineNumber = 1;
 	string line;
-	ifstream file("schedule.csv");
+	ifstream file(dir);
 
 	while (getline(file, line))
 	{
@@ -304,155 +304,217 @@ void constructHTML(vector<vector<Movie*> > selected)
 	web.close();
 }
 
-void printSpace(int space = 1)
+string charProducer(int quantity,string c)
 {
-	for(int i = 0;i < space;i++)
-	{
-		cout << " ";
-	}
-}
+	string s;
 
-void printDash(int quantity = 1)
-{
 	for(int i = 0;i < quantity;i++)
 	{
-		cout << "-";
+		s +=c;
 	}
+
+	return s;
 }
 
 
-void printLeftWall(int startH,int startM,int &column,int width)
-{
-	int space = (((startH-8)*60+ startM)/30)*5;
-
-	printSpace(space-column-width - 1);
-	//cout << "\t" << space-column-width << "\t";
-	if((space-column-width) != 0)cout<< "|";
-	column = space;
-
-	
-	
-}
-
-void printRightWall(string cinemaName,int startH,int startM,int finishH,int finishM,int &width)
+string buildLeftAndRightWall(string cinemaName,string line,int startH,int startM,int finishH,int finishM)
 {
 	int diffTime = (finishH*60+ finishM)-(startH*60+ startM);
-	int space =(diffTime/30)*5 - 1;
+	int width =(diffTime/30)*5 - 1;
+	int leftDistance =10 + (((startH-8)*60+ startM)/30)*5;
 
-	width = space + 1;
-	printSpace(space - cinemaName.length());
-	cout<< "|";
+	//Left Wall
+	 line[leftDistance - 1] = '|';
+
+	//Cinema Name
+	for(int i = 0;i < cinemaName.length();i++)
+	{
+		line[leftDistance+i+1] = cinemaName[i];	
+	}
+	//Right Wall
+	line[width+leftDistance] = '|';
+	return line;
 }
 
-void printUpperWall(int startH,int startM,int finishH,int finishM,int &column,int &width)
+string buildUpperWall(string line,int startH,int startM,int finishH,int finishM)
 {
-	int space =  (((startH-8)*60+ startM)/30)*5;
 	int diffTime = (finishH*60+ finishM)-(startH*60+ startM);
-	int dashes =(diffTime/30)*5;
+	int width =(diffTime/30)*5 - 1;
+	int leftDistance =10 + (((startH-8)*60+ startM)/30)*5;
 
-	printSpace(space-column-width);
-	//cout << "\t" << space-column-width << "\t";
-	printDash(dashes);
-	column = space;
-	width = dashes;
-	
-	
+	//Left Wall
+	line[leftDistance - 1] = '+';
+	if(line[leftDistance] != '+') line[leftDistance] = '-';
+
+	for(int i = 0;i < width;i++)
+	{
+		if(line[leftDistance+i+1] != '+') line[leftDistance+i+1] = '-';	
+	}
+	//Right Wall
+	line[width+leftDistance] = '+';
+	return line;
 }
+
+
+
+
+// void printUpperWall(int startH,int startM,int finishH,int finishM,int &column,int &width)
+// {
+// 	int space =  (((startH-8)*60+ startM)/30)*5;
+// 	int diffTime = (finishH*60+ finishM)-(startH*60+ startM);
+// 	int dashes =(diffTime/30)*5;
+
+// 	printSpace(space-column-width);
+// 	//cout << "\t" << space-column-width << "\t";
+// 	printDash(dashes);
+// 	column = space;
+// 	width = dashes;
+	
+	
+// }
 
 void printTable(vector<vector<Movie*> > selected)
 {
-	int startH = 0,startM = 0;
-	int finishH = 0,finishM = 0;
+	vector<string> lines;
 
-	int column = 0;
+	lines.push_back("          08:00               10:00               12:00               14:00               16:00               18:00               20:00               22:00               00:00 \n");
 
-	int width = 0;
+	for(int i = 0; i < 7;i++)
+	{
+		if(i == 0)
+		{
+			lines.push_back(charProducer(175," "));
+			lines.push_back("Saturday"+charProducer(167," "));
+		}
+		else if(i == 1)
+		{
+			lines.push_back(charProducer(175," "));
+			lines.push_back("Sunday"+charProducer(169," "));
+		}
+		else if(i== 2) {
+			lines.push_back(charProducer(175," "));
+			lines.push_back("Monday"+charProducer(169," "));
+		}
 
-	cout << "          08:00               10:00               12:00               14:00               16:00               18:00               20:00               22:00               00:00" << endl;
-	cout << endl;
+		else if(i == 3)
+		{
+			lines.push_back(charProducer(175," "));
+			lines.push_back("Tuesday"+charProducer(168," "));
+		}
+
+		else if(i == 4)
+		{
+			lines.push_back(charProducer(175," "));
+			lines.push_back("Wednesday"+charProducer(166," "));
+		}
+
+		else if(i == 5)
+		{
+			lines.push_back(charProducer(175," "));
+			lines.push_back("Thursday"+charProducer(167," "));
+		}
+
+		else if(i == 6)
+		{
+			lines.push_back(charProducer(175," "));
+			lines.push_back("Friday"+charProducer(169," "));
+			lines.push_back(charProducer(175," "));
+		}
+	}
 	for(int i = 0; i < selected.size();i++)
 	{
-		cout << "          ";
 		for(int j = 0; j < selected[i].size();j++)
 		{
-			extractTime(selected[i][j]->StartingTime,startH,startM);
-			extractTime(selected[i][j]->FinishingTime,finishH,finishM);
-
-			printUpperWall(startH,startM,finishH,finishM,column,width);
-		}
-
-		cout << endl;
-
-		column = 0;
-		width = 0;
-
-		if(i == 0) cout << "Saturday  ";
-		else if(i == 1) cout << "Sunday    ";
-		else if(i== 2) cout << "Monday    ";
-		else if(i == 3) cout << "Tuesday   ";
-		else if(i == 4) cout << "Wednesday ";
-		else if(i == 5) cout << "Thursday  ";
-		else if(i == 6) cout << "Friday    ";
-
-		for(int j = 0; j < selected[i].size();j++)
-		{
-			
+			int startH = 0,startM = 0;
+			int finishH = 0,finishM = 0;
 
 			extractTime(selected[i][j]->StartingTime,startH,startM);
 			extractTime(selected[i][j]->FinishingTime,finishH,finishM);
 
-			printLeftWall(startH,startM,column,width);
-			cout << selected[i][j]->CinemaName;
-			printRightWall(selected[i][j]->CinemaName,startH,startM,finishH,finishM,width);
+			//cout << selected[i][j]->CinemaName;
+			if((2*i+2) < lines.size())
+			{
+				lines[2*i+2] = buildLeftAndRightWall(selected[i][j]->CinemaName,lines[2*i+2],startH,startM,finishH,finishM);
+			}
+
+			if((2*i+1) < lines.size())
+			{
+				lines[2*i+1] = buildUpperWall(lines[2*i+1],startH,startM,finishH,finishM);
+			}
+
+			if((2*i+3) < lines.size())
+			{
+				lines[2*i+3] = buildUpperWall(lines[2*i+3],startH,startM,finishH,finishM);
+
+			}
 		}
 
+	}
 
-		column = 0;
-		width = 0;
-
-		cout <<endl;
-
-		cout << "          ";
-		for(int j = 0; j < selected[i].size();j++)
-		{
-			extractTime(selected[i][j]->StartingTime,startH,startM);
-			extractTime(selected[i][j]->FinishingTime,finishH,finishM);
-
-			printUpperWall(startH,startM,finishH,finishM,column,width);
-		}
-
-		cout << endl;
-
-		column = 0;
-		width = 0;
+	for(int i = 0; i < lines.size();i++)
+	{
+		cout <<lines[i] << endl;
 	}
 }
 
-int main()
+void extractMovieName(string text,string &movieName)
 {
-	string userCommand;
-
-	vector<Movie*> movies;
-
-	readSchedule(movies);
-
-	cout << "If you want to get the list of movies enter : GET ALL MOVIES" << endl;
-	getline(cin,userCommand);
-	if(userCommand == "GET ALL MOVIES")
+	stringstream ss(text);
+	int index = 1;
+	while( ss.good() )
 	{
-		printAllMovies(movies);
+		string substr;
+		getline( ss, substr,' ');
+
+		if(index > 2)
+		{
+			if(index > 3) movieName += " ";
+			movieName += substr;
+		}
+
+		index++;
 	}
+}
 
-	string movieName = "Braveheart";
+int main(int argc, char *argv[])
+{
+	if(argc < 1)
+	{
+		cout << "Schedule of movies are required!";
+	}
+	else
+	{
+		string userCommand;
 
-	vector<vector<Movie*> > plan;
-	vector<vector<Movie*> > selected;
+		vector<Movie*> movies;
 
-	constructPlan(plan,movies,movieName,selected);
+		readSchedule(movies,argv[1]);
 
-	constructHTML(selected);
+		cout << "If you want to get the list of movies enter : GET ALL MOVIES" << endl;
+		cout << "If you want to get schedule of a movie enter: GET SCHEDULE <MOVIE NAME>" << endl;
+		getline(cin,userCommand);
+		if(userCommand == "GET ALL MOVIES")
+		{
+			printAllMovies(movies);
+		}
 
-	printTable(selected);
+		else
+		{
+			string movieName;
+			extractMovieName(userCommand,movieName);
+
+			vector<vector<Movie*> > plan;
+			vector<vector<Movie*> > selected;
+
+			constructPlan(plan,movies,movieName,selected);
+
+			constructHTML(selected);
+
+			printTable(selected);
+		}
+
+		
+	}
 
 	return 0;
 }
