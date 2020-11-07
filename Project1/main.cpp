@@ -1,13 +1,10 @@
-/*
-* Daniel Saeedi
-* Advanced Programming Project 1
-*/
 #include<iostream>
 #include<vector>
 #include <sstream>
 #include <string>
 #include<fstream>
 #include<map>
+#include <algorithm>
 using namespace std;
 
 struct Movie
@@ -483,8 +480,6 @@ int main(int argc, char *argv[])
 
 		readSchedule(movies,argv[1]);
 
-		cout << "If you want to get the list of movies enter : GET ALL MOVIES" << endl;
-		cout << "If you want to get schedule of a movie enter: GET SCHEDULE <MOVIE NAME>" << endl;
 		getline(cin,userCommand);
 
 		if(userCommand == "GET ALL MOVIES")
