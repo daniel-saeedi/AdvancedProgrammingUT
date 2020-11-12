@@ -9,11 +9,11 @@ using namespace std;
 //Functions
 void splitBySpace(vector<string> &data,string text)
 {
-	stringstream ss(text);
-	while( ss.good() )
+	stringstream stringStream(text);
+	while(stringStream.good())
 	{
 		string substr;
-		getline( ss, substr,' ');
+		getline(stringStream, substr, ' ');
 		data.push_back(substr);
 	}
 }
