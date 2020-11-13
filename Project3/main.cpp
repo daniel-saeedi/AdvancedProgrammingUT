@@ -6,6 +6,6 @@ using namespace std;
 
 int main()
 {
-	Window* window = new Window(1199,598,"Soccer Stars!!!");
-	Game SoccerStars(1199,598,window);
+	Window* window = new Window(1024,600,"Soccer Stars!!!");
+	Game SoccerStars(1024,600,window);
 }
