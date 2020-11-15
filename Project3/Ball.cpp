@@ -1,25 +1,20 @@
 #include "Ball.hpp"
 
 //Constructor
-Ball::Ball(int _position_x,int _position_y)
+Ball::Ball(int init_x,int init_y,int _radius,int _mass): Object(init_x,init_y,_radius,_mass)
 {
-	position_x = _position_x;
-	position_y = _position_y;
-	width = 40;
-	height = 40;
 	ball_image = "Assets/ball.png";
-	vx = 0;
-	vy = 0;
-	mass = 1;
+	acceleration = 500;
 }
 
-void Ball::Reflect(std::string type)
+void Ball::CollideWithEdges(int width,int height)
 {
-	if(type == "y") vy = -vy;
-	else if(type == "x") vx = -vx;
-	else if(type == "xy")
-	{
-		vx = -vx;
-		vy = -vy;
-	}
+	int top_corner = y - radius;
+	int bottom_corner = y + radius;
+	int left_corner = x - radius;
+	int right_corner = x + radius;
+	if(top_corner <= 0) {Reflect("y"); y = radius;}
+	else if(bottom_corner >= height) {Reflect("y"); y = height - radius;}
+	else if(left_corner <= 0) {Reflect("x"); x = radius;}
+	else if(right_corner >= width) {Reflect("x"); x = width - radius;}
 }
