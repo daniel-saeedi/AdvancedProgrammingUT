@@ -10,24 +10,28 @@
 #define BALL_RADIUS 14
 #define BALL_MASS 1
 #define FRAME_RATE 0.015
-
 #include<vector>
-
-
 //Constructor
 Game::Game(int _width,int _height, Window* _window)
 {
+	goal_status = 0;
+	goal_team_A = 0;
+	goal_team_B = 0;
 	selected_player = nullptr;
 	throw_radius = 60;
 	max_initial_speed = 700;
-	SetPreloadPositions();
 	width = _width;
 	height = _height;
-	teamA = new Team(CreatePlayers(TEAM_A));
-	teamB = new Team(CreatePlayers(TEAM_B));
+	finished = false;
+	winner = 0;
 	background_image = "Assets/field.jpg";
 	window = _window;
+
+	SetPreloadPositions();
+	teamA = new Team(CreatePlayers(TEAM_A));
+	teamB = new Team(CreatePlayers(TEAM_B));
 	ball = new Ball(preload_position[BALL][0].x,preload_position[BALL][0].y,BALL_RADIUS,BALL_MASS);
+	GetInput();
 	Draw();
 }
 
@@ -66,23 +70,141 @@ void Game::Draw()
 	while(true)
 	{
 		window->clear();
-		MoveObjects();
-		//Draw Background
-		DrawBackground();
-		//Draw Ball
-		DrawBall();
-		//Draw Player
-		DrawPlayer(TEAM_A);
-		DrawPlayer(TEAM_B);
-		window->update_screen();
 		Update();
+		if(finished) ShowFinishedScreen();
+		else ShowGame();
 		delay(FRAME_RATE*1000);
+	}
+}
+
+void Game::GetInput()
+{
+	std::cout << "Enter number of rounds: " << std::endl;
+	std::cin >> rounds;
+	std::cout << "Enter number of goal per round: " << std::endl;
+	std::cin >> goal_per_round;
+}
+
+void Game::ShowGame()
+{
+	MoveObjects();
+	GameStatus();
+	//Draw Background
+	DrawBackground();
+	//Draw Header
+	DrawHeader();
+	//Draw Ball
+	DrawBall();
+	//Draw Player
+	DrawPlayer(TEAM_A);
+	DrawPlayer(TEAM_B);
+	window->update_screen();
+}
+
+void Game::DrawHeader()
+{
+	window->draw_img("Assets/header.png", Rectangle(0,0,width,50));
+	window->show_text("Team A   Goals: "+std::to_string(teamA->get_total_goals()),Point(10,10),WHITE,"./Assets/FreeSans.ttf", 20);
+	window->show_text("Goals: "+std::to_string(teamB->get_total_goals()) + "   Team B",Point(width-200,10),WHITE,"./Assets/FreeSans.ttf", 20);
+}
+
+void Game::ShowFinishedScreen()
+{
+	window->draw_rect(Rectangle(0,0,width,height), BLACK);
+	std::string message = "Team ";
+	std::string goals   = "Goals: ";
+	std::string rounds   = "Rounds: ";
+	if(winner == TEAM_A)
+	{
+		message += "A won!";
+		goals   += std::to_string(teamA->get_total_goals());
+		rounds  += std::to_string(teamA->get_won_rounds());
+	}
+	else if(winner == TEAM_B)
+	{
+		message += "B won!";
+		goals   += std::to_string(teamB->get_total_goals());
+		rounds  += std::to_string(teamB->get_won_rounds());
+	}
+	window->show_text(message, Point(250, 150), WHITE, "./Assets/FreeSans.ttf", 50);
+	window->show_text(goals, Point(320, 220), WHITE, "./Assets/FreeSans.ttf", 30);
+	window->show_text(rounds, Point(320, 270), WHITE, "./Assets/FreeSans.ttf", 30);
+	window->update_screen();
+}
+
+void Game::GameStatus()
+{
+	if(goal_status != 0 && !finished)
+	{	
+		if(goal_status == TEAM_A)
+		{
+			goal_team_B++;
+			teamB->increase_total_goals();
+		}
+		if(goal_status == TEAM_B)
+		{
+			goal_team_A++;
+			teamA->increase_total_goals();
+
+		}
+		goal_status = 0;
+		Reset();
+		if(goal_team_A >= goal_per_round || goal_team_B >= goal_per_round)
+		{
+			if(goal_team_A >= goal_per_round)
+			{
+				teamA->increase_won_rounds();
+			}
+			else
+			{
+				teamB->increase_won_rounds();
+			}
+			goal_team_A = 0;
+			goal_team_B = 0;
+		}
+	}
+
+	if(teamA->get_won_rounds() >= ceil(rounds/2.0))
+	{
+		finished = true;
+		winner = TEAM_A;
+	}
+	else if(teamB->get_won_rounds() >= ceil(rounds/2.0))
+	{
+		finished = true;
+		winner = TEAM_B;
 	}
 }
 
 void Game::DrawBackground()
 {
 	window->draw_img(background_image, Rectangle(0,0,width,height));
+}
+
+void Game::Reset()
+{
+	ball->set_x(preload_position[BALL][0].x);
+	ball->set_y(preload_position[BALL][0].y);
+	ball->set_vx(0);
+	ball->set_vy(0);
+	ResetPlayerPosition(TEAM_A);
+	ResetPlayerPosition(TEAM_B);
+}
+
+void Game::ResetPlayerPosition(int team_id)
+{
+	Team *team;
+	if(team_id == TEAM_A) team = teamA;
+	else if(team_id == TEAM_B) team = teamB;
+	for(int i = 0;i < PLAYERS;i++)
+	{
+		int pos_x = preload_position[team_id][i].x;
+		int pos_y = preload_position[team_id][i].y;
+		team->get_player(i)->set_x(pos_x);
+		team->get_player(i)->set_y(pos_y);
+		team->get_player(i)->set_vx(0);
+		team->get_player(i)->set_vy(0);
+	}
 }
 
 void Game::Update()
@@ -188,7 +310,7 @@ bool Game::IsSelected(int radius,int pos_x,int pos_y,Point mouse_position)
 void Game::MoveObjects()
 {
 	ball->Move(FRAME_RATE);
-	ball->CollideWithEdges(width,height);
+	goal_status = ball->CollideWithEdges(width,height);
 	bool collided_players = false;
 	for(int i = 0;i < PLAYERS;i++)
 	{

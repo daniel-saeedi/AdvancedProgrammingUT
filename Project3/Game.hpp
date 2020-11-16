@@ -28,6 +28,13 @@ private:
 	int max_initial_speed;
 	int width;
 	int height;
+	int goal_status;
+	int goal_per_round;
+	int rounds;
+	int goal_team_A;
+	int goal_team_B;
+	bool finished;
+	int winner;
 
 	std::vector<Player*> CreatePlayers(int team_id);
 	void Update();
@@ -40,6 +47,15 @@ private:
 	bool IsSelected(int radius,int pos_x,int pos_y,Point mouse_position);
 	void StartMove(Event e,Player *player);
 	void MoveObjects();
+	void GameStatus();
+	void Reset();
+	void ResetPlayerPosition(int team_id);
+
+	//Screens
+	void GetInput();
+	void DrawHeader();
+	void ShowGame();
+	void ShowFinishedScreen();
 
 	bool Collision(Object *object1,Object *object2);
 	bool CollisionDetector(Object *object1,Object *object2);
