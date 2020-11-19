@@ -26,6 +26,7 @@ Game::Game(int _width,int _height, Window* _window)
 	winner = 0;
 	background_image = "Assets/field.jpg";
 	window = _window;
+	turn = TEAM_A;
 
 	SetPreloadPositions();
 	teamA = new Team(CreatePlayers(TEAM_A));
@@ -98,9 +99,22 @@ void Game::ShowGame()
 	//Draw Player
 	DrawPlayer(TEAM_A);
 	DrawPlayer(TEAM_B);
+	DrawStars();
 	window->update_screen();
 }
 
+void Game::DrawStars()
+{
+	Team *team;
+	if(turn == TEAM_A) team = teamA;
+	if(turn == TEAM_B) team = teamB;
+	for(int i = 0;i < PLAYERS;i++)
+	{
+		int x = team->get_player(i)->get_x() - 30;
+		int y = team->get_player(i)->get_y() - 30;
+		window->draw_img("Assets/star.png", Rectangle(x,y,60,60));
+	}
+}
 void Game::DrawHeader()
 {
 	window->draw_img("Assets/header.png", Rectangle(0,0,width,50));
@@ -220,12 +234,12 @@ void Game::Update()
 				exit(0);
 				break;
 			}
-				
+
 			case Event::EventType::LCLICK:
 			{
 				Point mouse_position = e.get_mouse_position();
-				SelectPawn(TEAM_A,mouse_position);
-				SelectPawn(TEAM_B,mouse_position);
+				if(turn == TEAM_A) SelectPawn(TEAM_A,mouse_position);
+				else SelectPawn(TEAM_B,mouse_position);
 				is_mouse_down = true;
 			}
 
@@ -235,6 +249,8 @@ void Game::Update()
 				{
 					StartMove(e,selected_player);
 					selected_player = nullptr;
+					if(turn == TEAM_A) turn = TEAM_B;
+					else turn = TEAM_A;
 				}
 
 				is_mouse_down = false;
@@ -396,3 +412,5 @@ Point Game::CalculateVelocity(Point d,int d_size)
 	v.y = ((-1)*d.y*max_initial_speed)/denominator;
 	return v;
 }
+
+

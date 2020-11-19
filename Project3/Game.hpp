@@ -24,6 +24,7 @@ private:
 	Ball *ball;
 	Player *selected_player;
 	std::map<int,std::vector<Point>> preload_position;
+	int turn;
 	int throw_radius;
 	int max_initial_speed;
 	int width;
@@ -37,11 +38,6 @@ private:
 	int winner;
 
 	std::vector<Player*> CreatePlayers(int team_id);
-	void Update();
-	void Draw();
-	void DrawBall();
-	void DrawPlayer(int team_id);
-	void DrawBackground();
 	void SetPreloadPositions();
 	void SelectPawn(int team_id,Point mouse_position);
 	bool IsSelected(int radius,int pos_x,int pos_y,Point mouse_position);
@@ -56,6 +52,12 @@ private:
 	void DrawHeader();
 	void ShowGame();
 	void ShowFinishedScreen();
+	void Update();
+	void Draw();
+	void DrawBall();
+	void DrawPlayer(int team_id);
+	void DrawBackground();
+	void DrawStars();
 
 	bool Collision(Object *object1,Object *object2);
 	bool CollisionDetector(Object *object1,Object *object2);
