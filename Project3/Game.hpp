@@ -48,11 +48,13 @@ private:
 	void ResetPlayerPosition(int team_id);
 
 	//Screens
-	void GetInput();
+	int GetInput(std::string filed_name);
 	void DrawHeader();
 	void ShowGame();
 	void ShowFinishedScreen();
 	void Update();
+	void LeftClick(bool &is_mouse_down,Event e);
+	void LeftRelease(bool &is_mouse_down,Event e);
 	void Draw();
 	void DrawBall();
 	void DrawPlayer(int team_id);

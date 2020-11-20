@@ -7,13 +7,13 @@ BUILD_DIR=build
 
 all: soccerStars.out
 
-soccerStars.out: ${BUILD_DIR}/main.o ${BUILD_DIR}/functions.o  ${BUILD_DIR}/rsdl.o ${BUILD_DIR}/Game.o ${BUILD_DIR}/Team.o ${BUILD_DIR}/Stadium.o ${BUILD_DIR}/Player.o ${BUILD_DIR}/Ball.o ${BUILD_DIR}/Object.o
-	${CC} ${BUILD_DIR}/main.o ${BUILD_DIR}/functions.o ${BUILD_DIR}/rsdl.o ${BUILD_DIR}/Game.o ${BUILD_DIR}/Team.o ${BUILD_DIR}/Stadium.o ${BUILD_DIR}/Player.o ${BUILD_DIR}/Ball.o ${BUILD_DIR}/Object.o ${SDL_FLAGS} -o ${BUILD_DIR}/soccerStars.out
+soccerStars.out: ${BUILD_DIR}/main.o ${BUILD_DIR}/functions.o  ${BUILD_DIR}/rsdl.o ${BUILD_DIR}/TextInput.o ${BUILD_DIR}/MyString.o ${BUILD_DIR}/Game.o ${BUILD_DIR}/Team.o ${BUILD_DIR}/Stadium.o ${BUILD_DIR}/Player.o ${BUILD_DIR}/Ball.o ${BUILD_DIR}/Object.o
+	${CC} ${BUILD_DIR}/main.o ${BUILD_DIR}/functions.o ${BUILD_DIR}/rsdl.o ${BUILD_DIR}/TextInput.o ${BUILD_DIR}/MyString.o ${BUILD_DIR}/Game.o ${BUILD_DIR}/Team.o ${BUILD_DIR}/Stadium.o ${BUILD_DIR}/Player.o ${BUILD_DIR}/Ball.o ${BUILD_DIR}/Object.o ${SDL_FLAGS} -o ${BUILD_DIR}/soccerStars.out
 
 ${BUILD_DIR}/main.o: main.cpp Game.hpp
 	${CC} -c main.cpp ${SDL_FLAGS} -o ${BUILD_DIR}/main.o
 
-${BUILD_DIR}/Game.o: Game.cpp functions.o Stadium.hpp Player.hpp Ball.hpp Team.hpp rsdl.hpp
+${BUILD_DIR}/Game.o: Game.cpp functions.o Stadium.hpp Player.hpp Ball.hpp Team.hpp rsdl.hpp TextInput.hpp MyString.hpp
 	${CC} -c Game.cpp ${SDL_FLAGS} -o ${BUILD_DIR}/Game.o
 
 ${BUILD_DIR}/Team.o: Team.cpp
@@ -36,5 +36,11 @@ ${BUILD_DIR}/rsdl.o: rsdl.cpp
 
 ${BUILD_DIR}/functions.o: functions.cpp
 	${CC} -c functions.cpp ${SDL_FLAGS} -o ${BUILD_DIR}/functions.o
+
+${BUILD_DIR}/TextInput.o: TextInput.cpp rsdl.hpp MyString.hpp
+	${CC} -c TextInput.cpp ${SDL_FLAGS} -o ${BUILD_DIR}/TextInput.o
+
+${BUILD_DIR}/MyString.o: MyString.cpp rsdl.hpp
+	${CC} -c MyString.cpp ${SDL_FLAGS} -o ${BUILD_DIR}/MyString.o
 clean:
 	rm -rf ${BUILD_DIR} && mkdir -p ${BUILD_DIR}

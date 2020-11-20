@@ -1,5 +1,6 @@
 #include "Game.hpp"
 #include "Object.hpp"
+#include "TextInput.hpp"
 #include<cmath>
 #define PLAYERS 5
 #define BALL 0
@@ -32,7 +33,8 @@ Game::Game(int _width,int _height, Window* _window)
 	teamA = new Team(CreatePlayers(TEAM_A));
 	teamB = new Team(CreatePlayers(TEAM_B));
 	ball = new Ball(preload_position[BALL][0].x,preload_position[BALL][0].y,BALL_RADIUS,BALL_MASS);
-	GetInput();
+	rounds = GetInput("Rounds");
+	goal_per_round = GetInput("Goal Per Round");
 	Draw();
 }
 
@@ -78,12 +80,19 @@ void Game::Draw()
 	}
 }
 
-void Game::GetInput()
+int Game::GetInput(std::string filed_name)
 {
-	std::cout << "Enter number of rounds: " << std::endl;
-	std::cin >> rounds;
-	std::cout << "Enter number of goal per round: " << std::endl;
-	std::cin >> goal_per_round;
+	try
+	{
+		TextInputWindow textInputWindow(width,height,filed_name,window);
+		textInputWindow.display();
+		return stoi(textInputWindow.getText());
+	}
+	catch(string exception)
+	{
+		cerr << "EXCEPTION: " << exception << endl;
+		exit(1);
+	}
 }
 
 void Game::ShowGame()
@@ -237,15 +246,28 @@ void Game::Update()
 
 			case Event::EventType::LCLICK:
 			{
-				Point mouse_position = e.get_mouse_position();
-				if(turn == TEAM_A) SelectPawn(TEAM_A,mouse_position);
-				else SelectPawn(TEAM_B,mouse_position);
-				is_mouse_down = true;
+				LeftClick(is_mouse_down,e);
 			}
 
 			case Event::EventType::LRELEASE:
 			{
-				if(selected_player != nullptr && !is_mouse_down)
+				LeftRelease(is_mouse_down,e);
+			}
+		}
+	}
+}
+
+void Game::LeftClick(bool &is_mouse_down,Event e)
+{
+	Point mouse_position = e.get_mouse_position();
+	if(turn == TEAM_A) SelectPawn(TEAM_A,mouse_position);
+	else SelectPawn(TEAM_B,mouse_position);
+	is_mouse_down = true;
+}
+
+void Game::LeftRelease(bool &is_mouse_down,Event e)
+{
+	if(selected_player != nullptr && !is_mouse_down)
 				{
 					StartMove(e,selected_player);
 					selected_player = nullptr;
@@ -254,11 +276,7 @@ void Game::Update()
 				}
 
 				is_mouse_down = false;
-			}
-		}
-	}
 }
-
 void Game::DrawBall()
 {
 	std::string img_src = ball->get_ball_image();
@@ -412,5 +430,3 @@ Point Game::CalculateVelocity(Point d,int d_size)
 	v.y = ((-1)*d.y*max_initial_speed)/denominator;
 	return v;
 }
-
-

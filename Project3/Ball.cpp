@@ -31,7 +31,6 @@ int Ball::CollideWithEdges(int width,int height)
 		else if(bottom_corner >= height) {Reflect("y"); y = height - radius;}
 		else if(left_corner <= 0) {Reflect("x"); x = radius;}
 		else if(right_corner >= width) {Reflect("x"); x = width - radius;}
-
 		return 0;
 	}
 }
