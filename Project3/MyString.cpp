@@ -1,4 +1,4 @@
-#include "myString.hpp"
+#include "MyString.hpp"
 
 MyString::MyString(int _x, int _y, int _fontSize,std::string _field_name)
     : x(_x), y(_y), fontSize(_fontSize), field_name(_field_name) {}

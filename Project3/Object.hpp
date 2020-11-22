@@ -10,19 +10,19 @@ public:
 	void Move(double dt);
 
 	int get_radius(){return radius;}
-	int get_x(){return x;}
-	int get_y(){return y;}
+	double get_x(){return x;}
+	double get_y(){return y;}
 	int get_mass(){return mass;}
 	double get_vx(){return vx;}
 	double get_vy(){return vy;}
-	void set_x(int _x){x = _x;}
-	void set_y(int _y){y = _y;}
+	void set_x(double _x){x = _x;}
+	void set_y(double _y){y = _y;}
 	void set_vx(double _vx){vx = _vx;}
 	void set_vy(double _vy){vy = _vy;}
 protected:
 	int radius;
-	int x;
-	int y;
+	double x;
+	double y;
 	double vx;
 	double vy;
 	int mass;

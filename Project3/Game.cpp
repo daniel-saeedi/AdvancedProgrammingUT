@@ -168,7 +168,6 @@ void Game::GameStatus()
 		{
 			goal_team_A++;
 			teamA->increase_total_goals();
-
 		}
 		goal_status = 0;
 		Reset();
@@ -182,8 +181,7 @@ void Game::GameStatus()
 			{
 				teamB->increase_won_rounds();
 			}
-			goal_team_A = 0;
-			goal_team_B = 0;
+			goal_team_A = 0,goal_team_B = 0;
 		}
 	}
 
@@ -268,20 +266,20 @@ void Game::LeftClick(bool &is_mouse_down,Event e)
 void Game::LeftRelease(bool &is_mouse_down,Event e)
 {
 	if(selected_player != nullptr && !is_mouse_down)
-				{
-					StartMove(e,selected_player);
-					selected_player = nullptr;
-					if(turn == TEAM_A) turn = TEAM_B;
-					else turn = TEAM_A;
-				}
+	{
+		StartMove(e,selected_player);
+		selected_player = nullptr;
+		if(turn == TEAM_A) turn = TEAM_B;
+		else turn = TEAM_A;
+	}
 
-				is_mouse_down = false;
+	is_mouse_down = false;
 }
 void Game::DrawBall()
 {
 	std::string img_src = ball->get_ball_image();
-	int pos_x = ball->get_x();
-	int pos_y = ball->get_y();
+	int pos_x = ceil(ball->get_x());
+	int pos_y = ceil(ball->get_y());
 	int radius = ball->get_radius();
 
 	window->draw_img(img_src, Rectangle(pos_x,pos_y,radius*2,radius*2));
@@ -295,8 +293,8 @@ void Game::DrawPlayer(int team_id)
 	for(int i = 0;i < team->players_size();i++)
 	{
 		std::string img_src = team->get_player(i)->get_player_image();
-		int pos_x = team->get_player(i)->get_x();
-		int pos_y = team->get_player(i)->get_y();
+		int pos_x = ceil(team->get_player(i)->get_x());
+		int pos_y = ceil(team->get_player(i)->get_y());
 		int radius = team->get_player(i)->get_radius();
 		window->draw_img(img_src, Rectangle(pos_x-radius,pos_y-radius,radius*2,radius*2));
 	}
@@ -354,7 +352,8 @@ void Game::MoveObjects()
 			|| Collision(teamA->get_player(i),teamB->get_player(j))
 			|| Collision(teamB->get_player(i),teamB->get_player(j));
 		}
-		Collision(teamA->get_player(i),ball) || Collision(teamB->get_player(i),ball);
+		Collision(teamA->get_player(i),ball);
+		Collision(teamB->get_player(i),ball);
 		teamA->get_player(i)->CollideWithEdges(width,height);
 		teamB->get_player(i)->CollideWithEdges(width,height);
 
@@ -384,6 +383,22 @@ bool Game::CollisionDetector(Object *object1,Object *object2)
 	else return false;
 }
 
+bool CollisionDetector2(Object *object1,Object *object2)
+{
+	if(object1 != object2)
+	{
+		double r1 = object1->get_radius();
+		double r2 = object2->get_radius();
+		Point distance;
+		distance.x = object2->get_x() - object1->get_x();
+		distance.y = object2->get_y() - object1->get_y();
+		double d = VectorSize(distance);
+		if(d <= r1+r2) return true;
+		else return false;
+	}
+	else return false;
+}
+
 bool Game::Collision(Object *object1,Object *object2)
 {
 	bool collided = CollisionDetector(object1,object2);
@@ -394,8 +409,8 @@ bool Game::Collision(Object *object1,Object *object2)
 		object1->set_vy(new_velocities[0].y);
 		object2->set_vx(new_velocities[1].x);
 		object2->set_vy(new_velocities[1].y);
-		object1->Move(FRAME_RATE);
-		object2->Move(FRAME_RATE);
+		object1->Move(0.02);
+		object2->Move(0.02);
 	}
 	return collided;
 }
