@@ -10,7 +10,7 @@ public:
 	Ball(int init_x,int init_y,int _radius,int _mass);
 	int CollideWithEdges(int width,int height);
 
-	std::string get_ball_image(){return ball_image;}
+	std::string GetBallImage(){return ball_image;}
 private:
 	std::string ball_image;
 };

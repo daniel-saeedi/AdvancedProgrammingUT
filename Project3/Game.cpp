@@ -122,16 +122,16 @@ void Game::DrawStars()
 	if(turn == TEAM_B) team = teamB;
 	for(int i = 0;i < PLAYERS;i++)
 	{
-		int x = team->get_player(i)->get_x() - 30;
-		int y = team->get_player(i)->get_y() - 30;
+		int x = team->GetPlayer(i)->GetX() - 30;
+		int y = team->GetPlayer(i)->GetY() - 30;
 		window->draw_img(STAR_SRC, Rectangle(x,y,60,60));
 	}
 }
 void Game::DrawHeader()
 {
 	window->draw_img(HEADER_SRC, Rectangle(0,0,width,50));
-	window->show_text("Team A   Goals: "+std::to_string(teamA->get_total_goals()),Point(10,10),WHITE,FONT_SRC, 20);
-	window->show_text("Goals: "+std::to_string(teamB->get_total_goals()) + "   Team B",Point(width-200,10),WHITE,FONT_SRC, 20);
+	window->show_text("Team A   Goals: "+std::to_string(teamA->GetTotalGoals()),Point(10,10),WHITE,FONT_SRC, 20);
+	window->show_text("Goals: "+std::to_string(teamB->GetTotalGoals()) + "   Team B",Point(width-200,10),WHITE,FONT_SRC, 20);
 }
 
 void Game::ShowFinishedScreen()
@@ -143,14 +143,14 @@ void Game::ShowFinishedScreen()
 	if(winner == TEAM_A)
 	{
 		message += "A won!";
-		goals   += std::to_string(teamA->get_total_goals());
-		rounds  += std::to_string(teamA->get_won_rounds());
+		goals   += std::to_string(teamA->GetTotalGoals());
+		rounds  += std::to_string(teamA->GetWonRounds());
 	}
 	else if(winner == TEAM_B)
 	{
 		message += "B won!";
-		goals   += std::to_string(teamB->get_total_goals());
-		rounds  += std::to_string(teamB->get_won_rounds());
+		goals   += std::to_string(teamB->GetTotalGoals());
+		rounds  += std::to_string(teamB->GetWonRounds());
 	}
 	window->show_text(message, Point(250, 150), WHITE, FONT_SRC, 50);
 	window->show_text(goals, Point(320, 220), WHITE, FONT_SRC, 30);
@@ -165,12 +165,12 @@ void Game::GameStatus()
 		if(goal_status == TEAM_A)
 		{
 			goal_team_B++;
-			teamB->increase_total_goals();
+			teamB->IncreaseTotalGoals();
 		}
 		if(goal_status == TEAM_B)
 		{
 			goal_team_A++;
-			teamA->increase_total_goals();
+			teamA->IncreaseTotalGoals();
 		}
 		goal_status = 0;
 		Reset();
@@ -178,22 +178,22 @@ void Game::GameStatus()
 		{
 			if(goal_team_A >= goal_per_round)
 			{
-				teamA->increase_won_rounds();
+				teamA->IncreaseWonRounds();
 			}
 			else
 			{
-				teamB->increase_won_rounds();
+				teamB->IncreaseWonRounds();
 			}
 			goal_team_A = 0,goal_team_B = 0;
 		}
 	}
 
-	if(teamA->get_won_rounds() >= ceil(rounds/2.0))
+	if(teamA->GetWonRounds() >= ceil(rounds/2.0))
 	{
 		finished = true;
 		winner = TEAM_A;
 	}
-	else if(teamB->get_won_rounds() >= ceil(rounds/2.0))
+	else if(teamB->GetWonRounds() >= ceil(rounds/2.0))
 	{
 		finished = true;
 		winner = TEAM_B;
@@ -207,10 +207,10 @@ void Game::DrawBackground()
 
 void Game::Reset()
 {
-	ball->set_x(preload_position[BALL][0].x);
-	ball->set_y(preload_position[BALL][0].y);
-	ball->set_vx(0);
-	ball->set_vy(0);
+	ball->SetX(preload_position[BALL][0].x);
+	ball->SetY(preload_position[BALL][0].y);
+	ball->SetVx(0);
+	ball->SetVy(0);
 	ResetPlayerPosition(TEAM_A);
 	ResetPlayerPosition(TEAM_B);
 }
@@ -224,10 +224,10 @@ void Game::ResetPlayerPosition(int team_id)
 	{
 		int pos_x = preload_position[team_id][i].x;
 		int pos_y = preload_position[team_id][i].y;
-		team->get_player(i)->set_x(pos_x);
-		team->get_player(i)->set_y(pos_y);
-		team->get_player(i)->set_vx(0);
-		team->get_player(i)->set_vy(0);
+		team->GetPlayer(i)->SetX(pos_x);
+		team->GetPlayer(i)->SetY(pos_y);
+		team->GetPlayer(i)->SetVx(0);
+		team->GetPlayer(i)->SetVy(0);
 	}
 }
 
@@ -244,12 +244,10 @@ void Game::Update()
 				exit(0);
 				break;
 			}
-
 			case Event::EventType::LCLICK:
 			{
 				LeftClick(e);
 			}
-
 			case Event::EventType::LRELEASE:
 			{
 				LeftRelease(e);
@@ -280,10 +278,10 @@ void Game::LeftRelease(Event e)
 }
 void Game::DrawBall()
 {
-	std::string img_src = ball->get_ball_image();
-	int pos_x = ceil(ball->get_x());
-	int pos_y = ceil(ball->get_y());
-	int radius = ball->get_radius();
+	std::string img_src = ball->GetBallImage();
+	int pos_x = ceil(ball->GetX());
+	int pos_y = ceil(ball->GetY());
+	int radius = ball->GetRadius();
 	window->draw_img(img_src, Rectangle(pos_x,pos_y,radius*2,radius*2));
 }
 
@@ -292,12 +290,12 @@ void Game::DrawPlayer(int team_id)
 	Team* team;
 	if(team_id == TEAM_A) team = teamA;
 	if(team_id == TEAM_B) team = teamB;
-	for(int i = 0;i < team->players_size();i++)
+	for(int i = 0;i < team->PlayerSize();i++)
 	{
-		std::string img_src = team->get_player(i)->get_player_image();
-		int pos_x = ceil(team->get_player(i)->get_x());
-		int pos_y = ceil(team->get_player(i)->get_y());
-		int radius = team->get_player(i)->get_radius();
+		std::string img_src = team->GetPlayer(i)->GetPlayerImage();
+		int pos_x = ceil(team->GetPlayer(i)->GetX());
+		int pos_y = ceil(team->GetPlayer(i)->GetY());
+		int radius = team->GetPlayer(i)->GetRadius();
 		window->draw_img(img_src, Rectangle(pos_x-radius,pos_y-radius,radius*2,radius*2));
 	}
 }
@@ -308,15 +306,15 @@ void Game::SelectPawn(int team_id,Point mouse_position)
 	if(team_id == TEAM_A) team = teamA;
 	if(team_id == TEAM_B) team = teamB;
 
-	for(int i = 0;i < team->players_size();i++)
+	for(int i = 0;i < team->PlayerSize();i++)
 	{
-		int radius = team->get_player(i)->get_radius();
-		int pos_x = team->get_player(i)->get_x();
-		int pos_y = team->get_player(i)->get_y();
+		int radius = team->GetPlayer(i)->GetRadius();
+		int pos_x = ceil(team->GetPlayer(i)->GetX());
+		int pos_y = ceil(team->GetPlayer(i)->GetY());
 
 		if(IsSelected(radius,pos_x,pos_y,mouse_position))
 		{
-			selected_player = team->get_player(i);
+			selected_player = team->GetPlayer(i);
 		}
 	}
 }
@@ -332,13 +330,13 @@ void Game::StartMove(Event e,Player *player)
 {
 	Point mouse_position = e.get_mouse_position();
 	Point pawn_position;
-	pawn_position.x = player->get_x();
-	pawn_position.y = player->get_y();
+	pawn_position.x = player->GetX();
+	pawn_position.y = player->GetY();
 	Point d = SubtractVector(mouse_position,pawn_position);
 	int d_size = VectorSize(d);
 	Point velocity = CalculateVelocity(d,d_size);
-	player->set_vx(velocity.x);
-	player->set_vy(velocity.y);
+	player->SetVx(velocity.x);
+	player->SetVy(velocity.y);
 }
 
 void Game::MoveObjects()
@@ -350,21 +348,21 @@ void Game::MoveObjects()
 	{
 		for(int j = 0;j < PLAYERS;j++)
 		{
-			collided_players = Collision(teamA->get_player(i),teamA->get_player(j))
-			|| Collision(teamA->get_player(i),teamB->get_player(j))
-			|| Collision(teamB->get_player(i),teamB->get_player(j));
+			collided_players = Collision(teamA->GetPlayer(i),teamA->GetPlayer(j))
+			|| Collision(teamA->GetPlayer(i),teamB->GetPlayer(j))
+			|| Collision(teamB->GetPlayer(i),teamB->GetPlayer(j));
 		}
-		Collision(teamA->get_player(i),ball);
-		Collision(teamB->get_player(i),ball);
-		teamA->get_player(i)->CollideWithEdges(width,height);
-		teamB->get_player(i)->CollideWithEdges(width,height);
+		Collision(teamA->GetPlayer(i),ball);
+		Collision(teamB->GetPlayer(i),ball);
+		teamA->GetPlayer(i)->CollideWithEdges(width,height);
+		teamB->GetPlayer(i)->CollideWithEdges(width,height);
 
 		if(!collided_players)
 		{
-			teamA->get_player(i)->Move(FRAME_RATE);
-			teamB->get_player(i)->Move(FRAME_RATE);
+			teamA->GetPlayer(i)->Move(FRAME_RATE);
+			teamB->GetPlayer(i)->Move(FRAME_RATE);
 		}
 		collided_players = false;
 	}
-	
+
 }
