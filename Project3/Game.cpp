@@ -11,28 +11,31 @@
 #define BALL_RADIUS 14
 #define BALL_MASS 1
 #define FRAME_RATE 0.015
+#define FIELD_SRC "Assets/field.jpg"
+#define FONT_SRC "./Assets/FreeSans.ttf"
+#define STAR_SRC "Assets/star.png"
+#define HEADER_SRC "Assets/header.png"
 #include<vector>
 //Constructor
-Game::Game(int _width,int _height, Window* _window)
+Game::Game(int _throw_radius,int _max_initial_speed,int _width,int _height, Window* _window) : Physics(_throw_radius,_max_initial_speed, _width, _height)
 {
 	goal_status = 0;
 	goal_team_A = 0;
 	goal_team_B = 0;
 	selected_player = nullptr;
-	throw_radius = 60;
-	max_initial_speed = 700;
-	width = _width;
-	height = _height;
 	finished = false;
+	is_mouse_down = false;
 	winner = 0;
-	background_image = "Assets/field.jpg";
 	window = _window;
 	turn = TEAM_A;
-
 	SetPreloadPositions();
 	teamA = new Team(CreatePlayers(TEAM_A));
 	teamB = new Team(CreatePlayers(TEAM_B));
 	ball = new Ball(preload_position[BALL][0].x,preload_position[BALL][0].y,BALL_RADIUS,BALL_MASS);
+}
+
+void Game::StartGame()
+{
 	rounds = GetInput("Rounds");
 	goal_per_round = GetInput("Goal Per Round");
 	Draw();
@@ -121,14 +124,14 @@ void Game::DrawStars()
 	{
 		int x = team->get_player(i)->get_x() - 30;
 		int y = team->get_player(i)->get_y() - 30;
-		window->draw_img("Assets/star.png", Rectangle(x,y,60,60));
+		window->draw_img(STAR_SRC, Rectangle(x,y,60,60));
 	}
 }
 void Game::DrawHeader()
 {
-	window->draw_img("Assets/header.png", Rectangle(0,0,width,50));
-	window->show_text("Team A   Goals: "+std::to_string(teamA->get_total_goals()),Point(10,10),WHITE,"./Assets/FreeSans.ttf", 20);
-	window->show_text("Goals: "+std::to_string(teamB->get_total_goals()) + "   Team B",Point(width-200,10),WHITE,"./Assets/FreeSans.ttf", 20);
+	window->draw_img(HEADER_SRC, Rectangle(0,0,width,50));
+	window->show_text("Team A   Goals: "+std::to_string(teamA->get_total_goals()),Point(10,10),WHITE,FONT_SRC, 20);
+	window->show_text("Goals: "+std::to_string(teamB->get_total_goals()) + "   Team B",Point(width-200,10),WHITE,FONT_SRC, 20);
 }
 
 void Game::ShowFinishedScreen()
@@ -149,16 +152,16 @@ void Game::ShowFinishedScreen()
 		goals   += std::to_string(teamB->get_total_goals());
 		rounds  += std::to_string(teamB->get_won_rounds());
 	}
-	window->show_text(message, Point(250, 150), WHITE, "./Assets/FreeSans.ttf", 50);
-	window->show_text(goals, Point(320, 220), WHITE, "./Assets/FreeSans.ttf", 30);
-	window->show_text(rounds, Point(320, 270), WHITE, "./Assets/FreeSans.ttf", 30);
+	window->show_text(message, Point(250, 150), WHITE, FONT_SRC, 50);
+	window->show_text(goals, Point(320, 220), WHITE, FONT_SRC, 30);
+	window->show_text(rounds, Point(320, 270), WHITE, FONT_SRC, 30);
 	window->update_screen();
 }
 
 void Game::GameStatus()
 {
 	if(goal_status != 0 && !finished)
-	{	
+	{
 		if(goal_status == TEAM_A)
 		{
 			goal_team_B++;
@@ -199,7 +202,7 @@ void Game::GameStatus()
 
 void Game::DrawBackground()
 {
-	window->draw_img(background_image, Rectangle(0,0,width,height));
+	window->draw_img(FIELD_SRC, Rectangle(0,0,width,height));
 }
 
 void Game::Reset()
@@ -230,7 +233,7 @@ void Game::ResetPlayerPosition(int team_id)
 
 void Game::Update()
 {
-	bool is_mouse_down = false;
+	is_mouse_down = false;
 	while(window->has_pending_event())
 	{
 		Event e = window->poll_for_event();
@@ -244,18 +247,18 @@ void Game::Update()
 
 			case Event::EventType::LCLICK:
 			{
-				LeftClick(is_mouse_down,e);
+				LeftClick(e);
 			}
 
 			case Event::EventType::LRELEASE:
 			{
-				LeftRelease(is_mouse_down,e);
+				LeftRelease(e);
 			}
 		}
 	}
 }
 
-void Game::LeftClick(bool &is_mouse_down,Event e)
+void Game::LeftClick(Event e)
 {
 	Point mouse_position = e.get_mouse_position();
 	if(turn == TEAM_A) SelectPawn(TEAM_A,mouse_position);
@@ -263,7 +266,7 @@ void Game::LeftClick(bool &is_mouse_down,Event e)
 	is_mouse_down = true;
 }
 
-void Game::LeftRelease(bool &is_mouse_down,Event e)
+void Game::LeftRelease(Event e)
 {
 	if(selected_player != nullptr && !is_mouse_down)
 	{
@@ -281,7 +284,6 @@ void Game::DrawBall()
 	int pos_x = ceil(ball->get_x());
 	int pos_y = ceil(ball->get_y());
 	int radius = ball->get_radius();
-
 	window->draw_img(img_src, Rectangle(pos_x,pos_y,radius*2,radius*2));
 }
 
@@ -298,19 +300,6 @@ void Game::DrawPlayer(int team_id)
 		int radius = team->get_player(i)->get_radius();
 		window->draw_img(img_src, Rectangle(pos_x-radius,pos_y-radius,radius*2,radius*2));
 	}
-}
-
-void Game::StartMove(Event e,Player *player)
-{
-	Point mouse_position = e.get_mouse_position();
-	Point pawn_position;
-	pawn_position.x = player->get_x();
-	pawn_position.y = player->get_y();
-	Point d = SubtractVector(mouse_position,pawn_position);
-	int d_size = VectorSize(d);
-	Point velocity = CalculateVelocity(d,d_size);
-	player->set_vx(velocity.x);
-	player->set_vy(velocity.y); 
 }
 
 void Game::SelectPawn(int team_id,Point mouse_position)
@@ -339,6 +328,19 @@ bool Game::IsSelected(int radius,int pos_x,int pos_y,Point mouse_position)
 	return pow(radius,2)-(pow(pos_x-mouse_x,2) + pow(pos_y-mouse_y,2)) >= 0;
 }
 
+void Game::StartMove(Event e,Player *player)
+{
+	Point mouse_position = e.get_mouse_position();
+	Point pawn_position;
+	pawn_position.x = player->get_x();
+	pawn_position.y = player->get_y();
+	Point d = SubtractVector(mouse_position,pawn_position);
+	int d_size = VectorSize(d);
+	Point velocity = CalculateVelocity(d,d_size);
+	player->set_vx(velocity.x);
+	player->set_vy(velocity.y);
+}
+
 void Game::MoveObjects()
 {
 	ball->Move(FRAME_RATE);
@@ -365,83 +367,4 @@ void Game::MoveObjects()
 		collided_players = false;
 	}
 	
-}
-
-bool Game::CollisionDetector(Object *object1,Object *object2)
-{
-	if(object1 != object2)
-	{
-		double r1 = object1->get_radius();
-		double r2 = object2->get_radius();
-		Point distance;
-		distance.x = object2->get_x() - object1->get_x();
-		distance.y = object2->get_y() - object1->get_y();
-		double d = VectorSize(distance);
-		if(d < r1+r2) return true;
-		else return false;
-	}
-	else return false;
-}
-
-bool CollisionDetector2(Object *object1,Object *object2)
-{
-	if(object1 != object2)
-	{
-		double r1 = object1->get_radius();
-		double r2 = object2->get_radius();
-		Point distance;
-		distance.x = object2->get_x() - object1->get_x();
-		distance.y = object2->get_y() - object1->get_y();
-		double d = VectorSize(distance);
-		if(d <= r1+r2) return true;
-		else return false;
-	}
-	else return false;
-}
-
-bool Game::Collision(Object *object1,Object *object2)
-{
-	bool collided = CollisionDetector(object1,object2);
-	if(collided)
-	{
-		std::vector<Point> new_velocities = CalculateCollisionVelocity(object1,object2);
-		object1->set_vx(new_velocities[0].x);
-		object1->set_vy(new_velocities[0].y);
-		object2->set_vx(new_velocities[1].x);
-		object2->set_vy(new_velocities[1].y);
-		object1->Move(0.02);
-		object2->Move(0.02);
-	}
-	return collided;
-}
-
-std::vector<Point> Game::CalculateCollisionVelocity(Object *object1,Object *object2)
-{
-	std::vector<Point> new_velocities;
-	Point v1(object1->get_vx(),object1->get_vy());
-	Point x1(object1->get_x(),object1->get_y());
-	Point v2(object2->get_vx(),object2->get_vy());
-	Point x2(object2->get_x(),object2->get_y());
-	Point x1_x2 = SubtractVector(x1,x2);
-	Point x2_x1 = VectorMultiplication(-1,x1_x2);
-	Point v1_v2 = SubtractVector(v1,v2);
-	Point v2_v1 = VectorMultiplication(-1,v1_v2);
-	int mass1 = object1->get_mass();
-	int mass2 = object2->get_mass();
-	int coeff  =(2*mass2)/(mass1+mass2)*((DotProduct(v1_v2,x1_x2))/pow(VectorSize(x1_x2),2));
-	int coeff2 =(2*mass1)/(mass1+mass2)*((DotProduct(v2_v1,x2_x1))/pow(VectorSize(x2_x1),2));
-	new_velocities.push_back(SubtractVector(v1,VectorMultiplication(coeff,x1_x2)));
-	new_velocities.push_back(SubtractVector(v2,VectorMultiplication(coeff2,x2_x1)));
-	return new_velocities;
-}
-
-Point Game::CalculateVelocity(Point d,int d_size)
-{
-	Point v;
-	int denominator;
-	if(d_size < throw_radius) denominator = throw_radius;
-	else denominator = d_size;
-	v.x = ((-1)*d.x*max_initial_speed)/denominator;
-	v.y = ((-1)*d.y*max_initial_speed)/denominator;
-	return v;
 }

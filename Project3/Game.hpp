@@ -1,34 +1,29 @@
 #ifndef GAME_H
 #define GAME_H
-
 #include<iostream>
 #include<map>
+#include "Physics.hpp"
 #include "Object.hpp"
-#include "Stadium.hpp"
 #include "Player.hpp"
 #include "Ball.hpp"
 #include "Team.hpp"
 #include "rsdl.hpp"
 #include "functions.hpp"
 
-class Game
+class Game : public Physics
 {
 public:
-	Game(int _width,int _height, Window* _window);
-
+	Game(int _throw_radius,int _max_initial_speed,int _width,int _height, Window* _window);
+	void StartGame();
 private:
+	Window *window;
 	Team* teamA;
 	Team* teamB;
 	std::string background_image;
-	Window *window;
 	Ball *ball;
 	Player *selected_player;
 	std::map<int,std::vector<Point>> preload_position;
 	int turn;
-	int throw_radius;
-	int max_initial_speed;
-	int width;
-	int height;
 	int goal_status;
 	int goal_per_round;
 	int rounds;
@@ -36,6 +31,7 @@ private:
 	int goal_team_B;
 	bool finished;
 	int winner;
+	bool is_mouse_down;
 
 	std::vector<Player*> CreatePlayers(int team_id);
 	void SetPreloadPositions();
@@ -53,18 +49,13 @@ private:
 	void ShowGame();
 	void ShowFinishedScreen();
 	void Update();
-	void LeftClick(bool &is_mouse_down,Event e);
-	void LeftRelease(bool &is_mouse_down,Event e);
+	void LeftClick(Event e);
+	void LeftRelease(Event e);
 	void Draw();
 	void DrawBall();
 	void DrawPlayer(int team_id);
 	void DrawBackground();
 	void DrawStars();
-
-	bool Collision(Object *object1,Object *object2);
-	bool CollisionDetector(Object *object1,Object *object2);
-	std::vector<Point> CalculateCollisionVelocity(Object *object1,Object *object2);
-	Point CalculateVelocity(Point d,int d_size);
 };
 
 #endif
