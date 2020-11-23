@@ -1,5 +1,5 @@
 #include "Physics.hpp"
-#define COLLIDE_MOVE_TIME 0.017
+#define COLLISION_MOVE_TIME 0.02
 
 bool Physics::CollisionDetector(Object *object1,Object *object2)
 {
@@ -14,7 +14,7 @@ bool Physics::CollisionDetector(Object *object1,Object *object2)
 		if(d < r1+r2) return true;
 		else return false;
 	}
-	else return false;
+	return false;
 }
 
 bool Physics::Collision(Object *object1,Object *object2)
@@ -27,8 +27,8 @@ bool Physics::Collision(Object *object1,Object *object2)
 		object1->SetVy(new_velocities[0].y);
 		object2->SetVx(new_velocities[1].x);
 		object2->SetVy(new_velocities[1].y);
-		object1->Move(COLLIDE_MOVE_TIME);
-		object2->Move(COLLIDE_MOVE_TIME);
+		object1->Move(COLLISION_MOVE_TIME);
+		object2->Move(COLLISION_MOVE_TIME);
 	}
 	return collided;
 }

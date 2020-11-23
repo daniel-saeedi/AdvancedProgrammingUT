@@ -38,7 +38,7 @@ void Game::StartGame()
 {
 	rounds = GetInput("Rounds");
 	goal_per_round = GetInput("Goal Per Round");
-	Draw();
+	Render();
 }
 
 void Game::SetPreloadPositions()
@@ -71,7 +71,7 @@ std::vector<Player*> Game::CreatePlayers(int team_id)
 	return players;
 }
 
-void Game::Draw()
+void Game::Render()
 {
 	while(true)
 	{
@@ -132,6 +132,19 @@ void Game::DrawHeader()
 	window->draw_img(HEADER_SRC, Rectangle(0,0,width,50));
 	window->show_text("Team A   Goals: "+std::to_string(teamA->GetTotalGoals()),Point(10,10),WHITE,FONT_SRC, 20);
 	window->show_text("Goals: "+std::to_string(teamB->GetTotalGoals()) + "   Team B",Point(width-200,10),WHITE,FONT_SRC, 20);
+	std::string text = "Team ";
+	RGB color(0,0,0);
+	if(turn == TEAM_A)
+	{
+		text += "A";
+		color = RGB(0,128,0);
+	}
+	else
+	{
+		text += "B";
+		color = RGB(255,0,0);
+	}
+	window->show_text(text,Point(width/2-30,10),color,FONT_SRC, 20);
 }
 
 void Game::ShowFinishedScreen()
@@ -162,41 +175,56 @@ void Game::GameStatus()
 {
 	if(goal_status != 0 && !finished)
 	{
-		if(goal_status == TEAM_A)
-		{
-			goal_team_B++;
-			teamB->IncreaseTotalGoals();
-		}
-		if(goal_status == TEAM_B)
-		{
-			goal_team_A++;
-			teamA->IncreaseTotalGoals();
-		}
+		GoalStatus();
 		goal_status = 0;
+		RoundStatus();
 		Reset();
-		if(goal_team_A >= goal_per_round || goal_team_B >= goal_per_round)
-		{
-			if(goal_team_A >= goal_per_round)
-			{
-				teamA->IncreaseWonRounds();
-			}
-			else
-			{
-				teamB->IncreaseWonRounds();
-			}
-			goal_team_A = 0,goal_team_B = 0;
-		}
 	}
 
-	if(teamA->GetWonRounds() >= ceil(rounds/2.0))
+	if(IsRoundFinished(teamA))
 	{
 		finished = true;
 		winner = TEAM_A;
 	}
-	else if(teamB->GetWonRounds() >= ceil(rounds/2.0))
+	else if(IsRoundFinished(teamB))
 	{
 		finished = true;
 		winner = TEAM_B;
+	}
+}
+
+bool Game::IsRoundFinished(Team *team)
+{
+	return team->GetWonRounds() >= ceil(rounds/2.0);
+}
+
+void Game::RoundStatus()
+{
+	if(goal_team_A >= goal_per_round || goal_team_B >= goal_per_round)
+	{
+		if(goal_team_A >= goal_per_round)
+		{
+			teamA->IncreaseWonRounds();
+		}
+		else
+		{
+			teamB->IncreaseWonRounds();
+		}
+		goal_team_A = 0,goal_team_B = 0;
+	}
+}
+
+void Game::GoalStatus()
+{
+	if(goal_status == TEAM_A)
+	{
+		goal_team_B++;
+		teamB->IncreaseTotalGoals();
+	}
+	if(goal_status == TEAM_B)
+	{
+		goal_team_A++;
+		teamA->IncreaseTotalGoals();
 	}
 }
 

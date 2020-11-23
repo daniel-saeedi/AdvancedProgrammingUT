@@ -40,18 +40,21 @@ private:
 	void StartMove(Event e,Player *player);
 	void MoveObjects();
 	void GameStatus();
+	bool IsRoundFinished(Team *team);
+	void RoundStatus();
+	void GoalStatus();
 	void Reset();
 	void ResetPlayerPosition(int team_id);
 
 	//Screens
 	int GetInput(std::string filed_name);
-	void DrawHeader();
-	void ShowGame();
-	void ShowFinishedScreen();
 	void Update();
 	void LeftClick(Event e);
 	void LeftRelease(Event e);
-	void Draw();
+	void Render();
+	void DrawHeader();
+	void ShowGame();
+	void ShowFinishedScreen();
 	void DrawBall();
 	void DrawPlayer(int team_id);
 	void DrawBackground();
