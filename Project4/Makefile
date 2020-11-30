@@ -7,8 +7,8 @@ EXCEPTION_DIR=${SRC_DIR}/Exception
 
 all: mafia.out
 
-mafia.out: ${BUILD_DIR}/main.o ${BUILD_DIR}/Game.o ${BUILD_DIR}/CommandHandler.o ${BUILD_DIR}/Player.o ${BUILD_DIR}/Player.o ${BUILD_DIR}/Bulletproof.o ${BUILD_DIR}/Detective.o ${BUILD_DIR}/Doctor.o ${BUILD_DIR}/Godfather.o ${BUILD_DIR}/Joker.o ${BUILD_DIR}/Mafia.o ${BUILD_DIR}/Silencer.o ${BUILD_DIR}/Villager.o ${BUILD_DIR}/PlayerNotJoinedException.o ${BUILD_DIR}/GameNotCreatedException.o
-	${CC} ${BUILD_DIR}/main.o ${BUILD_DIR}/Game.o ${BUILD_DIR}/CommandHandler.o ${BUILD_DIR}/Player.o ${BUILD_DIR}/Player.o ${BUILD_DIR}/Bulletproof.o ${BUILD_DIR}/Detective.o ${BUILD_DIR}/Doctor.o ${BUILD_DIR}/Godfather.o ${BUILD_DIR}/Joker.o ${BUILD_DIR}/Mafia.o ${BUILD_DIR}/Silencer.o ${BUILD_DIR}/Villager.o ${BUILD_DIR}/PlayerNotJoinedException.o ${BUILD_DIR}/GameNotCreatedException.o -o ${BUILD_DIR}/mafia.out
+mafia.out: ${BUILD_DIR}/main.o ${BUILD_DIR}/Game.o ${BUILD_DIR}/CommandHandler.o ${BUILD_DIR}/Player.o ${BUILD_DIR}/Player.o ${BUILD_DIR}/Bulletproof.o ${BUILD_DIR}/Detective.o ${BUILD_DIR}/Doctor.o ${BUILD_DIR}/Godfather.o ${BUILD_DIR}/Joker.o ${BUILD_DIR}/Mafia.o ${BUILD_DIR}/Silencer.o ${BUILD_DIR}/Villager.o ${BUILD_DIR}/PlayerNotJoinedException.o ${BUILD_DIR}/GameNotCreatedException.o ${BUILD_DIR}/NotAllAssignedException.o ${BUILD_DIR}/GameAlreadyStartedException.o
+	${CC} ${BUILD_DIR}/main.o ${BUILD_DIR}/Game.o ${BUILD_DIR}/CommandHandler.o ${BUILD_DIR}/Player.o ${BUILD_DIR}/Player.o ${BUILD_DIR}/Bulletproof.o ${BUILD_DIR}/Detective.o ${BUILD_DIR}/Doctor.o ${BUILD_DIR}/Godfather.o ${BUILD_DIR}/Joker.o ${BUILD_DIR}/Mafia.o ${BUILD_DIR}/Silencer.o ${BUILD_DIR}/Villager.o ${BUILD_DIR}/PlayerNotJoinedException.o ${BUILD_DIR}/GameNotCreatedException.o ${BUILD_DIR}/NotAllAssignedException.o ${BUILD_DIR}/GameAlreadyStartedException.o -o ${BUILD_DIR}/mafia.out
 
 ${BUILD_DIR}/main.o: main.cpp ${SRC_DIR}/CommandHandler.hpp
 	${CC} -c main.cpp -o ${BUILD_DIR}/main.o
@@ -16,7 +16,7 @@ ${BUILD_DIR}/main.o: main.cpp ${SRC_DIR}/CommandHandler.hpp
 ${BUILD_DIR}/CommandHandler.o: ${SRC_DIR}/CommandHandler.cpp ${SRC_DIR}/Game.hpp ${EXCEPTION_DIR}/GameNotCreatedException.hpp
 	${CC} -c ${SRC_DIR}/CommandHandler.cpp -o ${BUILD_DIR}/CommandHandler.o
 
-${BUILD_DIR}/Game.o: ${SRC_DIR}/Game.cpp ${SRC_DIR}/Player.hpp ${EXCEPTION_DIR}/PlayerNotJoinedException.hpp
+${BUILD_DIR}/Game.o: ${SRC_DIR}/Game.cpp ${SRC_DIR}/Player.hpp ${SRC_DIR}/Silencer.hpp ${SRC_DIR}/Bulletproof.hpp ${SRC_DIR}/Detective.hpp ${SRC_DIR}/Doctor.hpp ${SRC_DIR}/Godfather.hpp ${SRC_DIR}/Joker.hpp ${SRC_DIR}/Mafia.hpp ${SRC_DIR}/Villager.hpp ${EXCEPTION_DIR}/PlayerNotJoinedException.hpp ${EXCEPTION_DIR}/NotAllAssignedException.hpp ${EXCEPTION_DIR}/GameAlreadyStartedException.hpp
 	${CC} -c ${SRC_DIR}/Game.cpp -o ${BUILD_DIR}/Game.o
 
 ${BUILD_DIR}/Player.o: ${SRC_DIR}/Player.cpp
@@ -51,6 +51,12 @@ ${BUILD_DIR}/PlayerNotJoinedException.o: ${EXCEPTION_DIR}/PlayerNotJoinedExcepti
 
 ${BUILD_DIR}/GameNotCreatedException.o: ${EXCEPTION_DIR}/GameNotCreatedException.cpp
 	${CC} -c ${EXCEPTION_DIR}/GameNotCreatedException.cpp -o ${BUILD_DIR}/GameNotCreatedException.o
+
+${BUILD_DIR}/NotAllAssignedException.o: ${EXCEPTION_DIR}/NotAllAssignedException.cpp
+	${CC} -c ${EXCEPTION_DIR}/NotAllAssignedException.cpp -o ${BUILD_DIR}/NotAllAssignedException.o
+
+${BUILD_DIR}/GameAlreadyStartedException.o: ${EXCEPTION_DIR}/GameAlreadyStartedException.cpp
+	${CC} -c ${EXCEPTION_DIR}/GameAlreadyStartedException.cpp -o ${BUILD_DIR}/GameAlreadyStartedException.o
 
 clean:
 	rm -rf ${BUILD_DIR} && mkdir -p ${BUILD_DIR}
