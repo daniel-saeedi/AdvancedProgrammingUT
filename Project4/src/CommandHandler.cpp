@@ -19,27 +19,20 @@ void CommandHandler::run()
 			const string command_type = tokenized_input[COMMAND_TYPE_INDEX];
 			try
 			{
-				if(command_type == CREATE_GAME)
+				if(game == nullptr)
 				{
-					create_game(tokenized_input);
+					day_command(command_type,tokenized_input);
 				}
-				else if(command_type == ASSIGN_ROLE)
+				else
 				{
-					assign_role(tokenized_input);
-				}
-				else if(command_type == START_GAME)
-				{
-					start_game();
-				}
-
-				else if(command_type == END_VOTE)
-				{
-					game->end_vote();
-				}
-
-				else if(tokenized_input.size() == 2)
-				{
-					vote(tokenized_input);
+					if(game->get_is_night())
+					{
+						night_command(command_type,tokenized_input);
+					}
+					else
+					{
+						day_command(command_type,tokenized_input);
+					}
 				}
 			}
 			catch(const exception& error)
@@ -50,7 +43,41 @@ void CommandHandler::run()
 	}
 }
 
-void CommandHandler::vote(vector<string> tokenized_input)
+void CommandHandler::day_command(string command_type,vector<string> tokenized_input)
+{
+	if(command_type == CREATE_GAME)
+	{
+		create_game(tokenized_input);
+	}
+	else if(command_type == ASSIGN_ROLE)
+	{
+		assign_role(tokenized_input);
+	}
+	else if(command_type == START_GAME)
+	{
+		start_game();
+	}
+	else if(command_type == END_VOTE)
+	{
+		game->end_vote();
+	}
+	else if(tokenized_input.size() == 2)
+	{
+		day_vote(tokenized_input);
+	}
+}
+
+void CommandHandler::night_command(string command_type,vector<string> tokenized_input)
+{
+	if(tokenized_input.size() == 2)
+	{
+		const int VOTER_INDEX = 0;
+		const int VOTEE_INDEX = 1;
+		game->night_events(tokenized_input[VOTER_INDEX],tokenized_input[VOTEE_INDEX]);
+	}
+}
+
+void CommandHandler::day_vote(vector<string> tokenized_input)
 {
 	const int VOTER_INDEX = 0;
 	const int VOTEE_INDEX = 1;

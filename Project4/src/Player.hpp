@@ -8,7 +8,7 @@ constexpr char PLAYER_ROLE[] = "player";
 class Player
 {
 public:
-	Player(std::string _name) : name(_name),is_silenced(false),is_alive(true){};
+	Player(std::string _name) : name(_name),is_silenced(false),is_alive(true),wakeup_during_night(false){};
 
 	std::string get_name(){return name;}
 	virtual std::string get_role(){return PLAYER_ROLE;}
@@ -16,9 +16,11 @@ public:
 	void kill(){is_alive = false;}
 	bool get_is_silenced(){return is_silenced;}
 	bool get_is_alive(){return is_alive;}
+	bool can_wakeup(){return wakeup_during_night;}
 protected:
 	std::string name;
 	bool is_silenced;
 	bool is_alive;
+	bool wakeup_during_night;
 };
 #endif

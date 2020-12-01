@@ -12,6 +12,8 @@
 #include "Exception/GameAlreadyStartedException.hpp"
 #include "Exception/SilencedException.hpp"
 #include "Exception/NotAliveVoteeException.hpp"
+#include "Exception/UserNotAliveException.hpp"
+#include "Exception/UserCannotWakeupException.hpp"
 constexpr char SILENCER[] = "silencer";
 constexpr char BULLETPROOF[] = "bulletproof";
 constexpr char DETECTIVE[] = "detective";
@@ -27,8 +29,18 @@ Game::Game()
 	start = false;
 	allowed_to_vote = false;
 	finished = false;
+	is_night = false;
 	day_number = 0;
-	vote_system = new VoteSystem();
+	day_vote_system = new VoteSystem();
+}
+
+void Game::night_events(std::string _voter,std::string _votee)
+{
+	if(!player_exists(_voter) || !player_exists(_votee)) throw PlayerNotJoinedException();
+	Player *voter = players[player_index(_voter)];
+	Player *votee = players[player_index(_votee)];
+	if(!votee->get_is_alive() || !voter->get_is_alive()) throw UserNotAliveException();
+	if(!voter->can_wakeup()) throw UserCannotWakeupException();
 }
 
 void Game::start_game()
@@ -50,7 +62,7 @@ void Game::end_vote()
 	if(allowed_to_vote)
 	{
 		allowed_to_vote = false;
-		Player* elected_player = vote_system->get_elected_player();
+		Player* elected_player = day_vote_system->get_elected_player();
 		if(elected_player != nullptr)
 		{
 			elected_player->kill();
@@ -61,7 +73,26 @@ void Game::end_vote()
 				finished = true;
 			}
 		}
-		vote_system->clear();
+		day_vote_system->clear();
+		//Start night
+		start_night();
+	}
+}
+
+void Game::start_night()
+{
+	is_night = true;
+	std::cout << "Night " << day_number << std::endl;
+	show_wakeup_users();
+}
+
+void Game::show_wakeup_users()
+{
+	for(int i = 0;i < players.size();i++)
+	{
+		Player *player = players[i];
+		if(player->can_wakeup() && player->get_is_alive()) 
+			std::cout << player->get_name() << ": " << player->get_role() << std::endl;
 	}
 }
 
@@ -72,7 +103,7 @@ void Game::vote(std::string _voter,std::string _votee)
 	Player *votee = players[player_index(_votee)];
 	if(voter->get_is_silenced()) throw SilencedException();
 	if(!votee->get_is_alive()) throw NotAliveVoteeException();
-	vote_system->new_vote(voter,votee);
+	day_vote_system->new_vote(voter,votee);
 }
 
 void Game::next_day()

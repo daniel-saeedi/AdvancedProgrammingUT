@@ -19,6 +19,9 @@ private:
 	void create_game(vector<string> tokenized_input);
 	void assign_role(vector<string> tokenized_input);
 	void start_game();
-	void vote(vector<string> tokenized_input);
+	void day_vote(vector<string> tokenized_input);
+	void night_vote(vector<string> tokenized_input);
+	void day_command(string command_type,vector<string> tokenized_input);
+	void night_command(string command_type,vector<string> tokenized_input);
 };
 #endif
