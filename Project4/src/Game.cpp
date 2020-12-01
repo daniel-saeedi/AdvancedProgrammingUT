@@ -10,6 +10,8 @@
 #include "Exception/PlayerNotJoinedException.hpp"
 #include "Exception/NotAllAssignedException.hpp"
 #include "Exception/GameAlreadyStartedException.hpp"
+#include "Exception/SilencedException.hpp"
+#include "Exception/NotAliveVoteeException.hpp"
 constexpr char SILENCER[] = "silencer";
 constexpr char BULLETPROOF[] = "bulletproof";
 constexpr char DETECTIVE[] = "detective";
@@ -23,6 +25,10 @@ constexpr char GET_STARTED[] = "Ready? Set! Go.";
 Game::Game()
 {
 	start = false;
+	allowed_to_vote = false;
+	finished = false;
+	day_number = 0;
+	vote_system = new VoteSystem();
 }
 
 void Game::start_game()
@@ -32,9 +38,47 @@ void Game::start_game()
 	else
 	{
 		start = true;
+		allowed_to_vote = true;
 		show_all_players();
 		std::cout << GET_STARTED << std::endl;
+		next_day();
 	}
+}
+
+void Game::end_vote()
+{
+	if(allowed_to_vote)
+	{
+		allowed_to_vote = false;
+		Player* elected_player = vote_system->get_elected_player();
+		if(elected_player != nullptr)
+		{
+			elected_player->kill();
+			std::cout << elected_player->get_name() << " died" << std::endl;
+			if(elected_player->get_role() == JOKER)
+			{
+				std::cout << "Joker won" << std::endl;
+				finished = true;
+			}
+		}
+		vote_system->clear();
+	}
+}
+
+void Game::vote(std::string _voter,std::string _votee)
+{
+	if(!player_exists(_voter) || !player_exists(_votee)) throw PlayerNotJoinedException();
+	Player *voter = players[player_index(_voter)];
+	Player *votee = players[player_index(_votee)];
+	if(voter->get_is_silenced()) throw SilencedException();
+	if(!votee->get_is_alive()) throw NotAliveVoteeException();
+	vote_system->new_vote(voter,votee);
+}
+
+void Game::next_day()
+{
+	day_number++;
+	std::cout << "Day " << day_number << std::endl;
 }
 
 void Game::show_all_players()

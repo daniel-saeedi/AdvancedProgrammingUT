@@ -3,6 +3,7 @@
 constexpr char CREATE_GAME[] = "create_game";
 constexpr char ASSIGN_ROLE[] = "assign_role";
 constexpr char START_GAME[] = "start_game";
+constexpr char END_VOTE[] = "end_vote";
 
 CommandHandler::CommandHandler(){game = nullptr;}
 
@@ -30,6 +31,16 @@ void CommandHandler::run()
 				{
 					start_game();
 				}
+
+				else if(command_type == END_VOTE)
+				{
+					game->end_vote();
+				}
+
+				else if(tokenized_input.size() == 2)
+				{
+					vote(tokenized_input);
+				}
 			}
 			catch(const exception& error)
 			{
@@ -37,6 +48,13 @@ void CommandHandler::run()
 			}
 		}
 	}
+}
+
+void CommandHandler::vote(vector<string> tokenized_input)
+{
+	const int VOTER_INDEX = 0;
+	const int VOTEE_INDEX = 1;
+	game->vote(tokenized_input[VOTER_INDEX],tokenized_input[VOTEE_INDEX]);
 }
 
 void CommandHandler::create_game(vector<string> tokenized_input)

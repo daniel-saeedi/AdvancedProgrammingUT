@@ -1,0 +1,1 @@
+#include "Candidate.hpp"

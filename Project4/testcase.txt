@@ -1,0 +1,11 @@
+create_game Hosna Daniel Joe Trump
+assign_role Hosna detective
+assign_role Daniel mafia
+assign_role Joe mafia
+assign_role Trump villager
+start_game
+Trump Joe
+Daniel Joe
+Hosna Daniel
+Joe Daniel
+end_vote
