@@ -37,5 +37,6 @@ private:
 	void next_day();
 	void start_night();
 	void show_wakeup_users();
+	void mafia_vote_to_kill(Player*voter,Player *votee);
 };
 #endif

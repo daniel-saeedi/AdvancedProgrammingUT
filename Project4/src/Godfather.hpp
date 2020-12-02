@@ -9,5 +9,6 @@ class Godfather : public Mafia
 public:
 	Godfather(std::string _name);
 	virtual std::string get_role(){return GODFATHER_ROLE;}
+	virtual std::string is_mafia(){return "No";}
 };
 #endif

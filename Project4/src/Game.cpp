@@ -32,15 +32,27 @@ Game::Game()
 	is_night = false;
 	day_number = 0;
 	day_vote_system = new VoteSystem();
+	mafia_vote_system = new VoteSystem();
 }
 
 void Game::night_events(std::string _voter,std::string _votee)
 {
 	if(!player_exists(_voter) || !player_exists(_votee)) throw PlayerNotJoinedException();
 	Player *voter = players[player_index(_voter)];
-	Player *votee = players[player_index(_votee)];
-	if(!votee->get_is_alive() || !voter->get_is_alive()) throw UserNotAliveException();
+	if(!voter->get_is_alive()) throw UserNotAliveException();
 	if(!voter->can_wakeup()) throw UserCannotWakeupException();
+	Player *candidate_to_kill = voter->vote_at_night(players[player_index(_votee)]);
+	mafia_vote_to_kill(voter,candidate_to_kill);
+}
+
+void Game::mafia_vote_to_kill(Player* voter,Player *votee)
+{
+	if(votee != nullptr)
+	{
+		if(!votee->get_is_alive()) throw NotAliveVoteeException();
+		mafia_vote_system->new_vote(voter,votee);
+		//std::cout << "test" << std::endl;
+	}
 }
 
 void Game::start_game()

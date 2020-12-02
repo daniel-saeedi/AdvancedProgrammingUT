@@ -10,5 +10,8 @@ class Silencer : public Mafia
 public:
 	Silencer(std::string _name);
 	virtual std::string get_role(){return SILENCER_ROLE;}
+	virtual Player* vote_at_night(Player* votee);
+private:
+	bool has_silenced;
 };
 #endif
