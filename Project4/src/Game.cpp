@@ -23,6 +23,12 @@ constexpr char JOKER[] = "joker";
 constexpr char MAFIA[] = "mafia";
 constexpr char VILLAGER[] = "villager";
 constexpr char GET_STARTED[] = "Ready? Set! Go.";
+constexpr char MAFIA_KILL[] = "Mafia tried to kill ";
+
+bool compare_by_word(Player *player1,Player *player2)
+{
+    return player1->get_name() < player2->get_name();
+}
 
 Game::Game()
 {
@@ -30,9 +36,23 @@ Game::Game()
 	allowed_to_vote = false;
 	finished = false;
 	is_night = false;
+	killed_player = nullptr;
 	day_number = 0;
 	day_vote_system = new VoteSystem();
 	mafia_vote_system = new VoteSystem();
+}
+
+void Game::end_night()
+{
+	is_night = false;
+	Player* elected_player = mafia_vote_system->get_elected_player();
+	if(elected_player != nullptr)
+	{
+		elected_player->kill();
+		std::cout << MAFIA_KILL << elected_player->get_name() << std::endl;
+		if(!elected_player->get_is_alive()) killed_player = elected_player;
+	}
+	next_day();
 }
 
 void Game::night_events(std::string _voter,std::string _votee)
@@ -51,7 +71,6 @@ void Game::mafia_vote_to_kill(Player* voter,Player *votee)
 	{
 		if(!votee->get_is_alive()) throw NotAliveVoteeException();
 		mafia_vote_system->new_vote(voter,votee);
-		//std::cout << "test" << std::endl;
 	}
 }
 
@@ -79,20 +98,58 @@ void Game::end_vote()
 		{
 			elected_player->kill();
 			std::cout << elected_player->get_name() << " died" << std::endl;
-			if(elected_player->get_role() == JOKER)
-			{
-				std::cout << "Joker won" << std::endl;
-				finished = true;
-			}
 		}
 		day_vote_system->clear();
+		reset_silence();
 		//Start night
 		start_night();
 	}
 }
 
+void Game::check_game_status()
+{
+	if(start)
+	{
+		int mafia_count = 0;
+		int villager_count = 0;
+		for(int i = 0;i < players.size();i++)
+		{
+			Player *player = players[i];
+			if(player->get_is_alive())
+			{
+				if(player->is_mafia()) mafia_count++;
+				if(player->is_villager()) villager_count++;
+			}
+
+			if(!player->get_is_alive() && player->is_joker())
+			{
+				finished = true;
+				std::cout << "Joker won" << std::endl;
+				break;
+			}
+		}
+		if(mafia_count == 0)
+		{
+			finished = true;
+			std::cout << "Villagers won" << std::endl;
+		}
+		else if(mafia_count >= villager_count)
+		{
+			finished = true;
+			std::cout << "Mafia won" << std::endl;
+		}
+	}
+}
+
+void Game::reset_silence()
+{
+	for(int i = 0;i < players.size();i++)
+		players[i]->silence(false);
+}
+
 void Game::start_night()
 {
+	killed_player = nullptr;
 	is_night = true;
 	std::cout << "Night " << day_number << std::endl;
 	show_wakeup_users();
@@ -122,6 +179,27 @@ void Game::next_day()
 {
 	day_number++;
 	std::cout << "Day " << day_number << std::endl;
+	if(killed_player != nullptr)
+		std::cout << killed_player->get_name() << " was killed" << std::endl;
+	std::vector<Player*> silenced = get_silenced_player();
+	std::string silenced_msg = "Silenced";
+	for(int i = 0;i < silenced.size();i++)
+	{
+		silenced_msg += " " + silenced[i]->get_name();
+	}
+	std::cout << silenced_msg << std::endl;
+	killed_player = nullptr;
+}
+
+std::vector<Player*> Game::get_silenced_player()
+{
+	std::vector<Player*> silenced;
+	for(int i = 0;i < players.size();i++)
+	{
+		if(players[i]->get_is_silenced()) silenced.push_back(players[i]);
+	}
+	sort(silenced.begin(),silenced.end(),compare_by_word);
+	return silenced;
 }
 
 void Game::show_all_players()

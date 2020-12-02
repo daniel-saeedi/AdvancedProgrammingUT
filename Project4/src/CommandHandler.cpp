@@ -4,6 +4,7 @@ constexpr char CREATE_GAME[] = "create_game";
 constexpr char ASSIGN_ROLE[] = "assign_role";
 constexpr char START_GAME[] = "start_game";
 constexpr char END_VOTE[] = "end_vote";
+constexpr char END_NIGHT[] = "end_night";
 
 CommandHandler::CommandHandler(){game = nullptr;}
 
@@ -25,13 +26,11 @@ void CommandHandler::run()
 				}
 				else
 				{
-					if(game->get_is_night())
+					if(!game->is_finished())
 					{
-						night_command(command_type,tokenized_input);
-					}
-					else
-					{
-						day_command(command_type,tokenized_input);
+						if(game->get_is_night()) night_command(command_type,tokenized_input);
+						else day_command(command_type,tokenized_input);
+						game->check_game_status();
 					}
 				}
 			}
@@ -69,7 +68,11 @@ void CommandHandler::day_command(string command_type,vector<string> tokenized_in
 
 void CommandHandler::night_command(string command_type,vector<string> tokenized_input)
 {
-	if(tokenized_input.size() == 2)
+	if(command_type == END_NIGHT)
+	{
+		game->end_night();
+	}
+	else if(tokenized_input.size() == 2)
 	{
 		const int VOTER_INDEX = 0;
 		const int VOTEE_INDEX = 1;

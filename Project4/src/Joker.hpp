@@ -8,7 +8,7 @@ class Joker : public Player
 {
 public:
 	Joker(std::string _name);
-
 	virtual std::string get_role(){return JOKER_ROLE;}
+	virtual bool is_joker(){return true;}
 };
 #endif

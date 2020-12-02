@@ -1,9 +1,10 @@
 create_game Hosna Daniel Joe Trump
 assign_role Hosna detective
 assign_role Daniel silencer
-assign_role Joe mafia
-assign_role Trump godfather
+assign_role Joe silencer
+assign_role Trump joker
 start_game
-Trump Joe
-Daniel Joe
 end_vote
+Daniel Hosna
+Joe Trump
+end_night
