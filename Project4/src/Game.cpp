@@ -113,6 +113,11 @@ void Game::end_vote()
 	{
 		elected_player->kill();
 		std::cout << elected_player->get_name() << " died" << std::endl;
+		if(elected_player->is_joker())
+		{
+			finished = true;
+			std::cout << "Joker won";
+		}
 	}
 	day_vote_system->clear();
 	check_game_status();
@@ -121,17 +126,12 @@ void Game::end_vote()
 
 void Game::check_game_status()
 {
-	if(start)
+	if(start && !finished)
 	{
 		std::vector<int> count = count_players();
 		int mafia_count = count[MAFIA_INDEX];
 		int villager_count = count[VILLAGER_INDEX];
-		if(is_joker_dead())
-		{
-			finished = true;
-			std::cout << "Joker won";
-		}
-		else if(mafia_count == 0)
+		if(mafia_count == 0)
 		{
 			finished = true;
 			std::cout << "Villagers won";
@@ -142,16 +142,6 @@ void Game::check_game_status()
 			std::cout << "Mafia won";
 		}
 	}
-}
-
-bool Game::is_joker_dead()
-{
-	for(int i = 0;i < players.size();i++)
-	{
-		Player *player = players[i];
-		if(!player->get_is_alive() && player->is_joker()) return true;
-	}
-	return false;
 }
 
 std::vector<int> Game::count_players()
@@ -351,17 +341,28 @@ int Game::player_index(std::string name)
 void Game::swap_character(std::string name1,std::string name2)
 {
 	if(!player_exists(name1) || !player_exists(name2)) throw PlayerNotJoinedException();
-	int player1_index = player_index(name1);
-	int player2_index = player_index(name2);
-	Player *player1 = players[player1_index];
-	Player *player2 = players[player2_index];
+	Player *player1 = players[player_index(name1)];
+	Player *player2 = players[player_index(name2)];
 	if(!player1->get_is_alive() || !player2->get_is_alive()) throw UserNotAliveException();
 	if(already_asked_to_swap) throw CharactersAlreadySwappedException();
 	if(voting_in_progress) throw VotingInProgressException();
 	if(is_night) throw CannotSwapException();
-	player1->change_name(name2);
-	player2->change_name(name1);
+	swap_players(player1,player2);
+	already_asked_to_swap = true;
+}
+
+void Game::swap_players(Player *player1,Player *player2)
+{
+	std::string player1_name = player1->get_name();
+	std::string player2_name = player2->get_name();
+	bool silence_state_player1 = player1->get_is_silenced();
+	bool silence_state_player2 = player2->get_is_silenced();
+	int player1_index = player_index(player1_name);
+	int player2_index = player_index(player2_name);
+	player1->change_name(player2_name);
+	player1->silence(silence_state_player2);
+	player2->change_name(player1_name);
+	player2->silence(silence_state_player1);
 	players[player1_index] = player2;
 	players[player2_index] = player1;
-	already_asked_to_swap = true;
 }

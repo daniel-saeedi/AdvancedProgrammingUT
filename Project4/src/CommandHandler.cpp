@@ -45,8 +45,7 @@ void CommandHandler::run()
 			}
 			catch(const exception& error)
 			{
-				//cerr << error.what();
-				cout << error.what();
+				cerr << error.what();
 			}
 		}
 	}
@@ -133,19 +132,3 @@ vector<string> CommandHandler::tokenize_input(string input)
 	stringstream input_string_stream(input);
 	return vector<string>(istream_iterator<string>(input_string_stream),istream_iterator<string>());
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

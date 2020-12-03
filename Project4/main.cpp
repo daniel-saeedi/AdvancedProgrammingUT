@@ -1,7 +1,6 @@
 #include<iostream>
 #include "src/CommandHandler.hpp"
 using namespace std;
-
 int main()
 {
 	CommandHandler command_handler = CommandHandler();

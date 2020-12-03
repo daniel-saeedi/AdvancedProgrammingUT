@@ -49,8 +49,8 @@ private:
 	void reset_silence();
 	void reset();
 	std::vector<int> count_players();
-	bool is_joker_dead();
 	void show_killed_player();
 	void show_silenced_player();
+	void swap_players(Player *player1,Player *player2);
 };
 #endif
