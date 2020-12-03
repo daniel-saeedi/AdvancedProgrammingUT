@@ -27,6 +27,7 @@ public:
 		if(!is_healed) is_alive = false;
 		else is_healed = false;
 	}
+	void change_name(std::string new_name){name = new_name;}
 protected:
 	std::string name;
 	bool is_silenced;

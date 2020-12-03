@@ -5,6 +5,8 @@ constexpr char ASSIGN_ROLE[] = "assign_role";
 constexpr char START_GAME[] = "start_game";
 constexpr char END_VOTE[] = "end_vote";
 constexpr char END_NIGHT[] = "end_night";
+constexpr char GET_GAME_STATE[] = "get_game_state";
+constexpr char SWAP_CHARACTER[] = "swap_character";
 
 CommandHandler::CommandHandler(){game = nullptr;}
 
@@ -26,11 +28,18 @@ void CommandHandler::run()
 				}
 				else
 				{
-					if(!game->is_finished())
+					if(command_type == SWAP_CHARACTER)
+					{
+						swap_character(tokenized_input);
+					}
+					if(command_type == GET_GAME_STATE)
+					{
+						game->get_game_state();
+					}
+					else if(!game->is_finished())
 					{
 						if(game->get_is_night()) night_command(command_type,tokenized_input);
 						else day_command(command_type,tokenized_input);
-						game->check_game_status();
 					}
 				}
 			}
@@ -40,6 +49,13 @@ void CommandHandler::run()
 			}
 		}
 	}
+}
+
+void CommandHandler::swap_character(vector<string> tokenized_input)
+{
+	const int PLAYER1_INDEX = 1;
+	const int PLAYER2_INDEX = 2;
+	game->swap_character(tokenized_input[PLAYER1_INDEX],tokenized_input[PLAYER2_INDEX]);
 }
 
 void CommandHandler::day_command(string command_type,vector<string> tokenized_input)

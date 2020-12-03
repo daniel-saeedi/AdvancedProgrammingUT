@@ -23,5 +23,6 @@ private:
 	void night_vote(vector<string> tokenized_input);
 	void day_command(string command_type,vector<string> tokenized_input);
 	void night_command(string command_type,vector<string> tokenized_input);
+	void swap_character(vector<string> tokenized_input);
 };
 #endif

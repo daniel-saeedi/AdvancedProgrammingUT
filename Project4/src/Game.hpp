@@ -20,11 +20,14 @@ public:
 	void end_night();
 	bool is_finished(){return finished;}
 	void check_game_status();
+	void get_game_state();
+	void swap_character(std::string name1,std::string name2);
 private:
 	int day_number;
 	bool start;
 	bool finished;
-	bool allowed_to_vote;
+	bool voting_in_progress;
+	bool already_asked_to_swap;
 	bool is_night;
 	VoteSystem *day_vote_system;
 	VoteSystem *mafia_vote_system;
@@ -44,5 +47,9 @@ private:
 	void mafia_vote_to_kill(Player*voter,Player *votee);
 	std::vector<Player*> get_silenced_player();
 	void reset_silence();
+	std::vector<int> count_players();
+	bool is_joker_dead();
+	void show_killed_player();
+	void show_silenced_player();
 };
 #endif

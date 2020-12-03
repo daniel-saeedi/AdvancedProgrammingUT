@@ -1,10 +1,11 @@
-create_game Hosna Daniel Joe Trump
+create_game Mamad Asghar Bardia Hosna Kazem Karim Rasta Hasan Akbar
+assign_role Mamad villager
+assign_role Asghar villager
+assign_role Bardia joker
 assign_role Hosna detective
-assign_role Daniel silencer
-assign_role Joe silencer
-assign_role Trump joker
+assign_role Kazem doctor
+assign_role Karim bulletproof
+assign_role Rasta mafia
+assign_role Hasan godfather
+assign_role Akbar silencer
 start_game
-end_vote
-Daniel Hosna
-Joe Trump
-end_night

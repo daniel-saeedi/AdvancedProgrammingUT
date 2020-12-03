@@ -1,0 +1,38 @@
+Mamad: villager
+Asghar: villager
+Bardia: joker
+Hosna: detective
+Kazem: doctor
+Karim: bulletproof
+Rasta: mafia
+Hasan: godfather
+Akbar: silencer
+Ready? Set! Go.
+Day 1
+Rasta died
+Night 1
+Hosna: detective
+Kazem: doctor
+Hasan: godfather
+Akbar: silencer
+No
+Mafia tried to kill Mamad
+Day 2
+Mamad was killed
+Silenced Bardia
+Mafia = 2
+Villager = 4
+Voter is silenced
+User not joined
+Asghar died
+Night 2
+Hosna: doctor
+Kazem: detective
+Hasan: godfather
+Akbar: silencer
+No
+Mafia tried to kill Karim
+Day 3
+Silenced Hosna
+Bardia died
+Joker won
