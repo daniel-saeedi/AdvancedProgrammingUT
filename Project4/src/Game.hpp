@@ -5,11 +5,11 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 class Game
 {
 public:
 	Game();
-
 	void add_unassgined_player(std::string name);
 	void assign_role(std::string name,std::string role);
 	void start_game();

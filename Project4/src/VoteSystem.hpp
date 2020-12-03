@@ -5,7 +5,7 @@
 #include "Candidate.hpp"
 #include <iostream>
 #include <vector>
-#include <map>
+#include <algorithm>
 
 class VoteSystem
 {

@@ -365,7 +365,3 @@ void Game::swap_character(std::string name1,std::string name2)
 	players[player2_index] = player1;
 	already_asked_to_swap = true;
 }
-
-
-
-
