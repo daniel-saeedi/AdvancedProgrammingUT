@@ -45,7 +45,8 @@ void CommandHandler::run()
 			}
 			catch(const exception& error)
 			{
-				cerr << error.what();
+				//cerr << error.what();
+				cout << error.what();
 			}
 		}
 	}

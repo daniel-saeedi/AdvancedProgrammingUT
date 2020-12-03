@@ -9,3 +9,31 @@ assign_role Rasta mafia
 assign_role Hasan godfather
 assign_role Akbar silencer
 start_game
+Mamad Rasta
+Asghar Rasta
+Hosna Rasta
+end_vote
+Akbar Bardia
+Hasan Mamad
+Akbar Mamad
+Hosna Hasan
+Kazem Hosna
+end_night
+swap_character Kazem Hosna
+get_game_state
+Bardia Hosna
+Hasan asghar
+Hasan Asghar
+Hosna Asghar
+end_vote
+Akbar Hosna
+Hasan Karim
+Akbar Karim
+Hosna Hosna
+Kazem Karim
+end_night
+Bardia Hosna
+Kazem Bardia
+Hasan Bardia
+Akbar Bardia
+end_vote

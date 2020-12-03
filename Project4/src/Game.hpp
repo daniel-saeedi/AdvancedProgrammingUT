@@ -47,6 +47,7 @@ private:
 	void mafia_vote_to_kill(Player*voter,Player *votee);
 	std::vector<Player*> get_silenced_player();
 	void reset_silence();
+	void reset();
 	std::vector<int> count_players();
 	bool is_joker_dead();
 	void show_killed_player();

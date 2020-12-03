@@ -16,3 +16,9 @@ Player* Detective::vote_at_night(Player* votee)
 	already_asked = true;
 	return nullptr;
 }
+
+void Detective::reset()
+{
+	already_asked = false;
+	is_healed = false;
+}

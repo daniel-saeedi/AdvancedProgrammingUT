@@ -10,5 +10,6 @@ public:
 	Joker(std::string _name);
 	virtual std::string get_role(){return JOKER_ROLE;}
 	virtual bool is_joker(){return true;}
+	virtual void reset(){is_healed = false;}
 };
 #endif

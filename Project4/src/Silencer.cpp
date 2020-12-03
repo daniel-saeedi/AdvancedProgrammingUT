@@ -17,3 +17,9 @@ Player* Silencer::vote_at_night(Player* votee)
 		return nullptr;
 	}
 }
+
+void Silencer::reset()
+{
+	has_silenced = false;
+	is_healed = false;
+}

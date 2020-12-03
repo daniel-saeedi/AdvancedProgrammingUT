@@ -11,6 +11,7 @@ public:
 	Detective(std::string _name);
 	virtual std::string get_role(){return DETECTIVE_ROLE;}
 	virtual Player* vote_at_night(Player* votee);
+	virtual void reset();
 private:
 	bool already_asked;
 };

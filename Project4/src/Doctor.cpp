@@ -16,3 +16,9 @@ Player* Doctor::vote_at_night(Player* votee)
 	votee->set_is_healed(true);
 	return nullptr;
 }
+
+void Doctor::reset()
+{
+	already_healed = false;
+	is_healed = false;
+}

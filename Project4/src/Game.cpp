@@ -51,7 +51,6 @@ Game::Game()
 void Game::end_night()
 {
 	is_night = false;
-	already_asked_to_swap = false;
 	Player* elected_player = mafia_vote_system->get_elected_player();
 	if(elected_player != nullptr)
 	{
@@ -59,9 +58,18 @@ void Game::end_night()
 		std::cout << MAFIA_KILL << elected_player->get_name() << std::endl;
 		if(!elected_player->get_is_alive()) killed_player = elected_player;
 	}
-
+	mafia_vote_system->clear();
+	reset();
 	check_game_status();
 	if(!finished) next_day();
+}
+
+void Game::reset()
+{
+	for(int i = 0;i < players.size();i++)
+	{
+		players[i]->reset();
+	}
 }
 
 void Game::night_events(std::string _voter,std::string _votee)
@@ -99,6 +107,7 @@ void Game::start_game()
 void Game::end_vote()
 {
 	voting_in_progress = false;
+	already_asked_to_swap = false;
 	Player* elected_player = day_vote_system->get_elected_player();
 	if(elected_player != nullptr)
 	{
@@ -106,8 +115,6 @@ void Game::end_vote()
 		std::cout << elected_player->get_name() << " died" << std::endl;
 	}
 	day_vote_system->clear();
-	reset_silence();
-	//Start night
 	check_game_status();
 	if(!finished) start_night();
 }
@@ -122,17 +129,17 @@ void Game::check_game_status()
 		if(is_joker_dead())
 		{
 			finished = true;
-			std::cout << "Joker won" << std::endl;
+			std::cout << "Joker won";
 		}
 		else if(mafia_count == 0)
 		{
 			finished = true;
-			std::cout << "Villagers won" << std::endl;
+			std::cout << "Villagers won";
 		}
 		else if(mafia_count >= villager_count)
 		{
 			finished = true;
-			std::cout << "Mafia won" << std::endl;
+			std::cout << "Mafia won";
 		}
 	}
 }
@@ -183,6 +190,7 @@ void Game::reset_silence()
 
 void Game::start_night()
 {
+	reset_silence();
 	killed_player = nullptr;
 	is_night = true;
 	std::cout << "Night " << day_number << std::endl;
@@ -343,14 +351,18 @@ int Game::player_index(std::string name)
 void Game::swap_character(std::string name1,std::string name2)
 {
 	if(!player_exists(name1) || !player_exists(name2)) throw PlayerNotJoinedException();
-	Player *player1 = players[player_index(name1)];
-	Player *player2 = players[player_index(name2)];
+	int player1_index = player_index(name1);
+	int player2_index = player_index(name2);
+	Player *player1 = players[player1_index];
+	Player *player2 = players[player2_index];
 	if(!player1->get_is_alive() || !player2->get_is_alive()) throw UserNotAliveException();
 	if(already_asked_to_swap) throw CharactersAlreadySwappedException();
 	if(voting_in_progress) throw VotingInProgressException();
 	if(is_night) throw CannotSwapException();
 	player1->change_name(name2);
 	player2->change_name(name1);
+	players[player1_index] = player2;
+	players[player2_index] = player1;
 	already_asked_to_swap = true;
 }
 

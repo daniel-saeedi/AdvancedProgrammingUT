@@ -27,6 +27,7 @@ public:
 		if(!is_healed) is_alive = false;
 		else is_healed = false;
 	}
+	virtual void reset() = 0;
 	void change_name(std::string new_name){name = new_name;}
 protected:
 	std::string name;

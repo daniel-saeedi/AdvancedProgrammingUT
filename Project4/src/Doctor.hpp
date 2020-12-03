@@ -10,6 +10,7 @@ public:
 	Doctor(std::string _name);
 	virtual std::string get_role(){return DOCTOR_ROLE;}
 	virtual Player* vote_at_night(Player* votee);
+	virtual void reset();
 private:
 	bool already_healed;
 };
