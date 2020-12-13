@@ -1,6 +1,8 @@
 #include "CommandHandler.hpp"
 const char CSV_DELIMITER = ',';
-//Headers
+constexpr char SINGUP[] = "signup";
+constexpr char POST[] = "POST";
+//Headers of csv file
 constexpr char ID[] = "id";
 constexpr char TITLE[] = "title";
 constexpr char ARTIST[] = "artist";
@@ -25,13 +27,24 @@ void CommandHandler::run()
 			const string command_type = tokenized_input[COMMAND_TYPE_INDEX];
 			try
 			{
-
+				if(command_type == POST) post_commands(tokenized_input);
 			}
 			catch(const exception& error)
 			{
 				cerr << error.what();
 			}
 		}
+	}
+}
+
+void CommandHandler::post_commands(vector<string> tokenized_input)
+{
+	const int OPERATION_INDEX = 1;
+	const int QUESTION_MARK_INDEX = 3;
+	if(tokenized_input[OPERATION_INDEX] == SINGUP)
+	{
+		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
+		utunes->signup(tokenized_input);
 	}
 }
 

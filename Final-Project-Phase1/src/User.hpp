@@ -1,12 +1,19 @@
 #ifndef USER_H
 #define USER_H
-using namespace std;
+#include <iostream>
+#include <string>
 
 class User
 {
 public:
+	User(std::string _email,std::string _username,std::string _password) 
+	: email(_email),username(_username),password(_password){}
 
+	bool is_email_username_equal(std::string _email,std::string _username);
+	bool check_email_password(std::string _email,std::string _password);
 private:
-
+	std::string email;
+	std::string username;
+	std::string password;
 };
 #endif

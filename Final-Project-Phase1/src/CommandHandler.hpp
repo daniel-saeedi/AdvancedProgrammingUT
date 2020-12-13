@@ -24,5 +24,6 @@ private:
 	vector<Song*> tokenize_table(vector<vector<string>> table);
 	Song* tokenize(vector<string> raw,vector<string> header);
 	int find_index_in_vector(const vector<string>& vec, string s);
+	void post_commands(vector<string> tokenized_input);
 };
 #endif
