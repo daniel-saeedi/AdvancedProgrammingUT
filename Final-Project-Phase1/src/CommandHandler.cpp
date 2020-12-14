@@ -1,7 +1,13 @@
 #include "CommandHandler.hpp"
 const char CSV_DELIMITER = ',';
-constexpr char SINGUP[] = "signup";
 constexpr char POST[] = "POST";
+constexpr char GET[] = "GET";
+constexpr char SINGUP[] = "signup";
+constexpr char LOGIN[] = "login";
+constexpr char LOGOUT[] = "logout";
+constexpr char SONGS[] = "songs";
+constexpr char LIKES[] = "likes";
+constexpr char DELETE[] = "DELETE";
 //Headers of csv file
 constexpr char ID[] = "id";
 constexpr char TITLE[] = "title";
@@ -28,6 +34,8 @@ void CommandHandler::run()
 			try
 			{
 				if(command_type == POST) post_commands(tokenized_input);
+				else if(command_type == GET) get_commands(tokenized_input);
+				else if(command_type == DELETE) delete_commands(tokenized_input);
 			}
 			catch(const exception& error)
 			{
@@ -41,10 +49,60 @@ void CommandHandler::post_commands(vector<string> tokenized_input)
 {
 	const int OPERATION_INDEX = 1;
 	const int QUESTION_MARK_INDEX = 3;
-	if(tokenized_input[OPERATION_INDEX] == SINGUP)
+	string operation = tokenized_input[OPERATION_INDEX];
+	if(operation == SINGUP)
 	{
 		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
 		utunes->signup(tokenized_input);
+	}
+	else if(operation == LOGIN)
+	{
+		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
+		utunes->login(tokenized_input);
+	}
+	else if(operation == LOGOUT)
+	{
+		utunes->logout();
+	}
+	else if(operation == LIKES)
+	{
+		utunes->check_login();
+		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
+		utunes->new_like(tokenized_input);
+	}
+}
+
+void CommandHandler::get_commands(vector<string> tokenized_input)
+{
+	utunes->check_login();
+	const int OPERATION_INDEX = 1;
+	const int QUESTION_MARK_INDEX = 3;
+	string operation = tokenized_input[OPERATION_INDEX];
+	if(operation == SONGS)
+	{
+		if(tokenized_input.size() == 2) utunes->get_songs();
+		else
+		{
+			tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
+			utunes->get_song(tokenized_input);
+		}
+	}
+	else if(operation == LIKES)
+	{
+		utunes->show_likes();
+	}
+}
+
+void CommandHandler::delete_commands(vector<string> tokenized_input)
+{
+	utunes->check_login();
+	const int OPERATION_INDEX = 1;
+	const int QUESTION_MARK_INDEX = 3;
+	string operation = tokenized_input[OPERATION_INDEX];
+	if(operation == LIKES)
+	{
+		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
+		utunes->delete_like(tokenized_input);
 	}
 }
 

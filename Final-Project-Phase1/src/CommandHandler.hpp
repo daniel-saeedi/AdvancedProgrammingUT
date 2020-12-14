@@ -25,5 +25,7 @@ private:
 	Song* tokenize(vector<string> raw,vector<string> header);
 	int find_index_in_vector(const vector<string>& vec, string s);
 	void post_commands(vector<string> tokenized_input);
+	void get_commands(vector<string> tokenized_input);
+	void delete_commands(vector<string> tokenized_input);
 };
 #endif

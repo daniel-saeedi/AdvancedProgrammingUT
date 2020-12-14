@@ -29,3 +29,8 @@ void AuthenticationSystem::logout()
 	delete current_session;
 	current_session = nullptr;
 }
+
+bool AuthenticationSystem::is_logged_in()
+{
+	if(current_session == nullptr) throw PermissionDeniedException();
+}
