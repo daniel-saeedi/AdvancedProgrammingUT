@@ -4,9 +4,9 @@
 class Like
 {
 public:
-	Like(User *_user) : user(_user){}
-	bool is_equal(User *_user);
+	Like(User* _user) : user(_user){}
+	bool is_equal(User* _user);
 private:
-	User *user;
+	User* user;
 };
 #endif

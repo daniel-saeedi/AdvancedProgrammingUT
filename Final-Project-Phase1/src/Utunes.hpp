@@ -22,6 +22,7 @@ public:
 	void new_like(vector<std::string> song_id);
 	void delete_like(vector<std::string> song_id);
 	void show_likes();
+	void add_playlist(vector<std::string> playlist_info);
 private:
 	AuthenticationSystem *auth_sys;
 	vector<Song*> songs;

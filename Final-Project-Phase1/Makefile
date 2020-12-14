@@ -25,7 +25,7 @@ ${BUILD_DIR}/AuthenticationSystem.o: ${SRC_DIR}/AuthenticationSystem.cpp ${SRC_D
 ${BUILD_DIR}/Session.o: ${SRC_DIR}/Session.cpp ${SRC_DIR}/User.hpp ${SRC_DIR}/Song.hpp
 	${CC} -c ${SRC_DIR}/Session.cpp -o ${BUILD_DIR}/Session.o
 
-${BUILD_DIR}/User.o: ${SRC_DIR}/User.cpp
+${BUILD_DIR}/User.o: ${SRC_DIR}/User.cpp ${SRC_DIR}/Playlist.hpp
 	${CC} -c ${SRC_DIR}/User.cpp -o ${BUILD_DIR}/User.o
 
 ${BUILD_DIR}/Song.o: ${SRC_DIR}/Song.cpp ${SRC_DIR}/LikeSystem.hpp ${SRC_DIR}/User.hpp
@@ -43,7 +43,7 @@ ${BUILD_DIR}/CommentSystem.o: ${SRC_DIR}/CommentSystem.cpp
 ${BUILD_DIR}/Comment.o: ${SRC_DIR}/Comment.cpp
 	${CC} -c ${SRC_DIR}/Comment.cpp -o ${BUILD_DIR}/Comment.o
 
-${BUILD_DIR}/Playlist.o: ${SRC_DIR}/Playlist.cpp
+${BUILD_DIR}/Playlist.o: ${SRC_DIR}/Playlist.cpp ${SRC_DIR}/Song.hpp
 	${CC} -c ${SRC_DIR}/Playlist.cpp -o ${BUILD_DIR}/Playlist.o
 
 ${BUILD_DIR}/BadRequestException.o: ${EXCEPTION_DIR}/BadRequestException.cpp

@@ -62,6 +62,25 @@ void Utunes::logout()
 	print_ok();
 }
 
+void Utunes::add_playlist(vector<std::string> playlist_info)
+{
+	int id = 0;
+	std::string name;
+	bool private_status;
+	for(int i = 0;i < playlist_info.size();i++)
+	{
+		if(playlist_info[i] == "name") name = playlist_info[i+1];
+		else if(playlist_info[i] == "privacy")
+		{
+			if(playlist_info[i+1] == "private") private_status = true;
+			if(playlist_info[i+1] == "public") private_status = false;
+		}
+	}
+	User *user = auth_sys->get_session()->get_user();
+	//user->add_playlist(id,name,private_status);
+	print_ok();
+}
+
 void Utunes::get_songs()
 {
 	Session *current_session = auth_sys->get_session();
