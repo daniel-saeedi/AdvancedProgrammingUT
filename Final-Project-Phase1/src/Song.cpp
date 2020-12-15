@@ -47,10 +47,8 @@ void Song::get_comments()
 	comment_sys->get_comments();
 }
 
-
-
-
-
-
-
-
+bool Song::is_artist_equal(std::string _artist)
+{
+	if(artist == _artist) return true;
+	return false;
+}

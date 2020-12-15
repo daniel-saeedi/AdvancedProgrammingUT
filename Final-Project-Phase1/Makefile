@@ -7,8 +7,8 @@ EXCEPTION_DIR=${SRC_DIR}/Exception
 
 all: utunes.out
 
-utunes.out: ${BUILD_DIR}/main.o ${BUILD_DIR}/CommandHandler.o ${BUILD_DIR}/Utunes.o ${BUILD_DIR}/AuthenticationSystem.o ${BUILD_DIR}/Session.o ${BUILD_DIR}/User.o ${BUILD_DIR}/Song.o ${BUILD_DIR}/LikeSystem.o ${BUILD_DIR}/CommentSystem.o ${BUILD_DIR}/PlaylistSystem.o ${BUILD_DIR}/Playlist.o ${BUILD_DIR}/Like.o ${BUILD_DIR}/Comment.o ${BUILD_DIR}/BadRequestException.o ${BUILD_DIR}/PermissionDeniedException.o ${BUILD_DIR}/NotFoundException.o ${BUILD_DIR}/EmptyException.o
-	${CC}	${BUILD_DIR}/main.o ${BUILD_DIR}/CommandHandler.o ${BUILD_DIR}/Utunes.o ${BUILD_DIR}/AuthenticationSystem.o ${BUILD_DIR}/Session.o ${BUILD_DIR}/User.o ${BUILD_DIR}/Song.o ${BUILD_DIR}/LikeSystem.o ${BUILD_DIR}/CommentSystem.o ${BUILD_DIR}/PlaylistSystem.o ${BUILD_DIR}/Playlist.o ${BUILD_DIR}/Like.o ${BUILD_DIR}/Comment.o ${BUILD_DIR}/BadRequestException.o ${BUILD_DIR}/PermissionDeniedException.o ${BUILD_DIR}/NotFoundException.o ${BUILD_DIR}/EmptyException.o -o utunes.out
+utunes.out: ${BUILD_DIR}/main.o ${BUILD_DIR}/CommandHandler.o ${BUILD_DIR}/Utunes.o ${BUILD_DIR}/AuthenticationSystem.o ${BUILD_DIR}/Session.o ${BUILD_DIR}/User.o ${BUILD_DIR}/Song.o ${BUILD_DIR}/Criteria.o ${BUILD_DIR}/PublishYearCriteria.o ${BUILD_DIR}/ArtistCriteria.o ${BUILD_DIR}/LikesCriteria.o ${BUILD_DIR}/AndCriteria.o ${BUILD_DIR}/LikeSystem.o ${BUILD_DIR}/CommentSystem.o ${BUILD_DIR}/PlaylistSystem.o ${BUILD_DIR}/Playlist.o ${BUILD_DIR}/Like.o ${BUILD_DIR}/Comment.o ${BUILD_DIR}/BadRequestException.o ${BUILD_DIR}/PermissionDeniedException.o ${BUILD_DIR}/NotFoundException.o ${BUILD_DIR}/EmptyException.o
+	${CC}	${BUILD_DIR}/main.o ${BUILD_DIR}/CommandHandler.o ${BUILD_DIR}/Utunes.o ${BUILD_DIR}/AuthenticationSystem.o ${BUILD_DIR}/Session.o ${BUILD_DIR}/User.o ${BUILD_DIR}/Song.o ${BUILD_DIR}/Criteria.o ${BUILD_DIR}/PublishYearCriteria.o ${BUILD_DIR}/ArtistCriteria.o ${BUILD_DIR}/LikesCriteria.o ${BUILD_DIR}/AndCriteria.o ${BUILD_DIR}/LikeSystem.o ${BUILD_DIR}/CommentSystem.o ${BUILD_DIR}/PlaylistSystem.o ${BUILD_DIR}/Playlist.o ${BUILD_DIR}/Like.o ${BUILD_DIR}/Comment.o ${BUILD_DIR}/BadRequestException.o ${BUILD_DIR}/PermissionDeniedException.o ${BUILD_DIR}/NotFoundException.o ${BUILD_DIR}/EmptyException.o -o utunes.out
 
 ${BUILD_DIR}/main.o: main.cpp ${SRC_DIR}/CommandHandler.hpp
 	${CC} -c main.cpp -o ${BUILD_DIR}/main.o
@@ -22,7 +22,7 @@ ${BUILD_DIR}/Utunes.o: ${SRC_DIR}/Utunes.cpp ${SRC_DIR}/AuthenticationSystem.hpp
 ${BUILD_DIR}/AuthenticationSystem.o: ${SRC_DIR}/AuthenticationSystem.cpp ${SRC_DIR}/Session.hpp ${SRC_DIR}/User.hpp ${EXCEPTION_DIR}/BadRequestException.hpp ${EXCEPTION_DIR}/PermissionDeniedException.hpp
 	${CC} -c ${SRC_DIR}/AuthenticationSystem.cpp -o ${BUILD_DIR}/AuthenticationSystem.o
 
-${BUILD_DIR}/Session.o: ${SRC_DIR}/Session.cpp ${SRC_DIR}/User.hpp ${SRC_DIR}/Song.hpp
+${BUILD_DIR}/Session.o: ${SRC_DIR}/Session.cpp ${SRC_DIR}/User.hpp ${SRC_DIR}/Song.hpp ${SRC_DIR}/Criteria.hpp ${SRC_DIR}/ArtistCriteria.hpp ${SRC_DIR}/PublishYearCriteria.hpp ${SRC_DIR}/LikesCriteria.hpp ${SRC_DIR}/AndCriteria.hpp
 	${CC} -c ${SRC_DIR}/Session.cpp -o ${BUILD_DIR}/Session.o
 
 ${BUILD_DIR}/User.o: ${SRC_DIR}/User.cpp
@@ -48,6 +48,21 @@ ${BUILD_DIR}/PlaylistSystem.o: ${SRC_DIR}/PlaylistSystem.cpp ${SRC_DIR}/Song.hpp
 
 ${BUILD_DIR}/Playlist.o: ${SRC_DIR}/Playlist.cpp ${SRC_DIR}/Song.hpp ${SRC_DIR}/User.hpp ${EXCEPTION_DIR}/PermissionDeniedException.hpp ${EXCEPTION_DIR}/BadRequestException.hpp ${EXCEPTION_DIR}/PermissionDeniedException.hpp
 	${CC} -c ${SRC_DIR}/Playlist.cpp -o ${BUILD_DIR}/Playlist.o
+
+${BUILD_DIR}/Criteria.o: ${SRC_DIR}/Criteria.cpp ${SRC_DIR}/Song.hpp 
+	${CC} -c ${SRC_DIR}/Criteria.cpp -o ${BUILD_DIR}/Criteria.o
+
+${BUILD_DIR}/ArtistCriteria.o: ${SRC_DIR}/ArtistCriteria.cpp ${SRC_DIR}/Song.hpp ${SRC_DIR}/Criteria.hpp
+	${CC} -c ${SRC_DIR}/ArtistCriteria.cpp -o ${BUILD_DIR}/ArtistCriteria.o
+
+${BUILD_DIR}/PublishYearCriteria.o: ${SRC_DIR}/PublishYearCriteria.cpp ${SRC_DIR}/Song.hpp ${SRC_DIR}/Criteria.hpp
+	${CC} -c ${SRC_DIR}/PublishYearCriteria.cpp -o ${BUILD_DIR}/PublishYearCriteria.o
+
+${BUILD_DIR}/LikesCriteria.o: ${SRC_DIR}/LikesCriteria.cpp ${SRC_DIR}/Song.hpp ${SRC_DIR}/Criteria.hpp
+	${CC} -c ${SRC_DIR}/LikesCriteria.cpp -o ${BUILD_DIR}/LikesCriteria.o
+
+${BUILD_DIR}/AndCriteria.o: ${SRC_DIR}/AndCriteria.cpp ${SRC_DIR}/Song.hpp ${SRC_DIR}/Criteria.hpp
+	${CC} -c ${SRC_DIR}/AndCriteria.cpp -o ${BUILD_DIR}/AndCriteria.o
 
 ${BUILD_DIR}/BadRequestException.o: ${EXCEPTION_DIR}/BadRequestException.cpp
 	${CC} -c ${EXCEPTION_DIR}/BadRequestException.cpp -o ${BUILD_DIR}/BadRequestException.o

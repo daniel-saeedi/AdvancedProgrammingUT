@@ -12,6 +12,7 @@ constexpr char PLAYLISTS[] = "playlists";
 constexpr char PLAYLISTS_SONGS[] = "playlists_songs";
 constexpr char USERS[] = "users";
 constexpr char COMMENTS[] = "comments";
+constexpr char FILTERS[] = "filters";
 //Headers of csv file
 constexpr char ID[] = "id";
 constexpr char TITLE[] = "title";
@@ -92,6 +93,12 @@ void CommandHandler::post_commands(vector<string> tokenized_input)
 		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
 		utunes->add_comment(tokenized_input);
 	}
+	else if(operation == FILTERS)
+	{
+		utunes->check_login();
+		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
+		utunes->add_filter(tokenized_input);
+	}
 }
 
 void CommandHandler::get_commands(vector<string> tokenized_input)
@@ -149,6 +156,10 @@ void CommandHandler::delete_commands(vector<string> tokenized_input)
 	{
 		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
 		utunes->delete_playlist_song(tokenized_input);
+	}
+	else if(operation == FILTERS)
+	{
+		utunes->delete_filters();
 	}
 }
 

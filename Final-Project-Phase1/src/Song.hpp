@@ -13,7 +13,7 @@ public:
 	{
 		like_sys = new LikeSystem;
 		comment_sys = new CommentSystem;
-	};
+	}
 	void print_info();
 	void print_single_info();
 	bool is_equal(int _id);
@@ -22,6 +22,9 @@ public:
 	void delete_like(User *user);
 	void add_comment(User *user,int time,std::string comment);
 	void get_comments();
+	bool is_artist_equal(std::string _artist);
+	int get_year(){return release_year;};
+	int get_likes(){return like_sys->get_total_likes();}
 private:
 	int id;
 	std::string title;

@@ -1,0 +1,4 @@
+POST signup ? email test@gmail.com username test password test
+POST filters ? artist Homayoun Shajarian
+POST filters ? min_year 2015 max_year 2020
+GET songs

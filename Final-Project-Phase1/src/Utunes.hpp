@@ -31,6 +31,8 @@ public:
 	void get_users();
 	void add_comment(vector<std::string> playlist_info);
 	void get_comments(vector<std::string> playlist_info);
+	void add_filter(vector<std::string> filter_info);
+	void delete_filters();
 private:
 	AuthenticationSystem *auth_sys;
 	PlaylistSystem *playlist_sys;
@@ -46,5 +48,8 @@ private:
 	int extract_id(vector<std::string> song_id);
 	User* find_user(std::string username);
 	bool user_exists(std::string username);
+	void add_artist_filter(vector<std::string> filter_info);
+	void add_publish_year_filter(vector<std::string> filter_info);
+	void add_likes_filter(vector<std::string> filter_info);
 };
 #endif

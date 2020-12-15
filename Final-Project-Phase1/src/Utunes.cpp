@@ -80,6 +80,66 @@ void Utunes::get_users()
 	}
 }
 
+void Utunes::add_filter(vector<std::string> filter_info)
+{
+	std::string operation = filter_info[0];
+	if(operation == "artist") add_artist_filter(filter_info);
+	else if(operation == "min_year") add_publish_year_filter(filter_info);
+	else if(operation == "min_like") add_likes_filter(filter_info);
+	else throw BadRequestException();
+	print_ok();
+}
+
+void Utunes::delete_filters()
+{
+	Session *session = auth_sys->get_session();
+	session->delete_filters();
+	print_ok();
+}
+
+void Utunes::add_artist_filter(vector<std::string> filter_info)
+{
+	Session *session = auth_sys->get_session();
+	std::string artist;
+	int name_index = INVALID;
+	for(int i = 0;i < filter_info.size();i++)
+	{
+		if(name_index != INVALID)
+		{
+			artist += filter_info[i];
+			if(i < filter_info.size() - 1) artist += " ";
+		}
+		if(filter_info[i] == "artist") name_index = i + 1;
+	}
+	session->add_artist_filter(artist);
+}
+
+void Utunes::add_publish_year_filter(vector<std::string> filter_info)
+{
+	Session *session = auth_sys->get_session();
+	int min_year;
+	int max_year;
+	for(int i = 0;i < filter_info.size();i++)
+	{
+		if(filter_info[i] == "min_year") min_year = stoi(filter_info[i+1]);
+		if(filter_info[i] == "max_year") max_year = stoi(filter_info[i+1]);
+	}
+	session->add_public_year_filter(min_year,max_year);
+}
+
+void Utunes::add_likes_filter(vector<std::string> filter_info)
+{
+	Session *session = auth_sys->get_session();
+	int min_like;
+	int max_like;
+	for(int i = 0;i < filter_info.size();i++)
+	{
+		if(filter_info[i] == "min_like") min_like = stoi(filter_info[i+1]);
+		if(filter_info[i] == "max_like") max_like = stoi(filter_info[i+1]);
+	}
+	session->add_likes_filter(min_like,max_like);
+}
+
 void Utunes::add_playlist(vector<std::string> playlist_info)
 {
 	std::string name;
@@ -157,8 +217,8 @@ void Utunes::get_playlist_songs(vector<std::string> playlist_info)
 void Utunes::get_songs()
 {
 	Session *current_session = auth_sys->get_session();
-	if(songs.size() == 0 || current_session->is_songs_filtered()) throw EmptyException();
-	if(current_session->is_songs_filtered()) current_session->show_songs();
+	if(songs.size() == 0) throw EmptyException();
+	if(current_session->is_songs_filtered()) current_session->show_songs(songs);
 	else show_songs();
 }
 
