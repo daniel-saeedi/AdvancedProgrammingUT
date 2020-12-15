@@ -12,8 +12,13 @@ bool User::check_email_password(std::string _email,std::string _password)
 	return false;
 }
 
-// bool User::add_playlist(int id,std::string name,bool private_status)
-// {
-// 	Playlist* playlist = new Playlist(id,name,private_status);
-// 	playlists.push_back(playlist);
-// }
+bool User::is_username_equal(std::string _username)
+{
+	if(username == _username) return true;
+	return false;
+}
+
+void User::print_username()
+{
+	std::cout << username << std::endl;
+}

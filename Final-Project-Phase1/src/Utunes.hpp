@@ -4,6 +4,7 @@
 #include "Song.hpp"
 #include "User.hpp"
 #include "Session.hpp"
+#include "PlaylistSystem.hpp"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -23,8 +24,14 @@ public:
 	void delete_like(vector<std::string> song_id);
 	void show_likes();
 	void add_playlist(vector<std::string> playlist_info);
+	void get_playlists(vector<std::string> playlist_info);
+	void add_song_to_playlist(vector<std::string> playlist_info);
+	void get_playlist_songs(vector<std::string> playlist_info);
+	void delete_playlist_song(vector<std::string> playlist_info);
+	void get_users();
 private:
 	AuthenticationSystem *auth_sys;
+	PlaylistSystem *playlist_sys;
 	vector<Song*> songs;
 	vector<User*> users;
 	bool email_username_exists(std::string email,std::string username);
@@ -35,5 +42,7 @@ private:
 	Song* find_song_by_id(int id);
 	vector<Song*> get_liked_songs();
 	int extract_id(vector<std::string> song_id);
+	User* find_user(std::string username);
+	bool user_exists(std::string username);
 };
 #endif

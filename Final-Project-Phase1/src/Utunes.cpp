@@ -1,14 +1,17 @@
 #include "Utunes.hpp"
+#include "Playlist.hpp"
 #include "Exception/BadRequestException.hpp"
 #include "Exception/NotFoundException.hpp"
 #include "Exception/EmptyException.hpp"
 constexpr char ID[] = "id";
 constexpr char EMPTY[] = "Empty";
+constexpr char USERNAME[] = "username";
 const int INVALID = -1;
 
 Utunes::Utunes(vector<Song*> _songs) : songs(_songs)
 {
 	auth_sys = new AuthenticationSystem();
+	playlist_sys = new PlaylistSystem;
 }
 
 void Utunes::signup(vector<std::string> signup_info)
@@ -62,9 +65,23 @@ void Utunes::logout()
 	print_ok();
 }
 
+void Utunes::check_login()
+{
+	auth_sys->is_logged_in();
+}
+
+void Utunes::get_users()
+{
+	if((users.size() - 1) <= 0) throw EmptyException();
+	User *current_user = auth_sys->get_session()->get_user();
+	for(int i = 0;i < users.size();i++)
+	{
+		if(current_user != users[i]) users[i]->print_username();
+	}
+}
+
 void Utunes::add_playlist(vector<std::string> playlist_info)
 {
-	int id = 0;
 	std::string name;
 	bool private_status;
 	for(int i = 0;i < playlist_info.size();i++)
@@ -77,8 +94,63 @@ void Utunes::add_playlist(vector<std::string> playlist_info)
 		}
 	}
 	User *user = auth_sys->get_session()->get_user();
-	//user->add_playlist(id,name,private_status);
+	playlist_sys->new_playlist(name,private_status,user);
 	print_ok();
+}
+
+void Utunes::add_song_to_playlist(vector<std::string> playlist_info)
+{
+	int playlist_id;
+	int song_id;
+	for(int i = 0;i < playlist_info.size();i++)
+	{
+		if(playlist_info[i] == "playlist_id") playlist_id = stoi(playlist_info[i+1]);
+		else if(playlist_info[i] == "song_id") song_id = stoi(playlist_info[i+1]);
+	}
+	User *user = auth_sys->get_session()->get_user();
+	Song* song = find_song_by_id(song_id);
+	playlist_sys->add_song_to_playlist(playlist_id,song,user);
+	print_ok();
+}
+
+void Utunes::delete_playlist_song(vector<std::string> playlist_info)
+{
+	int playlist_id;
+	int song_id;
+	for(int i = 0;i < playlist_info.size();i++)
+	{
+		if(playlist_info[i] == "playlist_id") playlist_id = stoi(playlist_info[i+1]);
+		else if(playlist_info[i] == "song_id") song_id = stoi(playlist_info[i+1]);
+	}
+	User *user = auth_sys->get_session()->get_user();
+	Song* song = find_song_by_id(song_id);
+	playlist_sys->delete_song(playlist_id,song,user);
+	print_ok();
+}
+
+
+void Utunes::get_playlists(vector<std::string> playlist_info)
+{
+	std::string username;
+	for(int i = 0;i < playlist_info.size();i++)
+	{
+		if(playlist_info[i] == USERNAME) username = playlist_info[i+1];
+	}
+	if(!user_exists(username)) throw NotFoundException();
+	User *current_user = auth_sys->get_session()->get_user();
+	User *user = find_user(username);
+	playlist_sys->show_playlist(user,current_user);
+}
+
+void Utunes::get_playlist_songs(vector<std::string> playlist_info)
+{
+	int playlist_id;
+	for(int i = 0;i < playlist_info.size();i++)
+	{
+		if(playlist_info[i] == "playlist_id") playlist_id = stoi(playlist_info[i+1]);
+	}
+	User *current_user = auth_sys->get_session()->get_user();
+	playlist_sys->show_playlist_songs(playlist_id,current_user);	
 }
 
 void Utunes::get_songs()
@@ -163,6 +235,15 @@ bool Utunes::song_exists(int id)
 	return false;
 }
 
+bool Utunes::user_exists(std::string username)
+{
+	for(int i = 0;i < users.size();i++)
+	{
+		if(users[i]->is_username_equal(username)) return true;
+	}
+	return false;
+}
+
 Song* Utunes::find_song_by_id(int id)
 {
 	Song* song = nullptr;
@@ -173,16 +254,17 @@ Song* Utunes::find_song_by_id(int id)
 	return song;
 }
 
-void Utunes::check_login()
+User* Utunes::find_user(std::string username)
 {
-	auth_sys->is_logged_in();
+	User* user = nullptr;
+	for(int i = 0;i < users.size();i++)
+	{
+		if(users[i]->is_username_equal(username)) user = users[i];
+	}
+	return user;
 }
 
 void Utunes::print_ok()
 {
 	std::cout << "OK" << std::endl;
 }
-
-
-
-

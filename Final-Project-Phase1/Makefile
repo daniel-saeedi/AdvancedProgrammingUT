@@ -7,8 +7,8 @@ EXCEPTION_DIR=${SRC_DIR}/Exception
 
 all: utunes.out
 
-utunes.out: ${BUILD_DIR}/main.o ${BUILD_DIR}/CommandHandler.o ${BUILD_DIR}/Utunes.o ${BUILD_DIR}/AuthenticationSystem.o ${BUILD_DIR}/Session.o ${BUILD_DIR}/User.o ${BUILD_DIR}/Song.o ${BUILD_DIR}/LikeSystem.o ${BUILD_DIR}/CommentSystem.o ${BUILD_DIR}/Playlist.o ${BUILD_DIR}/Like.o ${BUILD_DIR}/Comment.o ${BUILD_DIR}/BadRequestException.o ${BUILD_DIR}/PermissionDeniedException.o ${BUILD_DIR}/NotFoundException.o ${BUILD_DIR}/EmptyException.o
-	${CC}	${BUILD_DIR}/main.o ${BUILD_DIR}/CommandHandler.o ${BUILD_DIR}/Utunes.o ${BUILD_DIR}/AuthenticationSystem.o ${BUILD_DIR}/Session.o ${BUILD_DIR}/User.o ${BUILD_DIR}/Song.o ${BUILD_DIR}/LikeSystem.o ${BUILD_DIR}/CommentSystem.o ${BUILD_DIR}/Playlist.o ${BUILD_DIR}/Like.o ${BUILD_DIR}/Comment.o ${BUILD_DIR}/BadRequestException.o ${BUILD_DIR}/PermissionDeniedException.o ${BUILD_DIR}/NotFoundException.o ${BUILD_DIR}/EmptyException.o -o utunes.out
+utunes.out: ${BUILD_DIR}/main.o ${BUILD_DIR}/CommandHandler.o ${BUILD_DIR}/Utunes.o ${BUILD_DIR}/AuthenticationSystem.o ${BUILD_DIR}/Session.o ${BUILD_DIR}/User.o ${BUILD_DIR}/Song.o ${BUILD_DIR}/LikeSystem.o ${BUILD_DIR}/CommentSystem.o ${BUILD_DIR}/PlaylistSystem.o ${BUILD_DIR}/Playlist.o ${BUILD_DIR}/Like.o ${BUILD_DIR}/Comment.o ${BUILD_DIR}/BadRequestException.o ${BUILD_DIR}/PermissionDeniedException.o ${BUILD_DIR}/NotFoundException.o ${BUILD_DIR}/EmptyException.o
+	${CC}	${BUILD_DIR}/main.o ${BUILD_DIR}/CommandHandler.o ${BUILD_DIR}/Utunes.o ${BUILD_DIR}/AuthenticationSystem.o ${BUILD_DIR}/Session.o ${BUILD_DIR}/User.o ${BUILD_DIR}/Song.o ${BUILD_DIR}/LikeSystem.o ${BUILD_DIR}/CommentSystem.o ${BUILD_DIR}/PlaylistSystem.o ${BUILD_DIR}/Playlist.o ${BUILD_DIR}/Like.o ${BUILD_DIR}/Comment.o ${BUILD_DIR}/BadRequestException.o ${BUILD_DIR}/PermissionDeniedException.o ${BUILD_DIR}/NotFoundException.o ${BUILD_DIR}/EmptyException.o -o utunes.out
 
 ${BUILD_DIR}/main.o: main.cpp ${SRC_DIR}/CommandHandler.hpp
 	${CC} -c main.cpp -o ${BUILD_DIR}/main.o
@@ -16,7 +16,7 @@ ${BUILD_DIR}/main.o: main.cpp ${SRC_DIR}/CommandHandler.hpp
 ${BUILD_DIR}/CommandHandler.o: ${SRC_DIR}/CommandHandler.cpp ${SRC_DIR}/Utunes.hpp ${SRC_DIR}/Song.hpp
 	${CC} -c ${SRC_DIR}/CommandHandler.cpp -o ${BUILD_DIR}/CommandHandler.o
 
-${BUILD_DIR}/Utunes.o: ${SRC_DIR}/Utunes.cpp ${SRC_DIR}/AuthenticationSystem.hpp ${SRC_DIR}/Song.hpp ${SRC_DIR}/User.hpp ${SRC_DIR}/Session.hpp ${EXCEPTION_DIR}/BadRequestException.hpp ${EXCEPTION_DIR}/NotFoundException.hpp ${EXCEPTION_DIR}/BadRequestException.hpp
+${BUILD_DIR}/Utunes.o: ${SRC_DIR}/Utunes.cpp ${SRC_DIR}/AuthenticationSystem.hpp ${SRC_DIR}/Song.hpp ${SRC_DIR}/User.hpp ${SRC_DIR}/PlaylistSystem.hpp ${SRC_DIR}/Session.hpp ${EXCEPTION_DIR}/BadRequestException.hpp ${EXCEPTION_DIR}/NotFoundException.hpp ${EXCEPTION_DIR}/PermissionDeniedException.hpp ${EXCEPTION_DIR}/EmptyException.hpp
 	${CC} -c ${SRC_DIR}/Utunes.cpp -o ${BUILD_DIR}/Utunes.o
 
 ${BUILD_DIR}/AuthenticationSystem.o: ${SRC_DIR}/AuthenticationSystem.cpp ${SRC_DIR}/Session.hpp ${SRC_DIR}/User.hpp ${EXCEPTION_DIR}/BadRequestException.hpp ${EXCEPTION_DIR}/PermissionDeniedException.hpp
@@ -25,7 +25,7 @@ ${BUILD_DIR}/AuthenticationSystem.o: ${SRC_DIR}/AuthenticationSystem.cpp ${SRC_D
 ${BUILD_DIR}/Session.o: ${SRC_DIR}/Session.cpp ${SRC_DIR}/User.hpp ${SRC_DIR}/Song.hpp
 	${CC} -c ${SRC_DIR}/Session.cpp -o ${BUILD_DIR}/Session.o
 
-${BUILD_DIR}/User.o: ${SRC_DIR}/User.cpp ${SRC_DIR}/Playlist.hpp
+${BUILD_DIR}/User.o: ${SRC_DIR}/User.cpp
 	${CC} -c ${SRC_DIR}/User.cpp -o ${BUILD_DIR}/User.o
 
 ${BUILD_DIR}/Song.o: ${SRC_DIR}/Song.cpp ${SRC_DIR}/LikeSystem.hpp ${SRC_DIR}/User.hpp
@@ -43,7 +43,10 @@ ${BUILD_DIR}/CommentSystem.o: ${SRC_DIR}/CommentSystem.cpp
 ${BUILD_DIR}/Comment.o: ${SRC_DIR}/Comment.cpp
 	${CC} -c ${SRC_DIR}/Comment.cpp -o ${BUILD_DIR}/Comment.o
 
-${BUILD_DIR}/Playlist.o: ${SRC_DIR}/Playlist.cpp ${SRC_DIR}/Song.hpp
+${BUILD_DIR}/PlaylistSystem.o: ${SRC_DIR}/PlaylistSystem.cpp ${SRC_DIR}/Song.hpp ${SRC_DIR}/User.hpp ${SRC_DIR}/Playlist.hpp ${EXCEPTION_DIR}/EmptyException.hpp
+	${CC} -c ${SRC_DIR}/PlaylistSystem.cpp -o  ${BUILD_DIR}/PlaylistSystem.o
+
+${BUILD_DIR}/Playlist.o: ${SRC_DIR}/Playlist.cpp ${SRC_DIR}/Song.hpp ${SRC_DIR}/User.hpp ${EXCEPTION_DIR}/PermissionDeniedException.hpp ${EXCEPTION_DIR}/BadRequestException.hpp ${EXCEPTION_DIR}/PermissionDeniedException.hpp
 	${CC} -c ${SRC_DIR}/Playlist.cpp -o ${BUILD_DIR}/Playlist.o
 
 ${BUILD_DIR}/BadRequestException.o: ${EXCEPTION_DIR}/BadRequestException.cpp

@@ -2,12 +2,15 @@
 const char CSV_DELIMITER = ',';
 constexpr char POST[] = "POST";
 constexpr char GET[] = "GET";
+constexpr char DELETE[] = "DELETE";
 constexpr char SINGUP[] = "signup";
 constexpr char LOGIN[] = "login";
 constexpr char LOGOUT[] = "logout";
 constexpr char SONGS[] = "songs";
 constexpr char LIKES[] = "likes";
-constexpr char DELETE[] = "DELETE";
+constexpr char PLAYLISTS[] = "playlists";
+constexpr char PLAYLISTS_SONGS[] = "playlists_songs";
+constexpr char USERS[] = "users";
 //Headers of csv file
 constexpr char ID[] = "id";
 constexpr char TITLE[] = "title";
@@ -70,6 +73,18 @@ void CommandHandler::post_commands(vector<string> tokenized_input)
 		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
 		utunes->new_like(tokenized_input);
 	}
+	else if(operation == PLAYLISTS)
+	{
+		utunes->check_login();
+		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
+		utunes->add_playlist(tokenized_input);
+	}
+	else if(operation == PLAYLISTS_SONGS)
+	{
+		utunes->check_login();
+		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
+		utunes->add_song_to_playlist(tokenized_input);
+	}
 }
 
 void CommandHandler::get_commands(vector<string> tokenized_input)
@@ -91,6 +106,20 @@ void CommandHandler::get_commands(vector<string> tokenized_input)
 	{
 		utunes->show_likes();
 	}
+	else if(operation == PLAYLISTS)
+	{
+		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
+		utunes->get_playlists(tokenized_input);
+	}
+	else if(operation == PLAYLISTS_SONGS)
+	{
+		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
+		utunes->get_playlist_songs(tokenized_input);
+	}
+	else if(operation == USERS)
+	{
+		utunes->get_users();
+	}
 }
 
 void CommandHandler::delete_commands(vector<string> tokenized_input)
@@ -103,6 +132,11 @@ void CommandHandler::delete_commands(vector<string> tokenized_input)
 	{
 		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
 		utunes->delete_like(tokenized_input);
+	}
+	else if(operation == PLAYLISTS_SONGS)
+	{
+		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
+		utunes->delete_playlist_song(tokenized_input);
 	}
 }
 

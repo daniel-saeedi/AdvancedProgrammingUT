@@ -2,9 +2,8 @@
 #define SONG_H
 #include <iostream>
 #include <string>
-#include "User.hpp"
 #include "LikeSystem.hpp"
-
+#include "User.hpp"
 class Song
 {
 public:
