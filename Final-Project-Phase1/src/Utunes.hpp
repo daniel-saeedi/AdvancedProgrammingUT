@@ -29,6 +29,8 @@ public:
 	void get_playlist_songs(vector<std::string> playlist_info);
 	void delete_playlist_song(vector<std::string> playlist_info);
 	void get_users();
+	void add_comment(vector<std::string> playlist_info);
+	void get_comments(vector<std::string> playlist_info);
 private:
 	AuthenticationSystem *auth_sys;
 	PlaylistSystem *playlist_sys;

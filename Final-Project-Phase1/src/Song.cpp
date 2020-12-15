@@ -36,3 +36,21 @@ void Song::delete_like(User *user)
 {
 	like_sys->delete_like(user);
 }
+
+void Song::add_comment(User *user,int time,std::string comment)
+{
+	comment_sys->add_comment(user,time,comment);
+}
+
+void Song::get_comments()
+{
+	comment_sys->get_comments();
+}
+
+
+
+
+
+
+
+

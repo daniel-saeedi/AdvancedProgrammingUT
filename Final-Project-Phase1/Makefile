@@ -28,7 +28,7 @@ ${BUILD_DIR}/Session.o: ${SRC_DIR}/Session.cpp ${SRC_DIR}/User.hpp ${SRC_DIR}/So
 ${BUILD_DIR}/User.o: ${SRC_DIR}/User.cpp
 	${CC} -c ${SRC_DIR}/User.cpp -o ${BUILD_DIR}/User.o
 
-${BUILD_DIR}/Song.o: ${SRC_DIR}/Song.cpp ${SRC_DIR}/LikeSystem.hpp ${SRC_DIR}/User.hpp
+${BUILD_DIR}/Song.o: ${SRC_DIR}/Song.cpp ${SRC_DIR}/LikeSystem.hpp ${SRC_DIR}/CommentSystem.hpp ${SRC_DIR}/User.hpp
 	${CC} -c ${SRC_DIR}/Song.cpp -o ${BUILD_DIR}/Song.o
 
 ${BUILD_DIR}/LikeSystem.o: ${SRC_DIR}/LikeSystem.cpp ${SRC_DIR}/Like.hpp ${SRC_DIR}/User.hpp ${EXCEPTION_DIR}/BadRequestException.hpp
@@ -37,10 +37,10 @@ ${BUILD_DIR}/LikeSystem.o: ${SRC_DIR}/LikeSystem.cpp ${SRC_DIR}/Like.hpp ${SRC_D
 ${BUILD_DIR}/Like.o: ${SRC_DIR}/Like.cpp ${SRC_DIR}/User.hpp
 	${CC} -c ${SRC_DIR}/Like.cpp -o ${BUILD_DIR}/Like.o
 
-${BUILD_DIR}/CommentSystem.o: ${SRC_DIR}/CommentSystem.cpp
+${BUILD_DIR}/CommentSystem.o: ${SRC_DIR}/CommentSystem.cpp ${SRC_DIR}/User.hpp ${SRC_DIR}/Comment.hpp
 	${CC} -c ${SRC_DIR}/CommentSystem.cpp -o ${BUILD_DIR}/CommentSystem.o
 
-${BUILD_DIR}/Comment.o: ${SRC_DIR}/Comment.cpp
+${BUILD_DIR}/Comment.o: ${SRC_DIR}/Comment.cpp ${SRC_DIR}/User.hpp
 	${CC} -c ${SRC_DIR}/Comment.cpp -o ${BUILD_DIR}/Comment.o
 
 ${BUILD_DIR}/PlaylistSystem.o: ${SRC_DIR}/PlaylistSystem.cpp ${SRC_DIR}/Song.hpp ${SRC_DIR}/User.hpp ${SRC_DIR}/Playlist.hpp ${EXCEPTION_DIR}/EmptyException.hpp

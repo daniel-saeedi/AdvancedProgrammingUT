@@ -109,6 +109,7 @@ void Utunes::add_song_to_playlist(vector<std::string> playlist_info)
 	}
 	User *user = auth_sys->get_session()->get_user();
 	Song* song = find_song_by_id(song_id);
+	if(song)
 	playlist_sys->add_song_to_playlist(playlist_id,song,user);
 	print_ok();
 }
@@ -202,6 +203,36 @@ void Utunes::delete_like(vector<std::string> song_id)
 	Song *song = find_song_by_id(id);
 	song->delete_like(user);
 	print_ok();
+}
+
+void Utunes::add_comment(vector<std::string> playlist_info)
+{
+	int song_id;
+	int time;
+	std::string comment;
+	for(int i = 0;i < playlist_info.size();i++)
+	{
+		if(playlist_info[i] == "song_id") song_id = stoi(playlist_info[i+1]);
+		else if(playlist_info[i] == "time") time = stoi(playlist_info[i+1]);
+		else if(playlist_info[i] == "comment") comment = playlist_info[i+1];
+	}
+	if(!song_exists(song_id)) throw NotFoundException();
+	User *user = auth_sys->get_session()->get_user();
+	Song* song = find_song_by_id(song_id);
+	song->add_comment(user,time,comment);
+	print_ok();
+}
+
+void Utunes::get_comments(vector<std::string> playlist_info)
+{
+	int song_id;
+	for(int i = 0;i < playlist_info.size();i++)
+	{
+		if(playlist_info[i] == "song_id") song_id = stoi(playlist_info[i+1]);
+	}
+	if(!song_exists(song_id)) throw NotFoundException();
+	Song* song = find_song_by_id(song_id);
+	song->get_comments();
 }
 
 int Utunes::extract_id(vector<std::string> song_id)

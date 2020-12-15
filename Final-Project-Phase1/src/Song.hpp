@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include "LikeSystem.hpp"
+#include "CommentSystem.hpp"
 #include "User.hpp"
 class Song
 {
@@ -11,6 +12,7 @@ public:
 		: id(_id), title(_title), artist(_artist), release_year(_release_year),link(_link)
 	{
 		like_sys = new LikeSystem;
+		comment_sys = new CommentSystem;
 	};
 	void print_info();
 	void print_single_info();
@@ -18,6 +20,8 @@ public:
 	bool has_liked(User *user);
 	void like(User *user);
 	void delete_like(User *user);
+	void add_comment(User *user,int time,std::string comment);
+	void get_comments();
 private:
 	int id;
 	std::string title;
@@ -25,5 +29,6 @@ private:
 	int release_year;
 	std::string link;
 	LikeSystem *like_sys;
+	CommentSystem *comment_sys;
 };
 #endif

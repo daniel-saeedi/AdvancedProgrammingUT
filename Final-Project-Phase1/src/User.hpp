@@ -11,6 +11,7 @@ public:
 	bool check_email_password(std::string _email,std::string _password);
 	bool is_username_equal(std::string _username);
 	void print_username();
+	std::string get_username(){return username;}
 private:
 	std::string email;
 	std::string username;
