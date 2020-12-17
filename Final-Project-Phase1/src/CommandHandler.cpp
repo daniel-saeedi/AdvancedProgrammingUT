@@ -29,6 +29,11 @@ CommandHandler::CommandHandler(char* file)
 	utunes = new Utunes(songs);
 }
 
+CommandHandler::~CommandHandler()
+{
+	delete utunes;
+}
+
 void CommandHandler::run()
 {
 	const int COMMAND_TYPE_INDEX = 0;

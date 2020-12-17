@@ -9,6 +9,7 @@ class AuthenticationSystem
 {
 public:
 	AuthenticationSystem();
+	~AuthenticationSystem();
 	void login(std::vector<User*> users,std::string email,std::string password);
 	void logout();
 	bool is_logged_in();

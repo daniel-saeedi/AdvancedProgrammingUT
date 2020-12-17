@@ -18,6 +18,7 @@ class Session
 {
 public:
 	Session(User *_user);
+	~Session();
 	bool is_songs_filtered();
 	void show_songs(std::vector<Song*> songs);
 	User* get_user(){return user;}

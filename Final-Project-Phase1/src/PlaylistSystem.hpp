@@ -12,6 +12,7 @@ using namespace std;
 class PlaylistSystem
 {
 public:
+	~PlaylistSystem();
 	void new_playlist(std::string name,bool private_status,User *user);
 	void show_playlist(User *user,User *current_user);
 	void add_song_to_playlist(int playlist_id,Song *song,User *current_user);

@@ -13,6 +13,7 @@ class Utunes
 {
 public:
 	Utunes(vector <Song*> _songs);
+	~Utunes();
 	void signup(vector<std::string> signup_info);
 	void login(vector<std::string> login_info);
 	void logout();

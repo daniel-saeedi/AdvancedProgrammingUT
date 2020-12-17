@@ -11,6 +11,12 @@ Session::Session(User *_user)
 	}
 }
 
+Session::~Session()
+{
+	for(int i = 0;i < filters.size();i++)
+		delete filters[i];
+}
+
 bool Session::is_songs_filtered()
 {
 	return songs_filter_status;

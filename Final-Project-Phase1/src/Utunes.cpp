@@ -33,6 +33,16 @@ Utunes::Utunes(vector<Song*> _songs) : songs(_songs)
 	playlist_sys = new PlaylistSystem;
 }
 
+Utunes::~Utunes()
+{
+	delete auth_sys;
+	delete playlist_sys;
+	for(int i = 0;i < songs.size();i++)
+		delete songs[i];
+	for(int i = 0;i < users.size();i++)
+		delete users[i];
+}
+
 std::map<std::string,std::string> Utunes::split(vector<std::string> headers,vector<std::string> info)
 {
 	std::map<std::string,std::string> result;

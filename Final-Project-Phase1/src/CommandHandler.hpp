@@ -14,6 +14,7 @@ class CommandHandler
 {
 public:
 	CommandHandler(char* file);
+	~CommandHandler();
 	void run();
 private:
 	Utunes *utunes;

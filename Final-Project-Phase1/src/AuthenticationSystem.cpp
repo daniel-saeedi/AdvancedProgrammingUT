@@ -7,6 +7,11 @@ AuthenticationSystem::AuthenticationSystem()
 	current_session = nullptr;
 }
 
+AuthenticationSystem::~AuthenticationSystem()
+{
+	delete current_session;
+}
+
 void AuthenticationSystem::login(std::vector<User*> users,std::string email,std::string password)
 {
 	User *user = nullptr;

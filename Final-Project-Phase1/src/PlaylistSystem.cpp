@@ -1,6 +1,12 @@
 #include "PlaylistSystem.hpp"
 #include "Exception/EmptyException.hpp"
 
+PlaylistSystem::~PlaylistSystem()
+{
+	for(int i = 0;i < playlists.size();i++)
+		delete playlists[i];
+}
+
 bool compare_by_id_playlists(Playlist *playlist1,Playlist *playlist2)
 {
 	return playlist1->get_id() < playlist2->get_id();
