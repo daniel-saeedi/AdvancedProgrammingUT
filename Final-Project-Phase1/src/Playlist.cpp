@@ -13,13 +13,13 @@ bool compare_song_by_id(Song *song1,Song *song2)
 bool Playlist::is_user_equal(User *_user)
 {
 	if(user == _user) return true;
-	else false;
+	else return false;
 }
 
 bool Playlist::is_playlist_id_equal(int _id)
 {
 	if(id == _id) return true;
-	else false;
+	else return false;
 }
 
 void Playlist::show_info(User *current_user)

@@ -2,6 +2,7 @@
 #include "Utunes.hpp"
 #include "Playlist.hpp"
 #include "SortFunctions.hpp"
+#include "XOREncryption.hpp"
 #include "Exception/BadRequestException.hpp"
 #include "Exception/NotFoundException.hpp"
 #include "Exception/EmptyException.hpp"
@@ -43,26 +44,14 @@ Utunes::~Utunes()
 		delete users[i];
 }
 
-std::map<std::string,std::string> Utunes::split(vector<std::string> headers,vector<std::string> info)
-{
-	std::map<std::string,std::string> result;
-	for(int i = 0;i < headers.size();i++)
-	{
-		for(int j = 0;j < info.size();j++)
-		{
-			if(headers[i] == info[j]) result[headers[i]] = info[j+1];
-		}
-	}
-	if(result.size() != headers.size()) throw BadRequestException();
-	return result;
-}
-
 void Utunes::signup(vector<std::string> signup_info)
 {
 	std::map<std::string,std::string> data = split({EMAIL, USERNAME, PASSWORD},signup_info);
 	std::string email = data[EMAIL];
 	std::string username = data[USERNAME];
 	std::string password = data[PASSWORD];
+	//Encrypting the password
+	password = XOREncryption::encrypt_decrypt(password);
 	create_new_user(email,username,password);
 	auth_sys->login(users,email,password);
 	print_ok();
@@ -89,6 +78,8 @@ void Utunes::login(vector<std::string> login_info)
 	std::map<std::string,std::string> data = split({EMAIL, PASSWORD},login_info);
 	std::string email = data[EMAIL];
 	std::string password = data[PASSWORD];
+	//Encrypting the password
+	password = XOREncryption::encrypt_decrypt(password);
 	auth_sys->login(users,email,password);
 	print_ok();
 }
@@ -353,6 +344,20 @@ User* Utunes::find_user(std::string username)
 		if(users[i]->is_username_equal(username)) user = users[i];
 	}
 	return user;
+}
+
+std::map<std::string,std::string> Utunes::split(vector<std::string> headers,vector<std::string> info)
+{
+	std::map<std::string,std::string> result;
+	for(int i = 0;i < headers.size();i++)
+	{
+		for(int j = 0;j < info.size();j++)
+		{
+			if(headers[i] == info[j]) result[headers[i]] = info[j+1];
+		}
+	}
+	if(result.size() != headers.size()) throw BadRequestException();
+	return result;
 }
 
 void Utunes::print_ok()

@@ -1,5 +1,4 @@
 #include "User.hpp"
-
 bool User::is_email_username_equal(std::string _email,std::string _username)
 {
 	if(email == _email || username == _username) return true;

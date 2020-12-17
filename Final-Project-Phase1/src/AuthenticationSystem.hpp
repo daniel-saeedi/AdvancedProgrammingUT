@@ -5,6 +5,7 @@
 #include <vector>
 #include "Session.hpp"
 #include "User.hpp"
+#include "XOREncryption.hpp"
 class AuthenticationSystem
 {
 public:
@@ -17,5 +18,6 @@ public:
 private:
 	Session *current_session;
 	void create_new_session(User *user);
+	XOREncryption *encryption;
 };
 #endif
