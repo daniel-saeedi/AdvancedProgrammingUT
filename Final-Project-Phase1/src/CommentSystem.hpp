@@ -8,6 +8,7 @@ class CommentSystem
 public:
 	void add_comment(User *_user,int _time,std::string _comment);
 	void get_comments();
+	int get_total_comments(){return comments.size();}
 private:
 	std::vector<Comment*> comments;
 };

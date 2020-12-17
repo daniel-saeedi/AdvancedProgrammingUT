@@ -1,4 +1,5 @@
 #include "CommandHandler.hpp"
+#include "Exception/BadRequestException.hpp"
 const char CSV_DELIMITER = ',';
 constexpr char POST[] = "POST";
 constexpr char GET[] = "GET";
@@ -13,6 +14,8 @@ constexpr char PLAYLISTS_SONGS[] = "playlists_songs";
 constexpr char USERS[] = "users";
 constexpr char COMMENTS[] = "comments";
 constexpr char FILTERS[] = "filters";
+constexpr int OPERATION_INDEX = 1;
+constexpr int QUESTION_MARK_INDEX = 3;
 //Headers of csv file
 constexpr char ID[] = "id";
 constexpr char TITLE[] = "title";
@@ -38,13 +41,18 @@ void CommandHandler::run()
 			const string command_type = tokenized_input[COMMAND_TYPE_INDEX];
 			try
 			{
-				if(command_type == POST) post_commands(tokenized_input);
-				else if(command_type == GET) get_commands(tokenized_input);
-				else if(command_type == DELETE) delete_commands(tokenized_input);
+				if(command_type == POST) 
+					post_commands(tokenized_input);
+				else if(command_type == GET) 
+					get_commands(tokenized_input);
+				else if(command_type == DELETE) 
+					delete_commands(tokenized_input);
+				else
+					throw BadRequestException();
 			}
 			catch(const exception& error)
 			{
-				cerr << error.what();
+				cout << error.what();
 			}
 		}
 	}
@@ -52,60 +60,34 @@ void CommandHandler::run()
 
 void CommandHandler::post_commands(vector<string> tokenized_input)
 {
-	const int OPERATION_INDEX = 1;
-	const int QUESTION_MARK_INDEX = 3;
 	string operation = tokenized_input[OPERATION_INDEX];
+	if(tokenized_input.size() > 2)
+		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
 	if(operation == SINGUP)
-	{
-		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
 		utunes->signup(tokenized_input);
-	}
 	else if(operation == LOGIN)
-	{
-		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
 		utunes->login(tokenized_input);
-	}
 	else if(operation == LOGOUT)
-	{
 		utunes->logout();
-	}
-	else if(operation == LIKES)
+	else
 	{
 		utunes->check_login();
-		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
-		utunes->new_like(tokenized_input);
-	}
-	else if(operation == PLAYLISTS)
-	{
-		utunes->check_login();
-		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
-		utunes->add_playlist(tokenized_input);
-	}
-	else if(operation == PLAYLISTS_SONGS)
-	{
-		utunes->check_login();
-		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
-		utunes->add_song_to_playlist(tokenized_input);
-	}
-	else if(operation == COMMENTS)
-	{
-		utunes->check_login();
-		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
-		utunes->add_comment(tokenized_input);
-	}
-	else if(operation == FILTERS)
-	{
-		utunes->check_login();
-		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
-		utunes->add_filter(tokenized_input);
+		if(operation == LIKES)
+			utunes->new_like(tokenized_input);
+		else if(operation == PLAYLISTS)
+			utunes->add_playlist(tokenized_input);
+		else if(operation == PLAYLISTS_SONGS)
+			utunes->add_song_to_playlist(tokenized_input);
+		else if(operation == COMMENTS)
+			utunes->add_comment(tokenized_input);
+		else if(operation == FILTERS)
+			utunes->add_filter(tokenized_input);
 	}
 }
 
 void CommandHandler::get_commands(vector<string> tokenized_input)
 {
 	utunes->check_login();
-	const int OPERATION_INDEX = 1;
-	const int QUESTION_MARK_INDEX = 3;
 	string operation = tokenized_input[OPERATION_INDEX];
 	if(operation == SONGS)
 	{
@@ -116,51 +98,36 @@ void CommandHandler::get_commands(vector<string> tokenized_input)
 			utunes->get_song(tokenized_input);
 		}
 	}
-	else if(operation == LIKES)
+	else
 	{
-		utunes->show_likes();
+		if(tokenized_input.size() > 2)
+			tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
+		if(operation == LIKES) 
+			utunes->show_likes();
+		else if(operation == PLAYLISTS) 
+			utunes->get_playlists(tokenized_input);
+		else if(operation == PLAYLISTS_SONGS) 
+			utunes->get_playlist_songs(tokenized_input);
+		else if(operation == USERS) 
+			utunes->get_users();
+		else if(operation == COMMENTS) 
+			utunes->get_comments(tokenized_input);
 	}
-	else if(operation == PLAYLISTS)
-	{
-		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
-		utunes->get_playlists(tokenized_input);
-	}
-	else if(operation == PLAYLISTS_SONGS)
-	{
-		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
-		utunes->get_playlist_songs(tokenized_input);
-	}
-	else if(operation == USERS)
-	{
-		utunes->get_users();
-	}
-	else if(operation == COMMENTS)
-	{
-		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
-		utunes->get_comments(tokenized_input);
-	}
+	
 }
 
 void CommandHandler::delete_commands(vector<string> tokenized_input)
 {
 	utunes->check_login();
-	const int OPERATION_INDEX = 1;
-	const int QUESTION_MARK_INDEX = 3;
 	string operation = tokenized_input[OPERATION_INDEX];
+	if(tokenized_input.size() > 2)
+			tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
 	if(operation == LIKES)
-	{
-		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
 		utunes->delete_like(tokenized_input);
-	}
 	else if(operation == PLAYLISTS_SONGS)
-	{
-		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
 		utunes->delete_playlist_song(tokenized_input);
-	}
 	else if(operation == FILTERS)
-	{
 		utunes->delete_filters();
-	}
 }
 
 vector<string> CommandHandler::tokenize_input(string input)
@@ -234,13 +201,3 @@ int CommandHandler::find_index_in_vector(const vector<string>& vec, string s)
 	}
 	return INVALID;
 }
-
-
-
-
-
-
-
-
-
-

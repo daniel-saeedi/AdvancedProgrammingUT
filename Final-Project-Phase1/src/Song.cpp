@@ -1,5 +1,6 @@
 #include "Song.hpp"
-
+constexpr char LIKES_MARK[] = "#likes: ";
+constexpr char COMMENTS_MARK[] = "#comments: ";
 void Song::print_info()
 {
 	std::cout << id << " ";
@@ -14,37 +15,14 @@ void Song::print_single_info()
 	std::cout << title << std::endl;
 	std::cout << artist << std::endl;
 	std::cout << release_year << std::endl;
+	std::cout << LIKES_MARK << get_likes() << std::endl;
+	std::cout << COMMENTS_MARK << get_total_comments() << std::endl;
 }
 
 bool Song::is_equal(int _id)
 {
 	if(id == _id) return true;
 	return false;
-}
-
-void Song::like(User *user)
-{
-	like_sys->like(user);
-}
-
-bool Song::has_liked(User *user)
-{
-	return like_sys->like_exists(user);
-}
-
-void Song::delete_like(User *user)
-{
-	like_sys->delete_like(user);
-}
-
-void Song::add_comment(User *user,int time,std::string comment)
-{
-	comment_sys->add_comment(user,time,comment);
-}
-
-void Song::get_comments()
-{
-	comment_sys->get_comments();
 }
 
 bool Song::is_artist_equal(std::string _artist)

@@ -5,6 +5,10 @@ Session::Session(User *_user)
 {
 	user = _user;
 	songs_filter_status = false;
+	for(int i = 0;i < FILTERS_SIZE;i++)
+	{
+		filters.push_back(nullptr);
+	}
 }
 
 bool Session::is_songs_filtered()
@@ -27,22 +31,22 @@ void Session::show_songs(std::vector<Song*> songs)
 void Session::add_artist_filter(std::string artist)
 {
 	songs_filter_status = true;
-	//remove_filter(ARTIST_INDEX);
-	filters.push_back(new ArtistCriteria(artist));
+	remove_filter(ARTIST_INDEX);
+	filters[ARTIST_INDEX] = new ArtistCriteria(artist);
 }
 
 void Session::add_public_year_filter(int min,int max)
 {
 	songs_filter_status = true;
-	//remove_filter(PUBLISH_YEAR_INDEX);
-	filters.push_back(new PublishYearCriteria(min,max));
+	remove_filter(PUBLISH_YEAR_INDEX);
+	filters[PUBLISH_YEAR_INDEX] = new PublishYearCriteria(min,max);
 }
 
 void Session::add_likes_filter(int min,int max)
 {
 	songs_filter_status = true;
-	//remove_filter(LIKE_INDEX);
-	filters.push_back(new LikesCriteria(min,max));
+	remove_filter(LIKE_INDEX);
+	filters[LIKE_INDEX] = new LikesCriteria(min,max);
 }
 
 void Session::remove_filter(int index)

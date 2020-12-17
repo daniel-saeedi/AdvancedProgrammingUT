@@ -13,7 +13,7 @@
 constexpr int ARTIST_INDEX = 0;
 constexpr int PUBLISH_YEAR_INDEX = 1;
 constexpr int LIKE_INDEX = 2;
-constexpr int FILTERS = 3;
+constexpr int FILTERS_SIZE = 3;
 class Session
 {
 public:

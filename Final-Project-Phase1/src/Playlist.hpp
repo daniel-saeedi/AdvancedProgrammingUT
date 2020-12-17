@@ -15,6 +15,9 @@ public:
 	void add_song(Song *song,User *current_user);
 	void show_songs(User *current_user);
 	void delete_song(Song *song,User *current_user);
+	int get_id(){return id;}
+	bool song_exists(Song *song);
+	bool is_playlist_id_equal(int _id);
 private:
 	int id;
 	std::string name;
@@ -22,7 +25,6 @@ private:
 	User *user;
 	std::vector<Song*> songs;
 	void print_info();
-	bool song_exists(Song *song);
 	void check_permission(User *current_user);
 };
 #endif

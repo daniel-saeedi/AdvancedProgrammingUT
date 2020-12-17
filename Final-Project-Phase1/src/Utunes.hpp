@@ -8,8 +8,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-using namespace std;
-
+#include <map>
 class Utunes
 {
 public:
@@ -51,5 +50,6 @@ private:
 	void add_artist_filter(vector<std::string> filter_info);
 	void add_publish_year_filter(vector<std::string> filter_info);
 	void add_likes_filter(vector<std::string> filter_info);
+	std::map<std::string,std::string> split(vector<std::string> headers,vector<std::string> info);
 };
 #endif
