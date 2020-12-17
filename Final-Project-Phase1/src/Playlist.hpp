@@ -1,9 +1,9 @@
 #ifndef PLAYLIST_H
 #define PLAYLIST_H
-#include "Song.hpp"
-#include "User.hpp"
 #include <iostream>
 #include <vector>
+#include "Song.hpp"
+#include "User.hpp"
 
 class Playlist
 {
@@ -18,6 +18,7 @@ public:
 	int get_id(){return id;}
 	bool song_exists(Song *song);
 	bool is_playlist_id_equal(int _id);
+	bool is_private(){return private_status;}
 private:
 	int id;
 	std::string name;

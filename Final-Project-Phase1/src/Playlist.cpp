@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "Playlist.hpp"
 #include "Exception/BadRequestException.hpp"
 #include "Exception/PermissionDeniedException.hpp"
@@ -38,14 +39,14 @@ void Playlist::print_info()
 
 void Playlist::add_song(Song *song,User *current_user)
 {
-	check_permission(current_user);
+	if(user != current_user) throw PermissionDeniedException();
 	if(!song_exists(song)) songs.push_back(song);
 }
 
 void Playlist::delete_song(Song *song,User *current_user)
 {
-	check_permission(current_user);
 	if(!song_exists(song)) throw BadRequestException();
+	if(user != current_user) throw PermissionDeniedException();
 	for(int i = 0;i < songs.size();i++)
 	{
 		if(songs[i] == song)
@@ -55,7 +56,7 @@ void Playlist::delete_song(Song *song,User *current_user)
 
 void Playlist::show_songs(User *current_user)
 {
-	check_permission(current_user);
+	if(user != current_user && private_status) throw PermissionDeniedException();
 	if(songs.size() == 0) throw EmptyException();
 	sort(songs.begin(),songs.end(),compare_song_by_id);
 	for(int i = 0;i < songs.size();i++)
@@ -77,12 +78,3 @@ bool Playlist::song_exists(Song *song)
 	}
 	return false;
 }
-
-
-
-
-
-
-
-
-

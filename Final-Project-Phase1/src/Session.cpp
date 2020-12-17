@@ -44,14 +44,14 @@ void Session::add_artist_filter(std::string artist)
 void Session::add_public_year_filter(int min,int max)
 {
 	songs_filter_status = true;
-	remove_filter(PUBLISH_YEAR_INDEX);
+	if(min <= max) remove_filter(PUBLISH_YEAR_INDEX);
 	filters[PUBLISH_YEAR_INDEX] = new PublishYearCriteria(min,max);
 }
 
 void Session::add_likes_filter(int min,int max)
 {
 	songs_filter_status = true;
-	remove_filter(LIKE_INDEX);
+	if(min <= max ) remove_filter(PUBLISH_YEAR_INDEX);
 	filters[LIKE_INDEX] = new LikesCriteria(min,max);
 }
 
@@ -59,8 +59,8 @@ void Session::remove_filter(int index)
 {
 	if(filters[index] != nullptr)
 	{
-		filters[index] = nullptr;
 		Criteria *previous = filters[index];
+		filters[index] = nullptr;
 		delete previous;
 	}
 }

@@ -1,3 +1,4 @@
+#include <map>
 #include "CommandHandler.hpp"
 #include "Exception/BadRequestException.hpp"
 const char CSV_DELIMITER = ',';
@@ -14,6 +15,21 @@ constexpr char PLAYLISTS_SONGS[] = "playlists_songs";
 constexpr char USERS[] = "users";
 constexpr char COMMENTS[] = "comments";
 constexpr char FILTERS[] = "filters";
+constexpr char EMAIL[] = "email";
+constexpr char USERNAME[] = "username";
+constexpr char PASSWORD[] = "password";
+constexpr char MIN_YEAR[] = "min_year";
+constexpr char MAX_YEAR[] = "max_year";
+constexpr char MIN_LIKE[] = "min_like";
+constexpr char MAX_LIKE[] = "max_like";
+constexpr char PRIVATE[] = "private";
+constexpr char PUBLIC[] = "public";
+constexpr char NAME[] = "name";
+constexpr char PRIVACY[] = "privacy";
+constexpr char PLAYLIST_ID[] = "playlist_id";
+constexpr char SONG_ID[] = "song_id";
+constexpr char TIME[] = "time";
+constexpr char COMMENT[] = "comment";
 constexpr int OPERATION_INDEX = 1;
 constexpr int QUESTION_MARK_INDEX = 3;
 //Headers of csv file
@@ -69,24 +85,26 @@ void CommandHandler::post_commands(vector<string> tokenized_input)
 	if(tokenized_input.size() > 2)
 		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
 	if(operation == SINGUP)
-		utunes->signup(tokenized_input);
+		signup(tokenized_input);
 	else if(operation == LOGIN)
-		utunes->login(tokenized_input);
+		login(tokenized_input);
 	else if(operation == LOGOUT)
 		utunes->logout();
 	else
 	{
 		utunes->check_login();
 		if(operation == LIKES)
-			utunes->new_like(tokenized_input);
+			new_like(tokenized_input);
 		else if(operation == PLAYLISTS)
-			utunes->add_playlist(tokenized_input);
+			add_playlist(tokenized_input);
 		else if(operation == PLAYLISTS_SONGS)
-			utunes->add_song_to_playlist(tokenized_input);
+			add_song_to_playlist(tokenized_input);
 		else if(operation == COMMENTS)
-			utunes->add_comment(tokenized_input);
+			add_comment(tokenized_input);
 		else if(operation == FILTERS)
-			utunes->add_filter(tokenized_input);
+			add_filter(tokenized_input);
+		else
+			throw BadRequestException();
 	}
 }
 
@@ -100,7 +118,7 @@ void CommandHandler::get_commands(vector<string> tokenized_input)
 		else
 		{
 			tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
-			utunes->get_song(tokenized_input);
+			get_song(tokenized_input);
 		}
 	}
 	else
@@ -110,13 +128,15 @@ void CommandHandler::get_commands(vector<string> tokenized_input)
 		if(operation == LIKES) 
 			utunes->show_likes();
 		else if(operation == PLAYLISTS) 
-			utunes->get_playlists(tokenized_input);
+			get_playlists(tokenized_input);
 		else if(operation == PLAYLISTS_SONGS) 
-			utunes->get_playlist_songs(tokenized_input);
+			get_playlist_songs(tokenized_input);
 		else if(operation == USERS) 
 			utunes->get_users();
 		else if(operation == COMMENTS) 
-			utunes->get_comments(tokenized_input);
+			get_comments(tokenized_input);
+		else
+			throw BadRequestException();
 	}
 	
 }
@@ -128,11 +148,147 @@ void CommandHandler::delete_commands(vector<string> tokenized_input)
 	if(tokenized_input.size() > 2)
 			tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
 	if(operation == LIKES)
-		utunes->delete_like(tokenized_input);
+		delete_like(tokenized_input);
 	else if(operation == PLAYLISTS_SONGS)
-		utunes->delete_playlist_song(tokenized_input);
+		delete_playlist_song(tokenized_input);
 	else if(operation == FILTERS)
 		utunes->delete_filters();
+}
+
+
+void CommandHandler::signup(vector<string> info)
+{
+	std::map<std::string,std::string> data = split_by_headers({EMAIL, USERNAME, PASSWORD},info);
+	std::string email = data[EMAIL];
+	std::string username = data[USERNAME];
+	std::string password = data[PASSWORD];
+	utunes->signup(email,username,password);
+}
+
+void CommandHandler::login(vector<string> info)
+{
+	std::map<std::string,std::string> data = split_by_headers({EMAIL, PASSWORD},info);
+	std::string email = data[EMAIL];
+	std::string password = data[PASSWORD];
+	utunes->login(email,password);
+}
+
+void CommandHandler::new_like(vector<string> info)
+{
+	std::map<std::string,std::string> data = split_by_headers({ID},info);
+	int id = stoi(data[ID]);
+	utunes->new_like(id);
+}
+
+void CommandHandler::add_playlist(vector<string> info)
+{
+	std::map<std::string,std::string> data = split_by_headers({NAME, PRIVACY},info);
+	std::string name = data[NAME];
+	bool private_status;
+	if(data[PRIVACY] == PRIVATE) private_status = true;
+	if(data[PRIVACY] == PUBLIC) private_status = false;
+	utunes->add_playlist(name,private_status);
+}
+
+void CommandHandler::add_song_to_playlist(vector<string> info)
+{
+	std::map<std::string,std::string> data = split_by_headers({PLAYLIST_ID, SONG_ID},info);
+	int playlist_id = stoi(data[PLAYLIST_ID]);
+	int song_id = stoi(data[SONG_ID]);
+	utunes->add_song_to_playlist(playlist_id,song_id);
+}
+
+void CommandHandler::add_comment(vector<string> info)
+{
+	std::map<std::string,std::string> data = split_by_headers({SONG_ID,TIME,COMMENT},info);
+	int song_id = stoi(data[SONG_ID]);
+	int time = stoi(data[TIME]);
+	std::string comment = data[COMMENT];
+	utunes->add_comment(song_id,time,comment);
+}
+
+void CommandHandler::add_filter(vector<string> info)
+{
+	std::string operation = info[0];
+	if(operation == ARTIST) add_artist_filter(info);
+	else if(operation == MIN_YEAR) add_publish_year_filter(info);
+	else if(operation == MIN_LIKE) add_likes_filter(info);
+}
+
+void CommandHandler::add_artist_filter(vector<string> info)
+{
+	const int INVAL = -1;
+	std::string artist;
+	int name_index = INVAL;
+	for(int i = 0;i < info.size();i++)
+	{
+		if(name_index != INVAL)
+		{
+			artist += info[i];
+			if(i < info.size() - 1) artist += " ";
+		}
+		if(info[i] == ARTIST) name_index = i + 1;
+	}
+	utunes->add_artist_filter(artist);
+}
+
+void CommandHandler::add_publish_year_filter(vector<string> info)
+{
+	std::map<std::string,std::string> data = split_by_headers({MIN_YEAR, MAX_YEAR},info);
+	int min_year = stoi(data[MIN_YEAR]);
+	int max_year = stoi(data[MAX_YEAR]);
+	utunes->add_publish_year_filter(min_year,max_year);
+}
+
+void CommandHandler::add_likes_filter(vector<string> info)
+{
+	std::map<std::string,std::string> data = split_by_headers({MIN_LIKE, MAX_LIKE},info);
+	int min_like = stoi(data[MIN_LIKE]);
+	int max_like = stoi(data[MAX_LIKE]);
+	utunes->add_likes_filter(min_like,max_like);
+}
+
+void CommandHandler::get_song(vector<string> info)
+{
+	std::map<std::string,std::string> data = split_by_headers({ID},info);
+	int id = stoi(data[ID]);
+	utunes->get_song(id);
+}
+
+void CommandHandler::get_playlists(vector<string> info)
+{
+	std::map<std::string,std::string> data = split_by_headers({USERNAME},info);
+	std::string username = data[USERNAME];
+	utunes->get_playlists(username);
+}
+
+void CommandHandler::get_playlist_songs(vector<string> info)
+{
+	std::map<std::string,std::string> data = split_by_headers({PLAYLIST_ID},info);
+	int playlist_id = stoi(data[PLAYLIST_ID]);
+	utunes->get_playlist_songs(playlist_id);
+}
+
+void CommandHandler::get_comments(vector<string> info)
+{
+	std::map<std::string,std::string> data = split_by_headers({SONG_ID},info);
+	int song_id = stoi(data[SONG_ID]);
+	utunes->get_comments(song_id);
+}
+
+void CommandHandler::delete_like(vector<string> info)
+{
+	std::map<std::string,std::string> data = split_by_headers({ID},info);
+	int id = stoi(data[ID]);
+	utunes->delete_like(id);
+}
+
+void CommandHandler::delete_playlist_song(vector<string> info)
+{
+	std::map<std::string,std::string> data = split_by_headers({PLAYLIST_ID, SONG_ID},info);
+	int playlist_id = stoi(data[PLAYLIST_ID]);
+	int song_id = stoi(data[SONG_ID]);
+	utunes->delete_playlist_song(playlist_id,song_id);
 }
 
 vector<string> CommandHandler::tokenize_input(string input)
@@ -140,7 +296,6 @@ vector<string> CommandHandler::tokenize_input(string input)
 	stringstream input_string_stream(input);
 	return vector<string>(istream_iterator<string>(input_string_stream),istream_iterator<string>());
 }
-
 
 vector<Song*> CommandHandler::get_records(char* file)
 {
@@ -171,7 +326,7 @@ vector<string> CommandHandler::split(string line, char delimiter)
 	{
 		out_list.push_back(block);
 	}
-	return  out_list;
+	return out_list;
 }
 
 vector<Song*> CommandHandler::tokenize_table(vector<vector<string>> table)
@@ -205,4 +360,18 @@ int CommandHandler::find_index_in_vector(const vector<string>& vec, string s)
 			return i;
 	}
 	return INVALID;
+}
+
+std::map<std::string,std::string> CommandHandler::split_by_headers(vector<std::string> headers,vector<std::string> info)
+{
+	std::map<std::string,std::string> result;
+	for(int i = 0;i < headers.size();i++)
+	{
+		for(int j = 0;j < info.size();j++)
+		{
+			if(headers[i] == info[j]) result[headers[i]] = info[j+1];
+		}
+	}
+	if(result.size() != headers.size()) throw BadRequestException();
+	return result;
 }

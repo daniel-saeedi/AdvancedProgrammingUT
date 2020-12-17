@@ -25,10 +25,13 @@ void PlaylistSystem::show_playlist(User *user,User *current_user)
 	vector<Playlist*> lists = find_playlist(user);
 	sort(lists.begin(),lists.end(),compare_by_id_playlists);
 	if(lists.size() == 0) throw EmptyException();
+	int count_public_playlists = 0;
 	for(int i = 0;i < lists.size();i++)
 	{
 		lists[i]->show_info(current_user);
+		if(!lists[i]->is_private()) count_public_playlists++;
 	}
+	if(count_public_playlists == 0) throw EmptyException();
 }
 
 void PlaylistSystem::add_song_to_playlist(int playlist_id,Song *song,User *current_user)

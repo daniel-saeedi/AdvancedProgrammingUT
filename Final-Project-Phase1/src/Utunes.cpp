@@ -6,24 +6,7 @@
 #include "Exception/BadRequestException.hpp"
 #include "Exception/NotFoundException.hpp"
 #include "Exception/EmptyException.hpp"
-constexpr char ID[] = "id";
-constexpr char EMAIL[] = "email";
-constexpr char USERNAME[] = "username";
-constexpr char PASSWORD[] = "password";
-constexpr char MIN_YEAR[] = "min_year";
-constexpr char MAX_YEAR[] = "max_year";
-constexpr char MIN_LIKE[] = "min_like";
-constexpr char MAX_LIKE[] = "max_like";
-constexpr char ARTIST[] = "artist";
-constexpr char PRIVATE[] = "private";
-constexpr char PUBLIC[] = "public";
-constexpr char NAME[] = "name";
-constexpr char PRIVACY[] = "privacy";
-constexpr char PLAYLIST_ID[] = "playlist_id";
-constexpr char SONG_ID[] = "song_id";
 constexpr char PLAYLIST_MARK[] = "#playlists: ";
-constexpr char TIME[] = "time";
-constexpr char COMMENT[] = "comment";
 constexpr char OK[] = "OK";
 const int INVALID = -1;
 
@@ -44,12 +27,8 @@ Utunes::~Utunes()
 		delete users[i];
 }
 
-void Utunes::signup(vector<std::string> signup_info)
+void Utunes::signup(std::string email,std::string username,std::string password)
 {
-	std::map<std::string,std::string> data = split({EMAIL, USERNAME, PASSWORD},signup_info);
-	std::string email = data[EMAIL];
-	std::string username = data[USERNAME];
-	std::string password = data[PASSWORD];
 	//Encrypting the password
 	password = XOREncryption::encrypt_decrypt(password);
 	create_new_user(email,username,password);
@@ -73,11 +52,8 @@ bool Utunes::email_username_exists(std::string email,std::string username)
 	return false;
 }
 
-void Utunes::login(vector<std::string> login_info)
+void Utunes::login(std::string email,std::string password)
 {
-	std::map<std::string,std::string> data = split({EMAIL, PASSWORD},login_info);
-	std::string email = data[EMAIL];
-	std::string password = data[PASSWORD];
 	//Encrypting the password
 	password = XOREncryption::encrypt_decrypt(password);
 	auth_sys->login(users,email,password);
@@ -106,16 +82,6 @@ void Utunes::get_users()
 	}
 }
 
-void Utunes::add_filter(vector<std::string> filter_info)
-{
-	std::string operation = filter_info[0];
-	if(operation == ARTIST) add_artist_filter(filter_info);
-	else if(operation == MIN_YEAR) add_publish_year_filter(filter_info);
-	else if(operation == MIN_LIKE) add_likes_filter(filter_info);
-	else throw BadRequestException();
-	print_ok();
-}
-
 void Utunes::delete_filters()
 {
 	Session *session = auth_sys->get_session();
@@ -123,57 +89,35 @@ void Utunes::delete_filters()
 	print_ok();
 }
 
-void Utunes::add_artist_filter(vector<std::string> filter_info)
+void Utunes::add_artist_filter(std::string artist)
 {
 	Session *session = auth_sys->get_session();
-	std::string artist;
-	int name_index = INVALID;
-	for(int i = 0;i < filter_info.size();i++)
-	{
-		if(name_index != INVALID)
-		{
-			artist += filter_info[i];
-			if(i < filter_info.size() - 1) artist += " ";
-		}
-		if(filter_info[i] == ARTIST) name_index = i + 1;
-	}
 	session->add_artist_filter(artist);
+	print_ok();
 }
 
-void Utunes::add_publish_year_filter(vector<std::string> filter_info)
+void Utunes::add_publish_year_filter(int min_year,int max_year)
 {
 	Session *session = auth_sys->get_session();
-	std::map<std::string,std::string> data = split({MIN_YEAR, MAX_YEAR},filter_info);
-	int min_year = stoi(data[MIN_YEAR]);
-	int max_year = stoi(data[MAX_YEAR]);
 	session->add_public_year_filter(min_year,max_year);
+	print_ok();
 }
 
-void Utunes::add_likes_filter(vector<std::string> filter_info)
+void Utunes::add_likes_filter(int min_like,int max_like)
 {
 	Session *session = auth_sys->get_session();
-	std::map<std::string,std::string> data = split({MIN_LIKE, MAX_LIKE},filter_info);
-	int min_like = stoi(data[MIN_LIKE]);
-	int max_like = stoi(data[MAX_LIKE]);
 	session->add_likes_filter(min_like,max_like);
+	print_ok();
 }
 
-void Utunes::add_playlist(vector<std::string> playlist_info)
+void Utunes::add_playlist(std::string name,bool private_status)
 {
-	std::map<std::string,std::string> data = split({NAME, PRIVACY},playlist_info);
-	std::string name = data[NAME];
-	bool private_status;
-	if(data[PRIVACY] == PRIVATE) private_status = true;
-	if(data[PRIVACY] == PUBLIC) private_status = false;
 	User *user = auth_sys->get_session()->get_user();
 	playlist_sys->new_playlist(name,private_status,user);
 }
 
-void Utunes::add_song_to_playlist(vector<std::string> playlist_info)
+void Utunes::add_song_to_playlist(int playlist_id,int song_id)
 {
-	std::map<std::string,std::string> data = split({PLAYLIST_ID, SONG_ID},playlist_info);
-	int playlist_id = stoi(data[PLAYLIST_ID]);
-	int song_id = stoi(data[SONG_ID]);
 	User *user = auth_sys->get_session()->get_user();
 	Song* song = find_song_by_id(song_id);
 	if(song != nullptr)
@@ -181,31 +125,24 @@ void Utunes::add_song_to_playlist(vector<std::string> playlist_info)
 	print_ok();
 }
 
-void Utunes::delete_playlist_song(vector<std::string> playlist_info)
+void Utunes::delete_playlist_song(int playlist_id,int song_id)
 {
-	std::map<std::string,std::string> data = split({PLAYLIST_ID, SONG_ID},playlist_info);
-	int playlist_id = stoi(data[PLAYLIST_ID]);
-	int song_id = stoi(data[SONG_ID]);
 	User *user = auth_sys->get_session()->get_user();
 	Song* song = find_song_by_id(song_id);
 	playlist_sys->delete_song(playlist_id,song,user);
 	print_ok();
 }
 
-void Utunes::get_playlists(vector<std::string> playlist_info)
+void Utunes::get_playlists(std::string username)
 {
-	std::map<std::string,std::string> data = split({USERNAME},playlist_info);
-	std::string username = data[USERNAME];
 	if(!user_exists(username)) throw NotFoundException();
 	User *current_user = auth_sys->get_session()->get_user();
 	User *user = find_user(username);
 	playlist_sys->show_playlist(user,current_user);
 }
 
-void Utunes::get_playlist_songs(vector<std::string> playlist_info)
+void Utunes::get_playlist_songs(int playlist_id)
 {
-	std::map<std::string,std::string> data = split({PLAYLIST_ID},playlist_info);
-	int playlist_id = stoi(data[PLAYLIST_ID]);
 	User *current_user = auth_sys->get_session()->get_user();
 	playlist_sys->show_playlist_songs(playlist_id,current_user);	
 }
@@ -218,9 +155,9 @@ void Utunes::get_songs()
 	else show_songs();
 }
 
-void Utunes::get_song(vector<std::string> song_id)
+void Utunes::get_song(int id)
 {
-	int id = extract_id(song_id);
+	if(!song_exists(id)) throw NotFoundException();
 	Song *song = find_song_by_id(id);
 	song->print_single_info();
 	int num_of_playlists = playlist_sys->count_playlists_contain_song(song);
@@ -235,9 +172,9 @@ void Utunes::show_songs()
 	}
 }
 
-void Utunes::new_like(vector<std::string> song_id)
+void Utunes::new_like(int id)
 {
-	int id = extract_id(song_id);
+	if(!song_exists(id)) throw NotFoundException();
 	User *user = auth_sys->get_session()->get_user();
 	Song *song = find_song_by_id(id);
 	song->like(user);
@@ -255,21 +192,17 @@ void Utunes::show_likes()
 	}
 }
 
-void Utunes::delete_like(vector<std::string> song_id)
+void Utunes::delete_like(int id)
 {
-	int id = extract_id(song_id);
+	if(!song_exists(id)) throw NotFoundException();
 	User *user = auth_sys->get_session()->get_user();
 	Song *song = find_song_by_id(id);
 	song->delete_like(user);
 	print_ok();
 }
 
-void Utunes::add_comment(vector<std::string> playlist_info)
+void Utunes::add_comment(int song_id,int time,std::string comment)
 {
-	std::map<std::string,std::string> data = split({SONG_ID,TIME,COMMENT},playlist_info);
-	int song_id = stoi(data[SONG_ID]);
-	int time = stoi(data[TIME]);
-	std::string comment = data[COMMENT];
 	if(!song_exists(song_id)) throw NotFoundException();
 	User *user = auth_sys->get_session()->get_user();
 	Song* song = find_song_by_id(song_id);
@@ -277,24 +210,11 @@ void Utunes::add_comment(vector<std::string> playlist_info)
 	print_ok();
 }
 
-void Utunes::get_comments(vector<std::string> playlist_info)
+void Utunes::get_comments(int song_id)
 {
-	std::map<std::string,std::string> data = split({SONG_ID},playlist_info);
-	int song_id = stoi(data[SONG_ID]);
 	if(!song_exists(song_id)) throw NotFoundException();
 	Song* song = find_song_by_id(song_id);
 	song->get_comments();
-}
-
-int Utunes::extract_id(vector<std::string> song_id)
-{
-	int id = INVALID;
-	for(int i = 0;i < song_id.size();i++)
-	{
-		if(song_id[i] == ID) id = stoi(song_id[i+1]);
-	}
-	if(id == INVALID || !song_exists(id)) throw NotFoundException();
-	return id;
 }
 
 std::vector<Song*> Utunes::get_liked_songs()

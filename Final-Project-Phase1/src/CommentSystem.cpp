@@ -1,4 +1,5 @@
 #include "CommentSystem.hpp"
+#include "Exception/EmptyException.hpp"
 #include<algorithm>
 #include <tuple>
 bool compare_comments(Comment *comment1, Comment *comment2)
@@ -16,6 +17,7 @@ void CommentSystem::add_comment(User *_user,int _time,std::string _comment)
 
 void CommentSystem::get_comments()
 {
+	if(comments.size() == 0) throw EmptyException();
 	sort(comments.begin(),comments.end(),compare_comments);
 	for(int i = 0;i < comments.size();i++)
 	{
