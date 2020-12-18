@@ -266,20 +266,6 @@ User* Utunes::find_user(std::string username)
 	return user;
 }
 
-std::map<std::string,std::string> Utunes::split(vector<std::string> headers,vector<std::string> info)
-{
-	std::map<std::string,std::string> result;
-	for(int i = 0;i < headers.size();i++)
-	{
-		for(int j = 0;j < info.size();j++)
-		{
-			if(headers[i] == info[j]) result[headers[i]] = info[j+1];
-		}
-	}
-	if(result.size() != headers.size()) throw BadRequestException();
-	return result;
-}
-
 void Utunes::print_ok()
 {
 	std::cout << OK << std::endl;

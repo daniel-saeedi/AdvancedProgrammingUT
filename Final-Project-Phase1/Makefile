@@ -84,3 +84,4 @@ ${BUILD_DIR}/EmptyException.o: ${EXCEPTION_DIR}/EmptyException.cpp
 
 clean:
 	rm -rf ${BUILD_DIR} && mkdir -p ${BUILD_DIR}
+	rm utunes.out

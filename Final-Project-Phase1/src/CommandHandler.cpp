@@ -146,7 +146,7 @@ void CommandHandler::delete_commands(vector<string> tokenized_input)
 	utunes->check_login();
 	string operation = tokenized_input[OPERATION_INDEX];
 	if(tokenized_input.size() > 2)
-			tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
+		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
 	if(operation == LIKES)
 		delete_like(tokenized_input);
 	else if(operation == PLAYLISTS_SONGS)
@@ -158,7 +158,9 @@ void CommandHandler::delete_commands(vector<string> tokenized_input)
 
 void CommandHandler::signup(vector<string> info)
 {
-	std::map<std::string,std::string> data = split_by_headers({EMAIL, USERNAME, PASSWORD},info);
+	std::vector<std::string> headers = {EMAIL, USERNAME, PASSWORD};
+	is_command_valid(info.size(), headers.size());
+	std::map<std::string,std::string> data = split_by_headers(headers,info);
 	std::string email = data[EMAIL];
 	std::string username = data[USERNAME];
 	std::string password = data[PASSWORD];
@@ -167,7 +169,9 @@ void CommandHandler::signup(vector<string> info)
 
 void CommandHandler::login(vector<string> info)
 {
-	std::map<std::string,std::string> data = split_by_headers({EMAIL, PASSWORD},info);
+	std::vector<std::string> headers = {EMAIL, PASSWORD};
+	is_command_valid(info.size(), headers.size());
+	std::map<std::string,std::string> data = split_by_headers(headers,info);
 	std::string email = data[EMAIL];
 	std::string password = data[PASSWORD];
 	utunes->login(email,password);
@@ -175,14 +179,18 @@ void CommandHandler::login(vector<string> info)
 
 void CommandHandler::new_like(vector<string> info)
 {
-	std::map<std::string,std::string> data = split_by_headers({ID},info);
+	std::vector<std::string> headers = {ID};
+	is_command_valid(info.size(), headers.size());
+	std::map<std::string,std::string> data = split_by_headers(headers,info);
 	int id = stoi(data[ID]);
 	utunes->new_like(id);
 }
 
 void CommandHandler::add_playlist(vector<string> info)
 {
-	std::map<std::string,std::string> data = split_by_headers({NAME, PRIVACY},info);
+	std::vector<std::string> headers = {NAME, PRIVACY};
+	is_command_valid(info.size(), headers.size());
+	std::map<std::string,std::string> data = split_by_headers(headers,info);
 	std::string name = data[NAME];
 	bool private_status;
 	if(data[PRIVACY] == PRIVATE) private_status = true;
@@ -192,7 +200,9 @@ void CommandHandler::add_playlist(vector<string> info)
 
 void CommandHandler::add_song_to_playlist(vector<string> info)
 {
-	std::map<std::string,std::string> data = split_by_headers({PLAYLIST_ID, SONG_ID},info);
+	std::vector<std::string> headers = {PLAYLIST_ID, SONG_ID};
+	is_command_valid(info.size(), headers.size());
+	std::map<std::string,std::string> data = split_by_headers(headers,info);
 	int playlist_id = stoi(data[PLAYLIST_ID]);
 	int song_id = stoi(data[SONG_ID]);
 	utunes->add_song_to_playlist(playlist_id,song_id);
@@ -200,7 +210,9 @@ void CommandHandler::add_song_to_playlist(vector<string> info)
 
 void CommandHandler::add_comment(vector<string> info)
 {
-	std::map<std::string,std::string> data = split_by_headers({SONG_ID,TIME,COMMENT},info);
+	std::vector<std::string> headers = {SONG_ID,TIME,COMMENT};
+	is_command_valid(info.size(), headers.size());
+	std::map<std::string,std::string> data = split_by_headers(headers,info);
 	int song_id = stoi(data[SONG_ID]);
 	int time = stoi(data[TIME]);
 	std::string comment = data[COMMENT];
@@ -213,10 +225,12 @@ void CommandHandler::add_filter(vector<string> info)
 	if(operation == ARTIST) add_artist_filter(info);
 	else if(operation == MIN_YEAR) add_publish_year_filter(info);
 	else if(operation == MIN_LIKE) add_likes_filter(info);
+	else throw BadRequestException();
 }
 
 void CommandHandler::add_artist_filter(vector<string> info)
 {
+	if(info.size() < 2) throw BadRequestException();
 	const int INVAL = -1;
 	std::string artist;
 	int name_index = INVAL;
@@ -234,7 +248,9 @@ void CommandHandler::add_artist_filter(vector<string> info)
 
 void CommandHandler::add_publish_year_filter(vector<string> info)
 {
-	std::map<std::string,std::string> data = split_by_headers({MIN_YEAR, MAX_YEAR},info);
+	std::vector<std::string> headers = {MIN_YEAR, MAX_YEAR};
+	is_command_valid(info.size(), headers.size());
+	std::map<std::string,std::string> data = split_by_headers(headers,info);
 	int min_year = stoi(data[MIN_YEAR]);
 	int max_year = stoi(data[MAX_YEAR]);
 	utunes->add_publish_year_filter(min_year,max_year);
@@ -242,7 +258,9 @@ void CommandHandler::add_publish_year_filter(vector<string> info)
 
 void CommandHandler::add_likes_filter(vector<string> info)
 {
-	std::map<std::string,std::string> data = split_by_headers({MIN_LIKE, MAX_LIKE},info);
+	std::vector<std::string> headers = {MIN_LIKE, MAX_LIKE};
+	is_command_valid(info.size(), headers.size());
+	std::map<std::string,std::string> data = split_by_headers(headers,info);
 	int min_like = stoi(data[MIN_LIKE]);
 	int max_like = stoi(data[MAX_LIKE]);
 	utunes->add_likes_filter(min_like,max_like);
@@ -250,45 +268,62 @@ void CommandHandler::add_likes_filter(vector<string> info)
 
 void CommandHandler::get_song(vector<string> info)
 {
-	std::map<std::string,std::string> data = split_by_headers({ID},info);
+	std::vector<std::string> headers = {ID};
+	is_command_valid(info.size(), headers.size());
+	std::map<std::string,std::string> data = split_by_headers(headers,info);
 	int id = stoi(data[ID]);
 	utunes->get_song(id);
 }
 
 void CommandHandler::get_playlists(vector<string> info)
 {
-	std::map<std::string,std::string> data = split_by_headers({USERNAME},info);
+	std::vector<std::string> headers = {USERNAME};
+	is_command_valid(info.size(), headers.size());
+	std::map<std::string,std::string> data = split_by_headers(headers,info);
 	std::string username = data[USERNAME];
 	utunes->get_playlists(username);
 }
 
 void CommandHandler::get_playlist_songs(vector<string> info)
 {
-	std::map<std::string,std::string> data = split_by_headers({PLAYLIST_ID},info);
+	std::vector<std::string> headers = {PLAYLIST_ID};
+	is_command_valid(info.size(), headers.size());
+	std::map<std::string,std::string> data = split_by_headers(headers,info);
 	int playlist_id = stoi(data[PLAYLIST_ID]);
 	utunes->get_playlist_songs(playlist_id);
 }
 
 void CommandHandler::get_comments(vector<string> info)
 {
-	std::map<std::string,std::string> data = split_by_headers({SONG_ID},info);
+	std::vector<std::string> headers = {SONG_ID};
+	is_command_valid(info.size(), headers.size());
+	std::map<std::string,std::string> data = split_by_headers(headers,info);
 	int song_id = stoi(data[SONG_ID]);
 	utunes->get_comments(song_id);
 }
 
 void CommandHandler::delete_like(vector<string> info)
 {
-	std::map<std::string,std::string> data = split_by_headers({ID},info);
+	std::vector<std::string> headers = {ID};
+	is_command_valid(info.size(), headers.size());
+	std::map<std::string,std::string> data = split_by_headers(headers,info);
 	int id = stoi(data[ID]);
 	utunes->delete_like(id);
 }
 
 void CommandHandler::delete_playlist_song(vector<string> info)
 {
-	std::map<std::string,std::string> data = split_by_headers({PLAYLIST_ID, SONG_ID},info);
+	std::vector<std::string> headers = {PLAYLIST_ID, SONG_ID};
+	is_command_valid(info.size(), headers.size());
+	std::map<std::string,std::string> data = split_by_headers(headers,info);
 	int playlist_id = stoi(data[PLAYLIST_ID]);
 	int song_id = stoi(data[SONG_ID]);
 	utunes->delete_playlist_song(playlist_id,song_id);
+}
+
+void CommandHandler::is_command_valid(int info_size,int headers_size)
+{
+	if(info_size != 2*headers_size) throw BadRequestException();
 }
 
 vector<string> CommandHandler::tokenize_input(string input)

@@ -25,11 +25,11 @@ private:
 	vector<Song*> tokenize_table(vector<vector<string>> table);
 	Song* tokenize(vector<string> raw,vector<string> header);
 	int find_index_in_vector(const vector<string>& vec, string s);
+	void is_command_valid(int info_size,int headers_size);
 	void post_commands(vector<string> tokenized_input);
 	void get_commands(vector<string> tokenized_input);
 	void delete_commands(vector<string> tokenized_input);
 	std::map<std::string,std::string> split_by_headers(vector<std::string> headers,vector<std::string> info);
-
 	void signup(vector<string> info);
 	void login(vector<string> info);
 	void new_like(vector<string> info);

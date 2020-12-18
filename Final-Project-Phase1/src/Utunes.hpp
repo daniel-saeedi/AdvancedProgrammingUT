@@ -49,6 +49,5 @@ private:
 	vector<Song*> get_liked_songs();
 	User* find_user(std::string username);
 	bool user_exists(std::string username);
-	std::map<std::string,std::string> split(vector<std::string> headers,vector<std::string> info);
 };
 #endif
