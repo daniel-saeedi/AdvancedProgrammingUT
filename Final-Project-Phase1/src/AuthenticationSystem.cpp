@@ -38,4 +38,5 @@ void AuthenticationSystem::logout()
 bool AuthenticationSystem::is_logged_in()
 {
 	if(current_session == nullptr) throw PermissionDeniedException();
+	return true;
 }

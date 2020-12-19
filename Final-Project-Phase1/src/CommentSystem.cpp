@@ -2,7 +2,7 @@
 #include "Exception/EmptyException.hpp"
 #include<algorithm>
 #include <tuple>
-bool compare_comments(Comment *comment1, Comment *comment2)
+bool compare_comments(Comment *comment1,Comment *comment2)
 {
 	if(comment1->get_time() == comment2->get_time())
 		return comment1->get_username() < comment2->get_username();

@@ -1,4 +1,5 @@
 #include "AndCriteria.hpp"
+
 std::vector<Song*> AndCriteria::meet_criteria(std::vector<Song*> songs)
 {
 	std::vector<Song*> result = songs;

@@ -21,15 +21,15 @@ private:
 	vector<string> tokenize_input(string input);
 	vector<Song*> get_records(char* file);
 	vector<vector<string>> read_csv(char* file);
-	vector<string> split(string line, char delimiter);
+	vector<string> split(string line,char delimiter);
 	vector<Song*> tokenize_table(vector<vector<string>> table);
 	Song* tokenize(vector<string> raw,vector<string> header);
-	int find_index_in_vector(const vector<string>& vec, string s);
+	int find_index_in_vector(const vector<string>& vec,string s);
 	void is_command_valid(int info_size,int headers_size);
 	void post_commands(vector<string> tokenized_input);
 	void get_commands(vector<string> tokenized_input);
 	void delete_commands(vector<string> tokenized_input);
-	std::map<std::string,std::string> split_by_headers(vector<std::string> headers,vector<std::string> info);
+	map<string,string> split_by_headers(vector<string> headers,vector<string> info);
 	void signup(vector<string> info);
 	void login(vector<string> info);
 	void new_like(vector<string> info);

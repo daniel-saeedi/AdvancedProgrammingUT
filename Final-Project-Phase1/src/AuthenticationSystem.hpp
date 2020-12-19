@@ -18,6 +18,5 @@ public:
 private:
 	Session *current_session;
 	void create_new_session(User *user);
-	XOREncryption *encryption;
 };
 #endif
