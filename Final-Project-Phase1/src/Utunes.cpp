@@ -36,6 +36,14 @@ void Utunes::signup(std::string email,std::string username,std::string password)
 	print_ok();
 }
 
+void Utunes::login(std::string email,std::string password)
+{
+	//Encrypting the password
+	password = XOREncryption::encrypt_decrypt(password);
+	auth_sys->login(users,email,password);
+	print_ok();
+}
+
 void Utunes::create_new_user(std::string email,std::string username,std::string password)
 {
 	if(email_username_exists(email,username)) throw BadRequestException();
@@ -52,14 +60,6 @@ bool Utunes::email_username_exists(std::string email,std::string username)
 	return false;
 }
 
-void Utunes::login(std::string email,std::string password)
-{
-	//Encrypting the password
-	password = XOREncryption::encrypt_decrypt(password);
-	auth_sys->login(users,email,password);
-	print_ok();
-}
-
 void Utunes::logout()
 {
 	auth_sys->logout();
@@ -73,6 +73,7 @@ void Utunes::check_login()
 
 void Utunes::get_users()
 {
+	check_login();
 	if((users.size() - 1) <= 0) throw EmptyException();
 	User *current_user = auth_sys->get_session()->get_user();
 	sort(users.begin(),users.end(),compare_by_username);
@@ -84,6 +85,7 @@ void Utunes::get_users()
 
 void Utunes::delete_filters()
 {
+	check_login();
 	Session *session = auth_sys->get_session();
 	session->delete_filters();
 	print_ok();
@@ -91,6 +93,7 @@ void Utunes::delete_filters()
 
 void Utunes::add_artist_filter(std::string artist)
 {
+	check_login();
 	Session *session = auth_sys->get_session();
 	session->add_artist_filter(artist);
 	print_ok();
@@ -98,6 +101,7 @@ void Utunes::add_artist_filter(std::string artist)
 
 void Utunes::add_publish_year_filter(int min_year,int max_year)
 {
+	check_login();
 	Session *session = auth_sys->get_session();
 	session->add_public_year_filter(min_year,max_year);
 	print_ok();
@@ -105,6 +109,7 @@ void Utunes::add_publish_year_filter(int min_year,int max_year)
 
 void Utunes::add_likes_filter(int min_like,int max_like)
 {
+	check_login();
 	Session *session = auth_sys->get_session();
 	session->add_likes_filter(min_like,max_like);
 	print_ok();
@@ -112,12 +117,14 @@ void Utunes::add_likes_filter(int min_like,int max_like)
 
 void Utunes::add_playlist(std::string name,bool private_status)
 {
+	check_login();
 	User *user = auth_sys->get_session()->get_user();
 	playlist_sys->new_playlist(name,private_status,user);
 }
 
 void Utunes::add_song_to_playlist(int playlist_id,int song_id)
 {
+	check_login();
 	User *user = auth_sys->get_session()->get_user();
 	Song* song = find_song_by_id(song_id);
 	if(song != nullptr)
@@ -127,6 +134,7 @@ void Utunes::add_song_to_playlist(int playlist_id,int song_id)
 
 void Utunes::delete_playlist_song(int playlist_id,int song_id)
 {
+	check_login();
 	User *user = auth_sys->get_session()->get_user();
 	Song* song = find_song_by_id(song_id);
 	playlist_sys->delete_song(playlist_id,song,user);
@@ -135,6 +143,7 @@ void Utunes::delete_playlist_song(int playlist_id,int song_id)
 
 void Utunes::get_playlists(std::string username)
 {
+	check_login();
 	if(!user_exists(username)) throw NotFoundException();
 	User *current_user = auth_sys->get_session()->get_user();
 	User *user = find_user(username);
@@ -143,12 +152,14 @@ void Utunes::get_playlists(std::string username)
 
 void Utunes::get_playlist_songs(int playlist_id)
 {
+	check_login();
 	User *current_user = auth_sys->get_session()->get_user();
 	playlist_sys->show_playlist_songs(playlist_id,current_user);	
 }
 
 void Utunes::get_songs()
 {
+	check_login();
 	Session *current_session = auth_sys->get_session();
 	if(songs.size() == 0) throw EmptyException();
 	if(current_session->is_songs_filtered()) current_session->show_songs(songs);
@@ -157,6 +168,7 @@ void Utunes::get_songs()
 
 void Utunes::get_song(int id)
 {
+	check_login();
 	if(!song_exists(id)) throw NotFoundException();
 	Song *song = find_song_by_id(id);
 	song->print_single_info();
@@ -166,6 +178,7 @@ void Utunes::get_song(int id)
 
 void Utunes::show_songs()
 {
+	check_login();
 	for(int i = 0;i < songs.size();i++)
 	{	
 		songs[i]->print_info();
@@ -174,6 +187,7 @@ void Utunes::show_songs()
 
 void Utunes::new_like(int id)
 {
+	check_login();
 	if(!song_exists(id)) throw NotFoundException();
 	User *user = auth_sys->get_session()->get_user();
 	Song *song = find_song_by_id(id);
@@ -183,6 +197,7 @@ void Utunes::new_like(int id)
 
 void Utunes::show_likes()
 {
+	check_login();
 	std::vector<Song*> liked_songs = get_liked_songs();
 	sort(liked_songs.begin(),liked_songs.end(),compare_by_id);
 	if(liked_songs.size() == 0) throw EmptyException();
@@ -194,6 +209,7 @@ void Utunes::show_likes()
 
 void Utunes::delete_like(int id)
 {
+	check_login();
 	if(!song_exists(id)) throw NotFoundException();
 	User *user = auth_sys->get_session()->get_user();
 	Song *song = find_song_by_id(id);
@@ -203,6 +219,7 @@ void Utunes::delete_like(int id)
 
 void Utunes::add_comment(int song_id,int time,std::string comment)
 {
+	check_login();
 	if(!song_exists(song_id)) throw NotFoundException();
 	User *user = auth_sys->get_session()->get_user();
 	Song* song = find_song_by_id(song_id);
@@ -212,6 +229,7 @@ void Utunes::add_comment(int song_id,int time,std::string comment)
 
 void Utunes::get_comments(int song_id)
 {
+	check_login();
 	if(!song_exists(song_id)) throw NotFoundException();
 	Song* song = find_song_by_id(song_id);
 	song->get_comments();

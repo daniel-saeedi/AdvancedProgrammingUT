@@ -1,5 +1,11 @@
+#include <algorithm>
 #include "Session.hpp"
 #include "Exception/EmptyException.hpp"
+
+bool song_compare_by_id(Song *song1,Song *song2)
+{
+	return song1->get_id() < song2->get_id();
+}
 
 Session::Session(User *_user)
 {
@@ -27,6 +33,7 @@ void Session::show_songs(std::vector<Song*> songs)
 	AndCriteria *and_criteria = new AndCriteria(filters);
 	std::vector<Song*> filtered_songs = and_criteria->meet_criteria(songs);
 	delete and_criteria;
+	sort(filtered_songs.begin(),filtered_songs.end(),song_compare_by_id);
 	if(filtered_songs.size() == 0) throw EmptyException();
 	for(int i = 0;i < filtered_songs.size();i++)
 	{

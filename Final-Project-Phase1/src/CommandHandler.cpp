@@ -90,27 +90,22 @@ void CommandHandler::post_commands(vector<string> tokenized_input)
 		login(tokenized_input);
 	else if(operation == LOGOUT)
 		utunes->logout();
+	else if(operation == LIKES)
+		new_like(tokenized_input);
+	else if(operation == PLAYLISTS)
+		add_playlist(tokenized_input);
+	else if(operation == PLAYLISTS_SONGS)
+		add_song_to_playlist(tokenized_input);
+	else if(operation == COMMENTS)
+		add_comment(tokenized_input);
+	else if(operation == FILTERS)
+		add_filter(tokenized_input);
 	else
-	{
-		utunes->check_login();
-		if(operation == LIKES)
-			new_like(tokenized_input);
-		else if(operation == PLAYLISTS)
-			add_playlist(tokenized_input);
-		else if(operation == PLAYLISTS_SONGS)
-			add_song_to_playlist(tokenized_input);
-		else if(operation == COMMENTS)
-			add_comment(tokenized_input);
-		else if(operation == FILTERS)
-			add_filter(tokenized_input);
-		else
-			throw BadRequestException();
-	}
+		throw BadRequestException();
 }
 
 void CommandHandler::get_commands(vector<string> tokenized_input)
 {
-	utunes->check_login();
 	string operation = tokenized_input[OPERATION_INDEX];
 	if(operation == SONGS)
 	{
@@ -143,7 +138,6 @@ void CommandHandler::get_commands(vector<string> tokenized_input)
 
 void CommandHandler::delete_commands(vector<string> tokenized_input)
 {
-	utunes->check_login();
 	string operation = tokenized_input[OPERATION_INDEX];
 	if(tokenized_input.size() > 2)
 		tokenized_input.erase(tokenized_input.begin(), tokenized_input.begin() + QUESTION_MARK_INDEX);
@@ -153,6 +147,8 @@ void CommandHandler::delete_commands(vector<string> tokenized_input)
 		delete_playlist_song(tokenized_input);
 	else if(operation == FILTERS)
 		utunes->delete_filters();
+	else
+		throw BadRequestException();
 }
 
 
@@ -179,6 +175,7 @@ void CommandHandler::login(vector<string> info)
 
 void CommandHandler::new_like(vector<string> info)
 {
+	utunes->check_login();
 	std::vector<std::string> headers = {ID};
 	is_command_valid(info.size(), headers.size());
 	std::map<std::string,std::string> data = split_by_headers(headers,info);
@@ -188,6 +185,7 @@ void CommandHandler::new_like(vector<string> info)
 
 void CommandHandler::add_playlist(vector<string> info)
 {
+	utunes->check_login();
 	std::vector<std::string> headers = {NAME, PRIVACY};
 	is_command_valid(info.size(), headers.size());
 	std::map<std::string,std::string> data = split_by_headers(headers,info);
@@ -200,6 +198,7 @@ void CommandHandler::add_playlist(vector<string> info)
 
 void CommandHandler::add_song_to_playlist(vector<string> info)
 {
+	utunes->check_login();
 	std::vector<std::string> headers = {PLAYLIST_ID, SONG_ID};
 	is_command_valid(info.size(), headers.size());
 	std::map<std::string,std::string> data = split_by_headers(headers,info);
@@ -210,6 +209,7 @@ void CommandHandler::add_song_to_playlist(vector<string> info)
 
 void CommandHandler::add_comment(vector<string> info)
 {
+	utunes->check_login();
 	std::vector<std::string> headers = {SONG_ID,TIME,COMMENT};
 	is_command_valid(info.size(), headers.size());
 	std::map<std::string,std::string> data = split_by_headers(headers,info);
@@ -221,6 +221,7 @@ void CommandHandler::add_comment(vector<string> info)
 
 void CommandHandler::add_filter(vector<string> info)
 {
+	utunes->check_login();
 	std::string operation = info[0];
 	if(operation == ARTIST) add_artist_filter(info);
 	else if(operation == MIN_YEAR) add_publish_year_filter(info);

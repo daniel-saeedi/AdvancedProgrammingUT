@@ -45,8 +45,8 @@ void Playlist::add_song(Song *song,User *current_user)
 
 void Playlist::delete_song(Song *song,User *current_user)
 {
-	if(!song_exists(song)) throw BadRequestException();
 	if(user != current_user) throw PermissionDeniedException();
+	if(!song_exists(song)) throw BadRequestException();
 	for(int i = 0;i < songs.size();i++)
 	{
 		if(songs[i] == song)

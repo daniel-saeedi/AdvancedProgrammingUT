@@ -31,7 +31,7 @@ void PlaylistSystem::show_playlist(User *user,User *current_user)
 		lists[i]->show_info(current_user);
 		if(!lists[i]->is_private()) count_public_playlists++;
 	}
-	if(count_public_playlists == 0) throw EmptyException();
+	if(count_public_playlists == 0 && user != current_user) throw EmptyException();
 }
 
 void PlaylistSystem::add_song_to_playlist(int playlist_id,Song *song,User *current_user)
