@@ -63,18 +63,18 @@ void CommandHandler::run()
 			const string command_type = tokenized_input[COMMAND_TYPE_INDEX];
 			try
 			{
-				if(command_type == POST) 
+				if(command_type == POST)
 					post_commands(tokenized_input);
-				else if(command_type == GET) 
+				else if(command_type == GET)
 					get_commands(tokenized_input);
-				else if(command_type == DELETE) 
+				else if(command_type == DELETE)
 					delete_commands(tokenized_input);
 				else
 					throw BadRequestException();
 			}
 			catch(const exception& error)
 			{
-				cout << error.what();
+				cerr << error.what();
 			}
 		}
 	}
@@ -82,6 +82,8 @@ void CommandHandler::run()
 
 void CommandHandler::post_commands(vector<string> tokenized_input)
 {
+	if(tokenized_input.size() < MIN_TOKENS)
+		throw BadRequestException();
 	string operation = tokenized_input[OPERATION_INDEX];
 	if(tokenized_input.size() > MIN_TOKENS)
 		tokenized_input.erase(tokenized_input.begin(),tokenized_input.begin() + QUESTION_MARK_INDEX);
@@ -107,6 +109,8 @@ void CommandHandler::post_commands(vector<string> tokenized_input)
 
 void CommandHandler::get_commands(vector<string> tokenized_input)
 {
+	if(tokenized_input.size() < MIN_TOKENS)
+		throw BadRequestException();
 	string operation = tokenized_input[OPERATION_INDEX];
 	if(operation == SONGS)
 	{
@@ -121,24 +125,26 @@ void CommandHandler::get_commands(vector<string> tokenized_input)
 	{
 		if(tokenized_input.size() > MIN_TOKENS)
 			tokenized_input.erase(tokenized_input.begin(),tokenized_input.begin() + QUESTION_MARK_INDEX);
-		if(operation == LIKES) 
+		if(operation == LIKES)
 			utunes->show_likes();
-		else if(operation == PLAYLISTS) 
+		else if(operation == PLAYLISTS)
 			get_playlists(tokenized_input);
-		else if(operation == PLAYLISTS_SONGS) 
+		else if(operation == PLAYLISTS_SONGS)
 			get_playlist_songs(tokenized_input);
-		else if(operation == USERS) 
+		else if(operation == USERS)
 			utunes->get_users();
-		else if(operation == COMMENTS) 
+		else if(operation == COMMENTS)
 			get_comments(tokenized_input);
 		else
 			throw BadRequestException();
 	}
-	
+
 }
 
 void CommandHandler::delete_commands(vector<string> tokenized_input)
 {
+	if(tokenized_input.size() < MIN_TOKENS)
+		throw BadRequestException();
 	string operation = tokenized_input[OPERATION_INDEX];
 	if(tokenized_input.size() > MIN_TOKENS)
 		tokenized_input.erase(tokenized_input.begin(),tokenized_input.begin() + QUESTION_MARK_INDEX);
