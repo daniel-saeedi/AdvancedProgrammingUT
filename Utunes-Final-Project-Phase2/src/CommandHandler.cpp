@@ -80,7 +80,7 @@ void CommandHandler::run()
 			}
 			catch(const exception& error)
 			{
-				cerr << error.what();
+				cout << error.what();
 			}
 		}
 	}

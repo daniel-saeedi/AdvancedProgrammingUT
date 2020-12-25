@@ -1,4 +1,5 @@
 #include "Song.hpp"
+#include <iomanip>
 constexpr char LIKES_MARK[] = "#likes: ";
 constexpr char COMMENTS_MARK[] = "#comments: ";
 void Song::print_info()
@@ -11,6 +12,8 @@ void Song::print_info()
 
 void Song::print_info(double confidence)
 {
+	std::cout << std::fixed << std::showpoint;
+	std::cout << std::setprecision(2);
 	std::cout << id << " ";
 	std::cout << confidence << "% ";
 	std::cout << title << " ";

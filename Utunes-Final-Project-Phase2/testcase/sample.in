@@ -1,0 +1,13 @@
+GET similar_users ? count 5
+POST login ? email Ali password Ali
+GET similar_users ? count 5
+GET recommended ? count 5
+GET recommended ? count 1
+POST logout
+POST login ? email Amin password Amin
+GET similar_users ? count 2
+POST logout
+POST signup ? email User username User password User
+POST likes ? id 1
+GET recommended ? count 4
+POST logout
