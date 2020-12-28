@@ -1,12 +1,10 @@
 #include "RecommendationSystem.hpp"
-using namespace std;
 constexpr int PRECISION = 2;
+constexpr char PERCENTAGE[] = "% ";
 
 bool compare_user_similarity(std::pair<User*,double> a,std::pair<User*,double> b);
 
 bool compare_songs_confidence(std::pair<Song*,double> a,std::pair<Song*,double> b);
-
-double remove_digits(double n,int digits);
 
 void RecommendationSystem::get_similar_users(int count,User *current_user,const std::vector<User*> &users,const std::vector<Song*> &songs)
 {
@@ -19,9 +17,9 @@ std::vector<std::pair<User*,double>> RecommendationSystem::get_users_similarity(
 	std::vector<std::vector<double>> similarity_matrix = get_similarity_matrix(users,songs);
 	int current_user_index = find_user_index(users,current_user);
 	std::vector<double> current_user_similarity = similarity_matrix[current_user_index];
-	std::vector<std::pair<User*,double>> users_similarity = get_similar_users_pair(users,current_user_similarity);
-	sort(users_similarity.begin(),users_similarity.end(),compare_user_similarity);
-	return users_similarity;
+	std::vector<std::pair<User*,double>> users_similarity_pair = get_similar_users_pair(users,current_user_similarity);
+	sort(users_similarity_pair.begin(),users_similarity_pair.end(),compare_user_similarity);
+	return users_similarity_pair;
 }
 
 void RecommendationSystem::get_recommendation(int count,User *current_user,const std::vector<User*> &users,const std::vector<Song*> &songs)
@@ -80,8 +78,7 @@ std::vector<std::vector<double>> RecommendationSystem::get_similarity_matrix(con
 
 double RecommendationSystem::calculate_similarity(int total_same_likes,int total_songs)
 {
-	double similarity = (double)total_same_likes / (double)total_songs;
-	return similarity*100;
+	return ((double)total_same_likes / (double)total_songs) * 100;
 }
 
 double RecommendationSystem::calculate_confidence(Song *song,User *user,const std::vector<User*> &users,std::vector<std::vector<double>> similarity_matrix)
@@ -130,8 +127,8 @@ void RecommendationSystem::print_similar_users(int count,User *current_user,std:
 		{
 			printed++;
 			std::cout << std::fixed << std::showpoint;
-			std::cout << std::setprecision(2);
-			std::cout << users_similarity[i].second << "% ";
+			std::cout << std::setprecision(PRECISION);
+			std::cout << users_similarity[i].second << PERCENTAGE;
 			std::cout << user->get_username() << std::endl;
 		}
 	}
@@ -155,17 +152,18 @@ void RecommendationSystem::print_recommendation(User *current_user,int count,std
 
 std::vector<std::pair<User*,double>> RecommendationSystem::get_similar_users_pair(const std::vector<User*> &users,std::vector<double> similarity_matrix)
 {
-	std::vector<pair<User*,double>> vec;
+	std::vector<std::pair<User*,double>> similar_users_pair;
 	for(int i = 0;i < users.size();i++)
 	{
-		pair<User*,double> p;
+		std::pair<User*,double> p;
 		p.first = users[i];
 		p.second = similarity_matrix[i];
-		vec.push_back(p);
+		similar_users_pair.push_back(p);
 	}
-	return vec;
+	return similar_users_pair;
 }
 
+//Compare Functions
 bool compare_user_similarity(std::pair<User*,double> a,std::pair<User*,double> b)
 {
 	if(a.second == b.second)
@@ -176,11 +174,6 @@ bool compare_user_similarity(std::pair<User*,double> a,std::pair<User*,double> b
 	}
 	else
 		return a.second > b.second;
-}
-
-double remove_digits(double n,int digits)
-{
-	return std::floor(n * (double)pow(10,digits)) / (double)pow(10,digits);
 }
 
 bool compare_songs_confidence(std::pair<Song*,double> a,std::pair<Song*,double> b)

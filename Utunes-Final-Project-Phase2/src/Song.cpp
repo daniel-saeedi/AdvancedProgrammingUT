@@ -2,6 +2,8 @@
 #include <iomanip>
 constexpr char LIKES_MARK[] = "#likes: ";
 constexpr char COMMENTS_MARK[] = "#comments: ";
+constexpr int PRECISION = 2;
+
 void Song::print_info()
 {
 	std::cout << id << " ";
@@ -13,7 +15,7 @@ void Song::print_info()
 void Song::print_info(double confidence)
 {
 	std::cout << std::fixed << std::showpoint;
-	std::cout << std::setprecision(2);
+	std::cout << std::setprecision(PRECISION);
 	std::cout << id << " ";
 	std::cout << confidence << "% ";
 	std::cout << title << " ";
