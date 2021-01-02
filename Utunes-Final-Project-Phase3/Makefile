@@ -8,8 +8,8 @@ WEB_DIR=${SRC_DIR}/web
 
 all: utunes.out
 
-utunes.out: ${BUILD_DIR}/main.o ${BUILD_DIR}/CommandHandler.o ${BUILD_DIR}/Utunes.o ${BUILD_DIR}/RecommendationSystem.o ${BUILD_DIR}/AuthenticationSystem.o ${BUILD_DIR}/Session.o ${BUILD_DIR}/User.o ${BUILD_DIR}/XOREncryption.o ${BUILD_DIR}/Song.o ${BUILD_DIR}/Criteria.o ${BUILD_DIR}/PublishYearCriteria.o ${BUILD_DIR}/ArtistCriteria.o ${BUILD_DIR}/LikesCriteria.o ${BUILD_DIR}/AndCriteria.o ${BUILD_DIR}/LikeSystem.o ${BUILD_DIR}/CommentSystem.o ${BUILD_DIR}/PlaylistSystem.o ${BUILD_DIR}/Playlist.o ${BUILD_DIR}/Like.o ${BUILD_DIR}/Comment.o ${BUILD_DIR}/BadRequestException.o ${BUILD_DIR}/PermissionDeniedException.o ${BUILD_DIR}/NotFoundException.o ${BUILD_DIR}/EmptyException.o $(BUILD_DIR)/template_parser.o $(BUILD_DIR)/response.o $(BUILD_DIR)/request.o $(BUILD_DIR)/utilities.o $(BUILD_DIR)/server.o $(BUILD_DIR)/route.o ${BUILD_DIR}/RouteHandler.o ${BUILD_DIR}/UtunesServer.o
-	${CC}	${BUILD_DIR}/main.o ${BUILD_DIR}/CommandHandler.o ${BUILD_DIR}/Utunes.o ${BUILD_DIR}/RecommendationSystem.o ${BUILD_DIR}/AuthenticationSystem.o ${BUILD_DIR}/Session.o ${BUILD_DIR}/User.o ${BUILD_DIR}/XOREncryption.o ${BUILD_DIR}/Song.o ${BUILD_DIR}/Criteria.o ${BUILD_DIR}/PublishYearCriteria.o ${BUILD_DIR}/ArtistCriteria.o ${BUILD_DIR}/LikesCriteria.o ${BUILD_DIR}/AndCriteria.o ${BUILD_DIR}/LikeSystem.o ${BUILD_DIR}/CommentSystem.o ${BUILD_DIR}/PlaylistSystem.o ${BUILD_DIR}/Playlist.o ${BUILD_DIR}/Like.o ${BUILD_DIR}/Comment.o ${BUILD_DIR}/BadRequestException.o ${BUILD_DIR}/PermissionDeniedException.o ${BUILD_DIR}/NotFoundException.o ${BUILD_DIR}/EmptyException.o $(BUILD_DIR)/template_parser.o $(BUILD_DIR)/response.o $(BUILD_DIR)/request.o $(BUILD_DIR)/utilities.o $(BUILD_DIR)/server.o $(BUILD_DIR)/route.o ${BUILD_DIR}/RouteHandler.o ${BUILD_DIR}/UtunesServer.o -o utunes.out
+utunes.out: ${BUILD_DIR}/main.o ${BUILD_DIR}/CommandHandler.o ${BUILD_DIR}/Utunes.o ${BUILD_DIR}/RecommendationSystem.o ${BUILD_DIR}/AuthenticationSystem.o ${BUILD_DIR}/Session.o ${BUILD_DIR}/User.o ${BUILD_DIR}/XOREncryption.o ${BUILD_DIR}/Song.o ${BUILD_DIR}/Criteria.o ${BUILD_DIR}/PublishYearCriteria.o ${BUILD_DIR}/ArtistCriteria.o ${BUILD_DIR}/LikesCriteria.o ${BUILD_DIR}/AndCriteria.o ${BUILD_DIR}/LikeSystem.o ${BUILD_DIR}/CommentSystem.o ${BUILD_DIR}/PlaylistSystem.o ${BUILD_DIR}/Playlist.o ${BUILD_DIR}/Like.o ${BUILD_DIR}/Comment.o ${BUILD_DIR}/BadRequestException.o ${BUILD_DIR}/PermissionDeniedException.o ${BUILD_DIR}/NotFoundException.o ${BUILD_DIR}/EmptyException.o $(BUILD_DIR)/template_parser.o $(BUILD_DIR)/response.o $(BUILD_DIR)/request.o $(BUILD_DIR)/utilities.o $(BUILD_DIR)/server.o $(BUILD_DIR)/route.o ${BUILD_DIR}/RouteHandler.o ${BUILD_DIR}/UtunesServer.o ${BUILD_DIR}/HomeController.o ${BUILD_DIR}/SignupController.o ${BUILD_DIR}/SignupHandler.o ${BUILD_DIR}/LogoutHandler.o
+	${CC}	${BUILD_DIR}/main.o ${BUILD_DIR}/CommandHandler.o ${BUILD_DIR}/Utunes.o ${BUILD_DIR}/RecommendationSystem.o ${BUILD_DIR}/AuthenticationSystem.o ${BUILD_DIR}/Session.o ${BUILD_DIR}/User.o ${BUILD_DIR}/XOREncryption.o ${BUILD_DIR}/Song.o ${BUILD_DIR}/Criteria.o ${BUILD_DIR}/PublishYearCriteria.o ${BUILD_DIR}/ArtistCriteria.o ${BUILD_DIR}/LikesCriteria.o ${BUILD_DIR}/AndCriteria.o ${BUILD_DIR}/LikeSystem.o ${BUILD_DIR}/CommentSystem.o ${BUILD_DIR}/PlaylistSystem.o ${BUILD_DIR}/Playlist.o ${BUILD_DIR}/Like.o ${BUILD_DIR}/Comment.o ${BUILD_DIR}/BadRequestException.o ${BUILD_DIR}/PermissionDeniedException.o ${BUILD_DIR}/NotFoundException.o ${BUILD_DIR}/EmptyException.o $(BUILD_DIR)/template_parser.o $(BUILD_DIR)/response.o $(BUILD_DIR)/request.o $(BUILD_DIR)/utilities.o $(BUILD_DIR)/server.o $(BUILD_DIR)/route.o ${BUILD_DIR}/RouteHandler.o ${BUILD_DIR}/UtunesServer.o ${BUILD_DIR}/HomeController.o ${BUILD_DIR}/SignupController.o ${BUILD_DIR}/SignupHandler.o ${BUILD_DIR}/LogoutHandler.o -o utunes.out
 
 ${BUILD_DIR}/main.o: main.cpp ${SRC_DIR}/CommandHandler.hpp ${SRC_DIR}/Utunes.hpp ${WEB_DIR}/RouteHandler.hpp
 	${CC} -c main.cpp -o ${BUILD_DIR}/main.o
@@ -88,29 +88,43 @@ ${BUILD_DIR}/EmptyException.o: ${EXCEPTION_DIR}/EmptyException.cpp
 
 #Web
 
-$(BUILD_DIR)/template_parser.o: ${WEB_DIR}/APHTTP/utils/template_parser.cpp ${WEB_DIR}/APHTTP/utils/template_parser.hpp ${WEB_DIR}/APHTTP/utils/request.cpp ${WEB_DIR}/APHTTP/utils/request.hpp ${WEB_DIR}/APHTTP/utils/utilities.hpp ${WEB_DIR}/APHTTP/utils/utilities.cpp
-	$(CC) $(CF) -c ${WEB_DIR}/APHTTP/utils/template_parser.cpp -o $(BUILD_DIR)/template_parser.o
+$(BUILD_DIR)/template_parser.o: utils/template_parser.cpp utils/template_parser.hpp utils/request.cpp utils/request.hpp utils/utilities.hpp utils/utilities.cpp
+	$(CC) $(CF) -c utils/template_parser.cpp -o $(BUILD_DIR)/template_parser.o
 
-$(BUILD_DIR)/response.o: ${WEB_DIR}/APHTTP/utils/response.cpp ${WEB_DIR}/APHTTP/utils/response.hpp ${WEB_DIR}/APHTTP/utils/include.hpp
-	$(CC) $(CF) -c ${WEB_DIR}/APHTTP/utils/response.cpp -o $(BUILD_DIR)/response.o
+$(BUILD_DIR)/response.o: utils/response.cpp utils/response.hpp utils/include.hpp
+	$(CC) $(CF) -c utils/response.cpp -o $(BUILD_DIR)/response.o
 
-$(BUILD_DIR)/request.o: ${WEB_DIR}/APHTTP/utils/request.cpp ${WEB_DIR}/APHTTP/utils/request.hpp ${WEB_DIR}/APHTTP/utils/include.hpp ${WEB_DIR}/APHTTP/utils/utilities.hpp
-	$(CC) $(CF) -c ${WEB_DIR}/APHTTP/utils/request.cpp -o $(BUILD_DIR)/request.o
+$(BUILD_DIR)/request.o: utils/request.cpp utils/request.hpp utils/include.hpp utils/utilities.hpp
+	$(CC) $(CF) -c utils/request.cpp -o $(BUILD_DIR)/request.o
 
-$(BUILD_DIR)/utilities.o: ${WEB_DIR}/APHTTP/utils/utilities.cpp ${WEB_DIR}/APHTTP/utils/utilities.hpp
-	$(CC) $(CF) -c ${WEB_DIR}/APHTTP/utils/utilities.cpp -o $(BUILD_DIR)/utilities.o
+$(BUILD_DIR)/utilities.o: utils/utilities.cpp
+	$(CC) $(CF) -c utils/utilities.cpp -o $(BUILD_DIR)/utilities.o
 
-$(BUILD_DIR)/server.o: ${WEB_DIR}/APHTTP/server/server.cpp ${WEB_DIR}/APHTTP/server/server.hpp ${WEB_DIR}/APHTTP/server/route.hpp ${WEB_DIR}/APHTTP/utils/utilities.hpp ${WEB_DIR}/APHTTP/utils/response.hpp ${WEB_DIR}/APHTTP/utils/request.hpp ${WEB_DIR}/APHTTP/utils/include.hpp ${WEB_DIR}/APHTTP/utils/template_parser.hpp ${WEB_DIR}/APHTTP/utils/template_parser.cpp
-	$(CC) $(CF) -c ${WEB_DIR}/APHTTP/server/server.cpp -o $(BUILD_DIR)/server.o
+$(BUILD_DIR)/server.o: server/server.cpp server/server.hpp server/route.hpp utils/utilities.hpp utils/response.hpp utils/request.hpp utils/include.hpp utils/template_parser.hpp utils/template_parser.cpp
+	$(CC) $(CF) -c server/server.cpp -o $(BUILD_DIR)/server.o
 
-$(BUILD_DIR)/route.o: ${WEB_DIR}/APHTTP/server/route.cpp ${WEB_DIR}/APHTTP/server/route.hpp ${WEB_DIR}/APHTTP/utils/utilities.hpp ${WEB_DIR}/APHTTP/utils/response.hpp ${WEB_DIR}/APHTTP/utils/request.hpp ${WEB_DIR}/APHTTP/utils/include.hpp
-	$(CC) $(CF) -c ${WEB_DIR}/APHTTP/server/route.cpp -o $(BUILD_DIR)/route.o
+$(BUILD_DIR)/route.o: server/route.cpp server/route.hpp utils/utilities.hpp utils/response.hpp utils/request.hpp utils/include.hpp
+	$(CC) $(CF) -c server/route.cpp -o $(BUILD_DIR)/route.o
 
-${BUILD_DIR}/RouteHandler.o: ${WEB_DIR}/RouteHandler.cpp ${WEB_DIR}/UtunesServer.hpp
+${BUILD_DIR}/RouteHandler.o: ${WEB_DIR}/RouteHandler.cpp ${WEB_DIR}/UtunesServer.hpp ${WEB_DIR}/controllers/HomeController.hpp ${WEB_DIR}/controllers/SignupController.hpp ${WEB_DIR}/controllers/SignupHandler.hpp ${WEB_DIR}/controllers/LogoutHandler.hpp
 	${CC} -c ${WEB_DIR}/RouteHandler.cpp -o ${BUILD_DIR}/RouteHandler.o
 
-${BUILD_DIR}/UtunesServer.o: ${WEB_DIR}/UtunesServer.cpp ${WEB_DIR}/APHTTP/server/server.hpp
+${BUILD_DIR}/UtunesServer.o: ${WEB_DIR}/UtunesServer.cpp server/server.hpp
 	${CC} -c ${WEB_DIR}/UtunesServer.cpp -o ${BUILD_DIR}/UtunesServer.o
+
+#Controllers
+
+${BUILD_DIR}/HomeController.o: ${WEB_DIR}/controllers/HomeController.cpp server/server.hpp ${SRC_DIR}/Song.hpp 
+	${CC} -c ${WEB_DIR}/controllers/HomeController.cpp -o ${BUILD_DIR}/HomeController.o
+
+${BUILD_DIR}/SignupController.o: ${WEB_DIR}/controllers/SignupController.cpp server/server.hpp ${SRC_DIR}/User.hpp ${SRC_DIR}/Utunes.hpp
+	${CC} -c ${WEB_DIR}/controllers/SignupController.cpp -o ${BUILD_DIR}/SignupController.o
+
+${BUILD_DIR}/SignupHandler.o: ${WEB_DIR}/controllers/SignupHandler.cpp server/server.hpp ${SRC_DIR}/User.hpp ${SRC_DIR}/Utunes.hpp
+	${CC} -c ${WEB_DIR}/controllers/SignupHandler.cpp -o ${BUILD_DIR}/SignupHandler.o
+
+${BUILD_DIR}/LogoutHandler.o: ${WEB_DIR}/controllers/LogoutHandler.cpp server/server.hpp ${SRC_DIR}/Utunes.hpp
+	${CC} -c ${WEB_DIR}/controllers/LogoutHandler.cpp -o ${BUILD_DIR}/LogoutHandler.o
 
 clean:
 	rm -rf ${BUILD_DIR} && mkdir -p ${BUILD_DIR}

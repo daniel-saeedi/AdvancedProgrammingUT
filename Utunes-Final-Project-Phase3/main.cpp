@@ -13,7 +13,7 @@ int main(int argc, char** argv)
 	CommandHandler command_handler = CommandHandler(songs_csv_file,liked_songs_csv_file);
 	/* Uncomment this for CLI section*/
 	//command_handler.run();
-	
+
 	/* Web */
 	Utunes* utunes = command_handler.get_utunes();
 	RouteHandler route_handler = RouteHandler(utunes);

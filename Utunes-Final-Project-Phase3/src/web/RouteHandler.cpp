@@ -1,16 +1,65 @@
 #include "RouteHandler.hpp"
-const std::string PUBLIC_DIR = "../../public";
+#include "controllers/SignupHandler.hpp"
+#include "controllers/LogoutHandler.hpp"
+#include <fstream>
+const std::string PUBLIC_DIR = "public";
 void RouteHandler::run()
 {
 	srand(time(NULL));
 	try
 	{
-		UtunesServer server(2022);
-		server.setNotFoundErrPage(PUBLIC_DIR+"/404.html");
-		server.run();
+		UtunesServer* server = new UtunesServer(2024);
+		server->setNotFoundErrPage(PUBLIC_DIR+"/404.html");
+		load_img(server);
+		load_css(server);
+		server->get("/", new HomeController(PUBLIC_DIR+"/index.html",utunes->get_songs_vector(),utunes->get_users_count()));
+		server->get("/signup", new SignupController(PUBLIC_DIR+"/signup.html",utunes));
+		server->post("/signup", new SignupHandler(utunes));
+		server->get("/logout", new LogoutHandler(utunes));
+		server->run();
 	}
 	catch (Server::Exception e)
 	{
 		std::cerr << e.getMessage() << std::endl;
 	}
+	catch(const std::bad_alloc&){}
 }
+
+void RouteHandler::load_css(UtunesServer* server)
+{
+	std::ifstream f("src/web/files.txt");
+	std::string path;
+	while(f >> path)
+	{
+		server->get(path, new ShowPage(PUBLIC_DIR+path));
+	}
+	f.close();
+}
+
+void RouteHandler::load_img(UtunesServer* server)
+{
+	std::ifstream f("src/web/images.txt");
+	std::string path;
+	while(f >> path)
+	{
+		server->get(path, new ShowImage(PUBLIC_DIR+path));
+	}
+	f.close();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

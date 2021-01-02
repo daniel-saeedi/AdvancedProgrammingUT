@@ -5,6 +5,8 @@
 #include <string>
 #include "../Utunes.hpp"
 #include "UtunesServer.hpp"
+#include "controllers/HomeController.hpp"
+#include "controllers/SignupController.hpp"
 class RouteHandler
 {
 public:
@@ -12,5 +14,7 @@ public:
 	void run();
 private:
 	Utunes* utunes;
+	void load_css(UtunesServer* server);
+	void load_img(UtunesServer* server);
 };
 #endif

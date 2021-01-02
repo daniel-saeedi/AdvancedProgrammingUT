@@ -1,6 +1,6 @@
 #ifndef UTUNES_SERVER_H
 #define UTUNES_SERVER_H
-#include "APHTTP/server/server.hpp"
+#include "../../server/server.hpp"
 
 class UtunesServer : public Server {
 public:

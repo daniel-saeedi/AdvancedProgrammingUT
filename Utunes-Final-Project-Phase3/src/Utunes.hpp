@@ -39,6 +39,8 @@ public:
 	bool user_exists(std::string username);
 	void get_similar_users(int count);
 	void get_recommendation(int count);
+	std::vector<Song*> get_songs_vector(){return songs;}
+	int get_users_count(){return users.size();}
 private:
 	AuthenticationSystem *auth_sys;
 	PlaylistSystem *playlist_sys;

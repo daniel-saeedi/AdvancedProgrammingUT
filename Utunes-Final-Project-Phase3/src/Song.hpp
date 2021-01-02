@@ -17,6 +17,9 @@ public:
 	bool is_artist_equal(std::string _artist);
 	int get_year(){return release_year;}
 	int get_id(){return id;}
+	std::string get_title(){return title;}
+	std::string get_artist(){return artist;}
+	std::string get_link(){return link;}
 private:
 	int id;
 	std::string title;
