@@ -14,6 +14,7 @@ class RecommendationSystem
 public:
 	void get_similar_users(int count,User *current_user,const std::vector<User*> &users,const std::vector<Song*> &songs);
 	void get_recommendation(int count,User *current_user,const std::vector<User*> &users,const std::vector<Song*> &songs);
+	std::vector<Song*> get_recommended_songs(User *current_user,const std::vector<User*> &users,const std::vector<Song*> &songs);
 private:
 	std::vector<std::vector<bool>> get_songs_users_matrix(const std::vector<User*> &users,const std::vector<Song*> &songs);
 	std::vector<std::vector<double>> get_similarity_matrix(const std::vector<User*> &users,const std::vector<Song*> &songs);

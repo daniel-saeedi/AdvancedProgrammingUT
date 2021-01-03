@@ -1,88 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<title>Snipp - Free Bootstrap 4 Template by Colorlib</title>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<% if(context["logged_in"] == "true") { %>
-  <script type="text/javascript">
-    window.location.replace("./");
-  </script>
-<% } %>
-<link href="https://fonts.googleapis.com/css?family=Work+Sans:100,200,300,400,700,800" rel="stylesheet">
-<link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
-<link rel="stylesheet" href="css/animate.css">
-<link rel="stylesheet" href="css/owl.carousel.min.css">
-<link rel="stylesheet" href="css/owl.theme.default.min.css">
-<link rel="stylesheet" href="css/magnific-popup.css">
-<link rel="stylesheet" href="css/aos.css">
-<link rel="stylesheet" href="css/bootstrap-datepicker.css">
-<link rel="stylesheet" href="css/jquery.timepicker.css">
-<link rel="stylesheet" href="css/flaticon.css">
-<link rel="stylesheet" href="css/icomoon.css">
-<link rel="stylesheet" href="css/style.css">
-<style>
-  body
-  {
-    background: #EEE;
-  }
-  .styled_input
-  {
-    width: 100%;
-    height: 47px;
-    background: #eee;
-    border: 0px;
-    border-radius: 35px;
-    outline: none;
-    padding-left: 30px;
-    color: #000;
-  }
-  .styled_input:focus
-  {
-    background: #FFF;
-    border: 2px solid #EEE;
-  }
-  .styled_button
-  {
-    width: 100%;
-    border: 0px;
-    background: #29bae4;
-    color: #FFF;
-    padding: 16px;
-    border-radius: 7px;
-  }
-  .styled_button
-  {
-    width: 100%;
-    border: 0px;
-    background: #29bae4;
-    color: #FFF;
-    padding: 16px;
-    border-radius: 7px;
-    transition: 0.5s;
-     border:3px solid #29bae4;
-  }
-  .styled_button:hover
-  {
-    background: #FFF;
-    color: #29bae4;
-    border:3px solid #29bae4;
-  }
-  .error
-  {
-    background: #ff6363;
-    color: #FFF;
-    border-bottom: 3px solid #ff2928;
-    border-radius: 15px;
-    padding-top: 15px;
-    padding-left: 26px;
-    margin-bottom: 22px;
-  }
-</style>
-</head>
-<body>
+  <head>
+    <title>Snipp - Free Bootstrap 4 Template by Colorlib</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:100,200,300,400,700,800" rel="stylesheet">
 
-  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light scrolled awake" id="ftco-navbar">
+    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
+
+    <link rel="stylesheet" href="css/aos.css">
+
+    <link rel="stylesheet" href="css/ionicons.min.css">
+
+    <link rel="stylesheet" href="css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="css/jquery.timepicker.css">
+
+    
+    <link rel="stylesheet" href="css/flaticon.css">
+    <link rel="stylesheet" href="css/icomoon.css">
+    <link rel="stylesheet" href="css/style.css">
+    <% if(context["logged_in"] == "false") { %>
+      <script type="text/javascript">
+        window.location.replace("./");
+      </script>
+    <% } %>
+  </head>
+  <body>
+    
+  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
     <div class="container">
       <a class="navbar-brand" href="index.html">Utunes.</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,6 +46,7 @@
           <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
           <li class="nav-item"><a href="#songs" class="nav-link">Songs</a></li>
           <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+          <% if(context["logged_in"] == "false") { %>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="portfolio.html" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Auth</a>
               <div class="dropdown-menu" aria-labelledby="dropdown04">
@@ -102,30 +54,78 @@
                 <a class="dropdown-item" href="/signup">Signup</a>
               </div>
           </li>
+          <% } else {%>
+          <li class="nav-item"><a href="/logout" class="nav-link">Logout</a></li>
+          <% } %>
           <li class="nav-item cta"><a href="contact.html" class="nav-link"><span>Get Utunes</span></a></li>
         </ul>
       </div>
     </div>
   </nav>
     <!-- END nav -->
-
-    <section class="ftco-section testimony-section bg-light" id="songs">
+    
+    <div class="hero-wrap js-fullheight">
+      <div class="overlay"></div>
+      <div id="particles-js"></div>
       <div class="container">
-          <div style="width: 500px;margin: auto;padding: 27px;background: #FFF;border-radius: 10px;box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);">
-              <h2 style="text-align: center;margin-bottom: 45px;">Login</h2>
-              <% if(context["error"] != "") { %>
-              <div class="error">
-                <p><% cout << context["error"]; %></p>
-              </div>
-              <% } %>
-              <form action="/login" method="post">
-                <input type="email" class="styled_input" id="email" name="email" placeholder="Email" required><br><br>
-                <input type="password" class="styled_input" id="password" name="password" placeholder="password" required><br><br>
-                <input type="submit" class="styled_button" value="Login now!">
-              </form>
+        <div class="row no-gutters slider-text align-items-center justify-content-center" data-scrollax-parent="true">
+          <div class="col-md-6 ftco-animate text-center" data-scrollax=" properties: { translateY: '70%' }">
+            <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Song Page</h1>
           </div>
+        </div>
       </div>
-    </section>
+    </div>
+    
+    <section class="ftco-section ftco-degree-bg">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8 ftco-animate">
+            <h2 class="mb-3"><% cout << context["title"]; %></h2>
+
+            <audio style="width: 100%;" controls>
+              <source src="<% cout << context["link"]; %>" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+            <p>
+              <% cout << context["like_button"]; %>
+              <br><br>
+             
+              <b>Publish Year : </b> <% cout << context["year"]; %> <br><br>
+              <b>Likes : </b> <% cout << context["likes"]; %> <br><br>
+              <b>Playlists : </b> <% cout << context["playlists"]; %> <br><br>
+            </p>
+            <div class="tag-widget post-tag-container mb-5 mt-5">
+              <div class="tagcloud">
+                <a href="#" class="tag-cloud-link">Cool</a>
+                <a href="#" class="tag-cloud-link">Hip</a>
+                <a href="#" class="tag-cloud-link">Most-streamed</a>
+              </div>
+            </div>
+            
+            <div class="about-author d-flex p-5 bg-light">
+              <div class="bio align-self-md-center mr-5">
+                <img src="images/song.png" alt="Image placeholder" class="img-fluid mb-4">
+              </div>
+              <div class="desc align-self-md-center">
+                <h3><% cout << context["artist"]; %></h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus itaque, autem necessitatibus voluptate quod mollitia delectus aut, sunt placeat nam vero culpa sapiente consectetur similique, inventore eos fugit cupiditate numquam!</p>
+              </div>
+            </div>
+
+          </div> <!-- .col-md-8 -->
+          <div class="col-md-4 sidebar ftco-animate order-first">
+
+            <div class="sidebar-box ftco-animate">
+              <h3>Recommendation</h3>
+              <% cout << context["recommendation"]; %>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section> <!-- .section -->
+    
 
     <footer class="ftco-footer ftco-bg-dark ftco-section">
       <div class="container">
@@ -137,15 +137,15 @@
             </div>
           </div>
           <div class="col-md">
-            <div class="ftco-footer-widget mb-4 ml-5">
+             <div class="ftco-footer-widget mb-4">
               <h2 class="ftco-heading-2">Quick Links</h2>
               <ul class="list-unstyled">
                 <li><a href="#" class="py-2 d-block">Home</a></li>
-                <li><a href="#" class="py-2 d-block">Case studies</a></li>
+                <li><a href="#" class="py-2 d-block">About</a></li>
                 <li><a href="#" class="py-2 d-block">Services</a></li>
                 <li><a href="#" class="py-2 d-block">Portfolio</a></li>
-                <li><a href="#" class="py-2 d-block">About</a></li>
                 <li><a href="#" class="py-2 d-block">Contact</a></li>
+                <li><a href="#" class="py-2 d-block">Privacy</a></li>
               </ul>
             </div>
           </div>
@@ -202,6 +202,7 @@
   <script src="js/jquery.timepicker.min.js"></script>
   <script src="js/particles.min.js"></script>
   <script src="js/particle.js"></script>
+  <script src="js/scrollax.min.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
   <script src="js/google-map.js"></script>
   <script src="js/main.js"></script>

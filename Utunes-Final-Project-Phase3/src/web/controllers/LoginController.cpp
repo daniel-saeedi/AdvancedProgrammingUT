@@ -1,6 +1,6 @@
-#include "SignupController.hpp"
+#include "LoginController.hpp"
 
-std::map<std::string,std::string> SignupController::handle(Request *req)
+std::map<std::string,std::string> LoginController::handle(Request *req)
 {
 	std::map<std::string,std::string> context;
 	std::string error = req->getQueryParam("error");

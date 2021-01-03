@@ -11,7 +11,6 @@ class SignupController : public TemplateHandler
 public:
 	SignupController(std::string file_path,Utunes* _utunes) : TemplateHandler(file_path),utunes(_utunes){}
 	std::map<std::string,std::string> handle(Request *req);
-	Response* callback(Request *);
 private:
 	Utunes *utunes;
 };

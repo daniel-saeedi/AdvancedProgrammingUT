@@ -8,3 +8,6 @@
 /images/work-1.jpg
 /images/work-2.jpg
 /images/work-3.jpg
+/images/song.png
+/images/heart-red.png
+/images/heart-null.png

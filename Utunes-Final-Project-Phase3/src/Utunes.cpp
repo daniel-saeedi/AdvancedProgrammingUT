@@ -99,6 +99,12 @@ void Utunes::get_recommendation(int count)
 	recommendation_sys->get_recommendation(count,current_user,users,songs);
 }
 
+std::vector<Song*> Utunes::get_recommended_songs()
+{
+	User *current_user = auth_sys->get_session()->get_user();
+	return recommendation_sys->get_recommended_songs(current_user,users,songs);
+}
+
 void Utunes::delete_filters()
 {
 	check_login();

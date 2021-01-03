@@ -43,6 +43,18 @@ std::vector<std::pair<Song*,double>> RecommendationSystem::get_songs_confidence(
 	return songs_confidence;
 }
 
+std::vector<Song*> RecommendationSystem::get_recommended_songs(User *current_user,const std::vector<User*> &users,const std::vector<Song*> &songs)
+{
+	std::vector<std::pair<Song*,double>> songs_confidence = get_songs_confidence(current_user,users,songs);
+	std::vector<Song*> recom_songs;
+	for(int i = 0;i < songs_confidence.size();i++)
+	{
+		Song* song = songs_confidence[i].first;
+		recom_songs.push_back(song);
+	}
+	return recom_songs;
+}
+
 std::vector<std::vector<bool>> RecommendationSystem::get_songs_users_matrix(const std::vector<User*> &users,const std::vector<Song*> &songs)
 {
 	std::vector<std::vector<bool>> matrix;

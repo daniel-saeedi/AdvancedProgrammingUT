@@ -4,7 +4,11 @@
 <title>Snipp - Free Bootstrap 4 Template by Colorlib</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+<% if(context["logged_in"] == "true") { %>
+  <script type="text/javascript">
+    window.location.replace("./");
+  </script>
+<% } %>
 <link href="https://fonts.googleapis.com/css?family=Work+Sans:100,200,300,400,700,800" rel="stylesheet">
 <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
 <link rel="stylesheet" href="css/animate.css">
@@ -109,9 +113,11 @@
       <div class="container">
           <div style="width: 500px;margin: auto;padding: 27px;background: #FFF;border-radius: 10px;box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);">
               <h2 style="text-align: center;margin-bottom: 45px;">Signup</h2>
+              <% if(context["error"] != "") { %>
               <div class="error">
                 <p><% cout << context["error"]; %></p>
               </div>
+              <% } %>
               <form action="/signup" method="post">
                 <input type="email" class="styled_input" id="email" name="email" placeholder="Email" required><br><br>
                 <input type="username" class="styled_input" id="username" name="username" placeholder="username" required><br><br>

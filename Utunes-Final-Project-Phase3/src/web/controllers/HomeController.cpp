@@ -2,6 +2,8 @@
 
 std::map<std::string,std::string> HomeController::handle(Request *req)
 {
+	std::vector<Song*> songs = utunes->get_songs_vector();
+	int users_count =  utunes->get_users_count();
 	std::map<std::string,std::string> context;
 	std::string rows;
 	for(int i = 0;i < songs.size();i++)

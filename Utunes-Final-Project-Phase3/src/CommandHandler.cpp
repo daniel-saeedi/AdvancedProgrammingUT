@@ -416,7 +416,8 @@ Song* CommandHandler::tokenize(vector<string> raw,vector<string> header)
 	string title = raw[find_index_in_vector(header,TITLE)];
 	string artist = raw[find_index_in_vector(header,ARTIST)];
 	int release_year = stoi(raw[find_index_in_vector(header,RELEASE_YEAR)]);
-	string link = raw[find_index_in_vector(header,LINK)];
+	const int LINK_INDEX = 4;
+	string link = raw[LINK_INDEX];
 	Song *new_song = new Song(id,title,artist,release_year,link);
 	return new_song;
 }
