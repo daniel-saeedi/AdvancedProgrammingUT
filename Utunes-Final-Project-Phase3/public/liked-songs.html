@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Snipp - Free Bootstrap 4 Template by Colorlib</title>
+    <title>Liked songs</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
@@ -55,7 +55,7 @@
               </div>
           </li>
           <% } else {%>
-          <li class="nav-item dropdown">
+           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="portfolio.html" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Operations</a>
               <div class="dropdown-menu" aria-labelledby="dropdown04">
                 <a class="dropdown-item" href="/liked_songs">Liked Songs</a>
@@ -77,61 +77,83 @@
       <div class="container">
         <div class="row no-gutters slider-text align-items-center justify-content-center" data-scrollax-parent="true">
           <div class="col-md-6 ftco-animate text-center" data-scrollax=" properties: { translateY: '70%' }">
-            <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Song Page</h1>
+            <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Liked Songs</h1>
           </div>
         </div>
       </div>
     </div>
     
-    <section class="ftco-section ftco-degree-bg">
+    <section class="ftco-section testimony-section bg-light" id="songs">
       <div class="container">
-        <div class="row">
-          <div class="col-md-8 ftco-animate">
-            <h2 class="mb-3"><% cout << context["title"]; %></h2>
-
-            <audio style="width: 100%;" controls>
-              <source src="<% cout << context["link"]; %>" type="audio/mpeg">
-              Your browser does not support the audio element.
-            </audio>
-            <p>
-              <% cout << context["like_button"]; %>
-              <br><br>
-             
-              <b>Publish Year : </b> <% cout << context["year"]; %> <br><br>
-              <b>Likes : </b> <% cout << context["likes"]; %> <br><br>
-              <b>Playlists : </b> <% cout << context["playlists"]; %> <br><br>
-            </p>
-            <div class="tag-widget post-tag-container mb-5 mt-5">
-              <div class="tagcloud">
-                <a href="#" class="tag-cloud-link">Cool</a>
-                <a href="#" class="tag-cloud-link">Hip</a>
-                <a href="#" class="tag-cloud-link">Most-streamed</a>
-              </div>
-            </div>
-            
-            <div class="about-author d-flex p-5 bg-light">
-              <div class="bio align-self-md-center mr-5">
-                <img src="images/song.png" alt="Image placeholder" class="img-fluid mb-4">
-              </div>
-              <div class="desc align-self-md-center">
-                <h3><% cout << context["artist"]; %></h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus itaque, autem necessitatibus voluptate quod mollitia delectus aut, sunt placeat nam vero culpa sapiente consectetur similique, inventore eos fugit cupiditate numquam!</p>
-              </div>
-            </div>
-
-          </div> <!-- .col-md-8 -->
-          <div class="col-md-4 sidebar ftco-animate order-first">
-
-            <div class="sidebar-box ftco-animate">
-              <h3>Recommendation</h3>
-              <% cout << context["recommendation"]; %>
-            </div>
-
+        <div class="row justify-content-center mb-5 pb-5">
+          <div class="col-md-7 text-center heading-section ftco-animate">
+            <h2 class="mb-4">Here's a list of your likes</h2>
           </div>
+        </div>
+        <style>
+          .styled-table {
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.9em;
+            font-family: sans-serif;
+            min-width: 400px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .styled-table thead tr {
+            background-color: #009879;
+            color: #ffffff;
+            text-align: left;
+        }
+        .styled-table th,
+        .styled-table td {
+            padding: 12px 15px;
+        }
+        .styled-table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
 
+        .styled-table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+
+        .styled-table tbody tr:last-of-type {
+            border-bottom: 2px solid #009879;
+        }
+        .styled-table tbody tr.active-row {
+            font-weight: bold;
+            color: #009879;
+        }
+        </style>
+        <div class="row ftco-animate">
+          <div class="song_single_row col-md-12">
+            <table class="styled-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Thumbnail</th>
+                  <th>Title</th>
+                  <th>Artist</th>
+                  <th>Year</th>
+                  <th>Operation</th>
+                </tr>
+              </thead>
+              <tbody>
+                <%
+                    cout << context["liked_songs"];
+                %>
+              </tbody>
+            </table>
+            
+           
+            
+            
+          </div>
         </div>
       </div>
-    </section> <!-- .section -->
+    </section>
     
 
     <footer class="ftco-footer ftco-bg-dark ftco-section">

@@ -46,6 +46,7 @@ public:
 	PlaylistSystem* get_playlist_sys(){return playlist_sys;}
 	std::vector<Song*> get_recommended_songs();
 	User* get_current_user(){return auth_sys->get_session()->get_user();}
+	vector<Song*> get_liked_songs();
 private:
 	AuthenticationSystem *auth_sys;
 	PlaylistSystem *playlist_sys;
@@ -57,7 +58,6 @@ private:
 	void print_ok();
 	void show_songs();
 	bool song_exists(int id);
-	vector<Song*> get_liked_songs();
 	User* find_user(std::string username);
 };
 #endif

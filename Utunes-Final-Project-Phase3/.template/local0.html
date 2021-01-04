@@ -42,7 +42,14 @@
               </div>
           </li>
           <% } else {%>
-          <li class="nav-item"><a href="/logout" class="nav-link">Logout</a></li>
+           <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="portfolio.html" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Operations</a>
+              <div class="dropdown-menu" aria-labelledby="dropdown04">
+                <a class="dropdown-item" href="/liked_songs">Liked Songs</a>
+                <a class="dropdown-item" href="/manage_playlists">Manage Playlists</a>
+                <a href="/logout" class="dropdown-item">Logout</a>
+              </div>
+          </li>
           <% } %>
           <li class="nav-item cta"><a href="contact.html" class="nav-link"><span>Get Utunes</span></a></li>
         </ul>

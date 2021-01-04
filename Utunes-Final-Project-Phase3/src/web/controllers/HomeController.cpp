@@ -25,6 +25,6 @@ std::string HomeController::produce_row(int id,std::string song,std::string arti
 	result += "<td><img class='thumbnail' src='images/person_1.jpg' width='70'></td>";
 	result += "<td><a href='song?id="+std::to_string(id)+"'>" + song + "</a></td>";
 	result += "<td>" + artist + "</td>";
-	result += "<td>" + std::to_string(year) + "</td></a>";
+	result += "<td>" + std::to_string(year) + "</td></a></tr>";
 	return result;
 }

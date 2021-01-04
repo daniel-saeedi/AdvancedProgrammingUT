@@ -5,6 +5,7 @@
 #include "controllers/LoginHandler.hpp"
 #include "controllers/SongController.hpp"
 #include "controllers/LikeHandler.hpp"
+#include "controllers/LikedSongController.hpp"
 #include <fstream>
 const std::string PUBLIC_DIR = "public";
 void RouteHandler::run()
@@ -24,6 +25,7 @@ void RouteHandler::run()
 		server->get("/logout", new LogoutHandler(utunes));
 		server->get("/song", new SongController(PUBLIC_DIR+"/song-single.html",utunes));
 		server->get("/like", new LikeHandler(utunes));
+		server->get("/liked_songs", new LikedSongController(PUBLIC_DIR+"/liked-songs.html",utunes));
 		server->run();
 	}
 	catch (Server::Exception e)

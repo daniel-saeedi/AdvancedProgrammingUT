@@ -265,6 +265,7 @@ std::vector<Song*> Utunes::get_liked_songs()
 	{
 		if(songs[i]->has_liked(user)) liked_songs.push_back(songs[i]);
 	}
+	sort(liked_songs.begin(),liked_songs.end(),compare_by_id);
 	return liked_songs;
 }
 
