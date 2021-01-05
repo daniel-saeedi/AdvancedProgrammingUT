@@ -19,6 +19,9 @@ public:
 	bool song_exists(Song *song);
 	bool is_playlist_id_equal(int _id);
 	bool is_private(){return private_status;}
+	std::string get_name(){return name;}
+	std::vector<Song*> get_songs(){return songs;}
+	std::string get_user_name(){return user->get_username();}
 private:
 	int id;
 	std::string name;

@@ -11,3 +11,4 @@
 /images/song.png
 /images/heart-red.png
 /images/heart-null.png
+/images/delete-red.png

@@ -1,5 +1,6 @@
 #include "PlaylistSystem.hpp"
 #include "Exception/EmptyException.hpp"
+#include "Exception/PermissionDeniedException.hpp"
 
 PlaylistSystem::~PlaylistSystem()
 {
@@ -46,6 +47,14 @@ void PlaylistSystem::show_playlist_songs(int playlist_id,User *current_user)
 	playlists[index]->show_songs(current_user);
 }
 
+Playlist* PlaylistSystem::get_playlist_by_index(int playlist_id,User *current_user)
+{
+	int index = get_playlist_index(playlist_id);
+	Playlist* playlist = playlists[index];
+	if(!playlist->is_user_equal(current_user) && playlist->is_private()) throw PermissionDeniedException();
+	return playlist;
+}
+
 void PlaylistSystem::delete_song(int playlist_id,Song *song,User *current_user)
 {
 	int index = get_playlist_index(playlist_id);
@@ -58,6 +67,17 @@ vector<Playlist*> PlaylistSystem::find_playlist(User *user)
 	for(int i = 0;i < playlists.size();i++)
 	{
 		if(playlists[i]->is_user_equal(user)) lists.push_back(playlists[i]);
+	}
+	return lists;
+}
+
+vector<Playlist*> PlaylistSystem::get_playlists(User *user)
+{
+	vector<Playlist*> lists;
+	for(int i = 0;i < playlists.size();i++)
+	{
+		if(!playlists[i]->is_private()) lists.push_back(playlists[i]);
+		else if(playlists[i]->is_private() && playlists[i]->is_user_equal(user)) lists.push_back(playlists[i]);
 	}
 	return lists;
 }
@@ -82,3 +102,4 @@ int PlaylistSystem::get_playlist_index(int playlist_id)
 	if(index == -1) throw EmptyException();
 	return index;
 }
+

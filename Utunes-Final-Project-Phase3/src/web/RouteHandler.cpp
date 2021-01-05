@@ -6,6 +6,11 @@
 #include "controllers/SongController.hpp"
 #include "controllers/LikeHandler.hpp"
 #include "controllers/LikedSongController.hpp"
+#include "controllers/PlaylistsController.hpp"
+#include "controllers/NewPlaylistHandler.hpp"
+#include "controllers/PlaylistController.hpp"
+#include "controllers/AddSongHandler.hpp"
+#include "controllers/RemoveSongHandler.hpp"
 #include <fstream>
 const std::string PUBLIC_DIR = "public";
 void RouteHandler::run()
@@ -26,6 +31,11 @@ void RouteHandler::run()
 		server->get("/song", new SongController(PUBLIC_DIR+"/song-single.html",utunes));
 		server->get("/like", new LikeHandler(utunes));
 		server->get("/liked_songs", new LikedSongController(PUBLIC_DIR+"/liked-songs.html",utunes));
+		server->get("/manage_playlists", new PlaylistsController(PUBLIC_DIR+"/playlists.html",utunes));
+		server->post("/new_playlist", new NewPlaylistHandler(utunes));
+		server->get("/playlist", new PlaylistController(PUBLIC_DIR+"/playlist.html",utunes));
+		server->post("/add_song_playlist", new AddSongHandler(utunes));
+		server->get("/delete_song", new RemoveSongHandler(utunes));
 		server->run();
 	}
 	catch (Server::Exception e)
