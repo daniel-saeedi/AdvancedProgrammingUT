@@ -16,7 +16,7 @@ Response* LikeHandler::callback(Request *req)
 	catch(std::exception& excep)
 	{
 		std::string message = excep.what();
-		res = Response::redirect("/login?error="+message);
+		res = Response::redirect("/?error="+message);
 	}
 	return res;
 }

@@ -25,7 +25,7 @@ std::string LikedSongController::produce_row(int id,std::string song,std::string
 {
 	std::string result = "<tr>";
 	result += "<td>" + std::to_string(id) + "</td>";
-	result += "<td><img class='thumbnail' src='images/person_1.jpg' width='70'></td>";
+	result += "<td><img class='thumbnail' style='border-radius:50%;' src='images/song.png' width='70'></td>";
 	result += "<td><a href='song?id="+std::to_string(id)+"'>" + song + "</a></td>";
 	result += "<td>" + artist + "</td>";
 	result += "<td>" + std::to_string(year) + "</td></a>";

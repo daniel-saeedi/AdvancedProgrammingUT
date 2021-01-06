@@ -15,6 +15,7 @@ public:
 	std::map<std::string,std::string> handle(Request *req);
 private:
 	Utunes *utunes;
+	std::map<std::string,std::string> get_info(Request* req);
 	std::string songs_html(int playlist_id,vector<Song*> songs,bool can_delete);
 	std::string produce_row(int playlist_id,int id,std::string song,std::string artist,int year,bool can_delete);
 };

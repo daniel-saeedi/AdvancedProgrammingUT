@@ -1,36 +1,41 @@
 #include "PlaylistController.hpp"
+const int DEFAULT_ID = 1;
 
-std::map<std::string,std::string> PlaylistController::handle(Request *req)
+std::map<std::string,std::string> PlaylistController::handle(Request* req)
 {
 	std::map<std::string,std::string> context;
 	if(req->getSessionId() != "")
 	{
-		context["logged_in"] = "true";
-		int id = 1;
-		if(req->getQueryParam("id") != "") id = stoi(req->getQueryParam("id"));
-		PlaylistSystem* playlist_sys = utunes->get_playlist_sys();
-		User* current_user = utunes->get_current_user();
-		Playlist* playlist = playlist_sys->get_playlist_by_index(id,current_user);
-		bool can_delete = true;
-		if(!playlist->is_user_equal(current_user))
-		{
-			context["can_add"] = "false";
-			can_delete = false;
-		}
-		else
-			context["can_add"] = "true";
-
-		if(playlist->is_private())
-			context["title"] = playlist->get_name() + "(Private)";
-		else
-			context["title"] = playlist->get_name() + "(Public)";
-
-		context["songs"] = songs_html(id,playlist->get_songs(),can_delete);
-		context["playlist_id"] = std::to_string(id);
-		context["playlist_name"] = playlist->get_name();
-
+		context = get_info(req);
 	}
 	else context["logged_in"] = "false";
+	return context;
+}
+
+std::map<std::string,std::string> PlaylistController::get_info(Request* req)
+{
+	std::map<std::string,std::string> context;
+	int id = DEFAULT_ID;
+	if(req->getQueryParam("id") != "") id = stoi(req->getQueryParam("id"));
+	PlaylistSystem* playlist_sys = utunes->get_playlist_sys();
+	User* current_user = utunes->get_current_user();
+	Playlist* playlist = playlist_sys->get_playlist_by_index(id,current_user);
+	bool can_delete = true;
+	if(!playlist->is_user_equal(current_user))
+	{
+		context["can_add"] = "false";
+		can_delete = false;
+	}
+	else
+		context["can_add"] = "true";
+	if(playlist->is_private())
+		context["title"] = playlist->get_name() + "(Private)";
+	else
+		context["title"] = playlist->get_name() + "(Public)";
+	context["songs"] = songs_html(id,playlist->get_songs(),can_delete);
+	context["playlist_id"] = std::to_string(id);
+	context["playlist_name"] = playlist->get_name();
+	context["logged_in"] = "true";
 	return context;
 }
 
@@ -46,7 +51,7 @@ std::string PlaylistController::produce_row(int playlist_id,int id,std::string s
 {
 	std::string result = "<tr>";
 	result += "<td>" + std::to_string(id) + "</td>";
-	result += "<td><img class='thumbnail' src='images/person_1.jpg' width='70'></td>";
+	result += "<td><img class='thumbnail' style='border-radius:50%;' src='images/song.png' width='70'></td>";
 	result += "<td><a href='song?id="+std::to_string(id)+"'>" + song + "</a></td>";
 	result += "<td>" + artist + "</td>";
 	result += "<td>" + std::to_string(year) + "</td></a>";

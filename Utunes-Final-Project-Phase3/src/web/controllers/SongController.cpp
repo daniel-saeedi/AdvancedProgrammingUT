@@ -56,7 +56,7 @@ std::string SongController::get_recom(Song* current_song)
 }
 std::string SongController::recommendation_html(std::string title,std::string artist,int id,int year)
 {
-	std::string html = "<div class='block-21 mb-4 d-flex'><a class='blog-img mr-4' style='background-image: url(images/song.png);'></a><div class='text'><h3 class='heading'>";
+	std::string html = "<div class='block-21 mb-4 d-flex'><a class='blog-img mr-4' style='background-image: url(images/song.png);border-radius:50%;'></a><div class='text'><h3 class='heading'>";
 	html += "<a href='/song?id="+std::to_string(id)+"'>"+title+"</a></h3>";
 	html += "<div class='meta'><div><a href='#'><span class='icon-calendar'></span>" + std::to_string(year) + "</a></div>";
 	html += "<div><a href='#'><span class='icon-calendar'></span>" + artist + "</a></div>";
