@@ -35,17 +35,17 @@
     
   <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
     <div class="container">
-      <a class="navbar-brand" href="index.html">Utunes.</a>
+      <a class="navbar-brand" href="/">Utunes.</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="oi oi-menu"></span> Menu
       </button>
 
       <div class="collapse navbar-collapse" id="ftco-nav">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item active"><a href="index.html" class="nav-link">Home</a></li>
-          <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+          <li class="nav-item active"><a href="/" class="nav-link">Home</a></li>
+          <li class="nav-item"><a href="about" class="nav-link">About</a></li>
           <li class="nav-item"><a href="#songs" class="nav-link">Songs</a></li>
-          <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+          <li class="nav-item"><a href="contact" class="nav-link">Contact</a></li>
           <% if(context["logged_in"] == "false") { %>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="portfolio.html" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Auth</a>
@@ -64,12 +64,11 @@
               </div>
           </li>
           <% } %>
-          <li class="nav-item cta"><a href="contact.html" class="nav-link"><span>Get Utunes</span></a></li>
+          <li class="nav-item cta"><a href="#" class="nav-link"><span>Get Utunes</span></a></li>
         </ul>
       </div>
     </div>
   </nav>
-    <!-- END nav -->
     
     <div class="hero-wrap js-fullheight">
       <div class="overlay"></div>
@@ -82,95 +81,6 @@
         </div>
       </div>
     </div>
-     <style>
-          .styled-table {
-            border-collapse: collapse;
-            margin: 25px 0;
-            font-size: 0.9em;
-            font-family: sans-serif;
-            min-width: 400px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-            width: 100%;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        .styled-table thead tr {
-            background-color: #009879;
-            color: #ffffff;
-            text-align: left;
-        }
-        .styled-table th,
-        .styled-table td {
-            padding: 12px 15px;
-        }
-        .styled-table tbody tr {
-            border-bottom: 1px solid #dddddd;
-        }
-
-        .styled-table tbody tr:nth-of-type(even) {
-            background-color: #f3f3f3;
-        }
-
-        .styled-table tbody tr:last-of-type {
-            border-bottom: 2px solid #009879;
-        }
-        .styled-table tbody tr.active-row {
-            font-weight: bold;
-            color: #009879;
-        }
-  .styled_input
-  {
-    width: 100%;
-    height: 47px;
-    background: #eee;
-    border: 0px;
-    border-radius: 35px;
-    outline: none;
-    padding-left: 30px;
-    color: #000;
-  }
-  .styled_input:focus
-  {
-    background: #FFF;
-    border: 2px solid #EEE;
-  }
-  .styled_button
-  {
-    width: 100%;
-    border: 0px;
-    background: #29bae4;
-    color: #FFF;
-    padding: 16px;
-    border-radius: 7px;
-  }
-  .styled_button
-  {
-    width: 100%;
-    border: 0px;
-    background: #29bae4;
-    color: #FFF;
-    padding: 16px;
-    border-radius: 7px;
-    transition: 0.5s;
-     border:3px solid #29bae4;
-  }
-  .styled_button:hover
-  {
-    background: #FFF;
-    color: #29bae4;
-    border:3px solid #29bae4;
-  }
-  .error
-  {
-    background: #ff6363;
-    color: #FFF;
-    border-bottom: 3px solid #ff2928;
-    border-radius: 15px;
-    padding-top: 15px;
-    padding-left: 26px;
-    margin-bottom: 22px;
-  }
-        </style>
     <section class="ftco-section testimony-section bg-light" id="songs">
       <div class="container">
         <div class="row ftco-animate">
@@ -214,20 +124,17 @@
         <div class="row mb-5">
           <div class="col-md">
             <div class="ftco-footer-widget mb-4">
-              <h2 class="ftco-heading-2">Snipp.</h2>
+              <h2 class="ftco-heading-2">Utunes.</h2>
               <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
             </div>
           </div>
           <div class="col-md">
-             <div class="ftco-footer-widget mb-4">
+            <div class="ftco-footer-widget mb-4 ml-5">
               <h2 class="ftco-heading-2">Quick Links</h2>
               <ul class="list-unstyled">
-                <li><a href="#" class="py-2 d-block">Home</a></li>
-                <li><a href="#" class="py-2 d-block">About</a></li>
-                <li><a href="#" class="py-2 d-block">Services</a></li>
-                <li><a href="#" class="py-2 d-block">Portfolio</a></li>
-                <li><a href="#" class="py-2 d-block">Contact</a></li>
-                <li><a href="#" class="py-2 d-block">Privacy</a></li>
+                <li><a href="./" class="py-2 d-block">Home</a></li>
+                <li><a href="/about" class="py-2 d-block">About</a></li>
+                <li><a href="/contact" class="py-2 d-block">Contact</a></li>
               </ul>
             </div>
           </div>
@@ -254,10 +161,9 @@
         </div>
         <div class="row">
           <div class="col-md-12 text-center">
-
-            <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-  <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+            <p>
+                Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved
+            </p>
           </div>
         </div>
       </div>

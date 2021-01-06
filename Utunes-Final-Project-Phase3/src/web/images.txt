@@ -5,6 +5,9 @@
 /images/image_5.jpg
 /images/image_6.jpg
 /images/person_1.jpg
+/images/person_2.jpg
+/images/person_3.jpg
+/images/person_4.jpg
 /images/work-1.jpg
 /images/work-2.jpg
 /images/work-3.jpg

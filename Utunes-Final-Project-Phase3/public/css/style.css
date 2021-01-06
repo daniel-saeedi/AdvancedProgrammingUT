@@ -1,9 +1,3 @@
-/*!
- * Bootstrap v4.1.0 (https://getbootstrap.com/)
- * Copyright 2011-2018 The Bootstrap Authors
- * Copyright 2011-2018 Twitter, Inc.
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- */
 :root {
   --blue: #007bff;
   --indigo: #6610f2;
@@ -8995,3 +8989,92 @@ textarea.form-control {
   100% {
     stroke-dasharray: 89, 200;
     stroke-dashoffset: -136px; } }
+
+.styled-table {
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  min-width: 400px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.styled-table thead tr {
+  background-color: #009879;
+  color: #ffffff;
+  text-align: left;
+}
+.styled-table th,
+.styled-table td {
+  padding: 12px 15px;
+}
+.styled-table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+  border-bottom: 2px solid #009879;
+}
+.styled-table tbody tr.active-row {
+  font-weight: bold;
+  color: #009879;
+}
+
+.styled_input
+{
+  width: 100%;
+  height: 47px;
+  background: #eee;
+  border: 0px;
+  border-radius: 35px;
+  outline: none;
+  padding-left: 30px;
+  color: #000;
+}
+.styled_input:focus
+{
+  background: #FFF;
+  border: 2px solid #EEE;
+}
+.styled_button
+{
+  width: 100%;
+  border: 0px;
+  background: #29bae4;
+  color: #FFF;
+  padding: 16px;
+  border-radius: 7px;
+}
+.styled_button
+{
+  width: 100%;
+  border: 0px;
+  background: #29bae4;
+  color: #FFF;
+  padding: 16px;
+  border-radius: 7px;
+  transition: 0.5s;
+   border:3px solid #29bae4;
+}
+.styled_button:hover
+{
+  background: #FFF;
+  color: #29bae4;
+  border:3px solid #29bae4;
+}
+.error
+{
+  background: #ff6363;
+  color: #FFF;
+  border-bottom: 3px solid #ff2928;
+  border-radius: 15px;
+  padding-top: 15px;
+  padding-left: 26px;
+  margin-bottom: 22px;
+}

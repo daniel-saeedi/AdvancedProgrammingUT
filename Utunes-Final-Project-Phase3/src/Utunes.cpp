@@ -113,6 +113,13 @@ void Utunes::delete_filters()
 	print_ok();
 }
 
+std::vector<Song*> Utunes::get_filtered_songs()
+{
+	check_login();
+	Session *session = auth_sys->get_session();
+	return session->get_filtered_songs(songs);
+}
+
 void Utunes::add_artist_filter(std::string artist)
 {
 	check_login();

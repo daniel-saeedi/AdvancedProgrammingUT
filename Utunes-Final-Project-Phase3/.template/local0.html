@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Snipp - Free Bootstrap 4 Template by Colorlib</title>
+    <title>Utunes -  Homepage</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
@@ -30,9 +30,9 @@
       <div class="collapse navbar-collapse" id="ftco-nav">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item active"><a href="index.html" class="nav-link">Home</a></li>
-          <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+          <li class="nav-item"><a href="about" class="nav-link">About</a></li>
           <li class="nav-item"><a href="#songs" class="nav-link">Songs</a></li>
-          <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+          <li class="nav-item"><a href="contact" class="nav-link">Contact</a></li>
           <% if(context["logged_in"] == "false") { %>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="portfolio.html" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Auth</a>
@@ -51,7 +51,7 @@
               </div>
           </li>
           <% } %>
-          <li class="nav-item cta"><a href="contact.html" class="nav-link"><span>Get Utunes</span></a></li>
+          <li class="nav-item cta"><a href="#" class="nav-link"><span>Get Utunes</span></a></li>
         </ul>
       </div>
     </div>
@@ -188,6 +188,7 @@
     </section>
     </div>
 
+    <% if(context["logged_in"] != "false") {  %>
     <section class="ftco-section testimony-section bg-light" id="songs">
       <div class="container">
         <div class="row justify-content-center mb-5 pb-5">
@@ -197,44 +198,20 @@
             <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in</p>
           </div>
         </div>
-        <style>
-          .styled-table {
-            border-collapse: collapse;
-            margin: 25px 0;
-            font-size: 0.9em;
-            font-family: sans-serif;
-            min-width: 400px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-            width: 100%;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        .styled-table thead tr {
-            background-color: #009879;
-            color: #ffffff;
-            text-align: left;
-        }
-        .styled-table th,
-        .styled-table td {
-            padding: 12px 15px;
-        }
-        .styled-table tbody tr {
-            border-bottom: 1px solid #dddddd;
-        }
-
-        .styled-table tbody tr:nth-of-type(even) {
-            background-color: #f3f3f3;
-        }
-
-        .styled-table tbody tr:last-of-type {
-            border-bottom: 2px solid #009879;
-        }
-        .styled-table tbody tr.active-row {
-            font-weight: bold;
-            color: #009879;
-        }
-        </style>
         <div class="row ftco-animate">
+          <div style="width: 500px;margin: auto;padding: 27px;background: #FFF;border-radius: 10px;box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);">
+              <h2 style="text-align: center;margin-bottom: 45px;">Add filter</h2>
+              <form action="/" method="get">
+                <input type="text" class="styled_input" id="artist" name="artist" placeholder="Artist"><br><br>
+                <input type="number" class="styled_input" id="min_like" name="min_like" placeholder="Minimum likes"><br><br>
+                <input type="number" class="styled_input" id="max_like" name="max_like" placeholder="Maximum likes"><br><br>
+                <input type="number" class="styled_input" id="min_year" name="min_year" placeholder="Minimum Year"><br><br>
+                <input type="number" class="styled_input" id="max_year" name="max_year" placeholder="Maximum Year"><br><br>
+                <input type="hidden" name="filter" value="1">
+                <input type="submit" class="styled_button" value="Filter !"><br><br>
+                <a href="/" style="display: block;text-align: center;"><img src="images/delete-red.png" width="30px">Remove Filters</a>
+              </form>
+          </div>
           <div class="song_single_row col-md-12">
             <table class="styled-table">
               <thead>
@@ -247,19 +224,14 @@
                 </tr>
               </thead>
               <tbody>
-                <%
-                    cout << context["songs"];
-                %>
+                <% cout << context["songs"]; %>
               </tbody>
             </table>
-            
-           
-            
-            
           </div>
         </div>
       </div>
     </section>
+    <% } %>
 
     <section class="ftco-section ftco-counter" id="section-counter">
       <div class="container">
@@ -461,7 +433,7 @@
         <div class="row mb-5">
           <div class="col-md">
             <div class="ftco-footer-widget mb-4">
-              <h2 class="ftco-heading-2">Snipp.</h2>
+              <h2 class="ftco-heading-2">Utunes.</h2>
               <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
             </div>
           </div>
@@ -469,12 +441,9 @@
             <div class="ftco-footer-widget mb-4 ml-5">
               <h2 class="ftco-heading-2">Quick Links</h2>
               <ul class="list-unstyled">
-                <li><a href="#" class="py-2 d-block">Home</a></li>
-                <li><a href="#" class="py-2 d-block">Case studies</a></li>
-                <li><a href="#" class="py-2 d-block">Services</a></li>
-                <li><a href="#" class="py-2 d-block">Portfolio</a></li>
-                <li><a href="#" class="py-2 d-block">About</a></li>
-                <li><a href="#" class="py-2 d-block">Contact</a></li>
+                <li><a href="./" class="py-2 d-block">Home</a></li>
+                <li><a href="/about" class="py-2 d-block">About</a></li>
+                <li><a href="/contact" class="py-2 d-block">Contact</a></li>
               </ul>
             </div>
           </div>
@@ -501,10 +470,9 @@
         </div>
         <div class="row">
           <div class="col-md-12 text-center">
-
-            <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-  <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+            <p>
+                Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved
+            </p>
           </div>
         </div>
       </div>

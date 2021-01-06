@@ -47,6 +47,7 @@ public:
 	std::vector<Song*> get_recommended_songs();
 	User* get_current_user(){return auth_sys->get_session()->get_user();}
 	vector<Song*> get_liked_songs();
+	std::vector<Song*> get_filtered_songs();
 private:
 	AuthenticationSystem *auth_sys;
 	PlaylistSystem *playlist_sys;

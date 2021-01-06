@@ -41,6 +41,17 @@ void Session::show_songs(std::vector<Song*> songs)
 	}
 }
 
+std::vector<Song*> Session::get_filtered_songs(std::vector<Song*> songs)
+{
+	AndCriteria *and_criteria = new AndCriteria(filters);
+	std::vector<Song*> filtered_songs = and_criteria->meet_criteria(songs);
+	delete and_criteria;
+	if(filters.size() == 0)
+		return songs;
+	else
+		return filtered_songs;
+}
+
 void Session::add_artist_filter(std::string artist)
 {
 	songs_filter_status = true;

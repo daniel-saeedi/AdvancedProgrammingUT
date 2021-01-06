@@ -36,6 +36,8 @@ void RouteHandler::run()
 		server->get("/playlist", new PlaylistController(PUBLIC_DIR+"/playlist.html",utunes));
 		server->post("/add_song_playlist", new AddSongHandler(utunes));
 		server->get("/delete_song", new RemoveSongHandler(utunes));
+		server->get("/about", new ShowPage(PUBLIC_DIR+"/about.html"));
+		server->get("/contact", new ShowPage(PUBLIC_DIR+"/contact.html"));
 		server->run();
 	}
 	catch (Server::Exception e)

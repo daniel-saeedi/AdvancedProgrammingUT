@@ -14,6 +14,8 @@ public:
 	std::map<std::string,std::string> handle(Request *req);
 private:
 	std::string produce_row(int id,std::string song,std::string artist,int year);
+	std::string songs_html(std::vector<Song*> songs);
+	std::string get_filtered_songs(Request *req);
 	Utunes* utunes;
 };
 #endif

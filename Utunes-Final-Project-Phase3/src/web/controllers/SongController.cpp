@@ -18,7 +18,6 @@ std::map<std::string,std::string> SongController::handle(Request *req)
 	{
 		context["logged_in"] = "true";
 		context["recommendation"] = get_recom(song);
-		
 		context["like_button"] = get_like_button(song);
 	}
 	else context["logged_in"] = "false";

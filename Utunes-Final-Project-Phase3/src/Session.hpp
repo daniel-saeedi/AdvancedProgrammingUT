@@ -26,6 +26,7 @@ public:
 	void add_public_year_filter(int min,int max);
 	void add_likes_filter(int min,int max);
 	void delete_filters();
+	std::vector<Song*> get_filtered_songs(std::vector<Song*> songs);
 private:
 	User *user;
 	bool songs_filter_status;
