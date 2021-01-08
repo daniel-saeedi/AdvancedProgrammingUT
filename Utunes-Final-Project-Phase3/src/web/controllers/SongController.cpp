@@ -1,33 +1,32 @@
 #include "SongController.hpp"
-
-
 std::map<std::string,std::string> SongController::handle(Request *req)
 {
 	std::map<std::string,std::string> context;
-	int id = 1;
-	if(req->getQueryParam("id") != "") id = stoi(req->getQueryParam("id"));
-	Song* song = utunes->find_song_by_id(id);
-	context["id"] = id;
-	context["title"] = song->get_title();
-	context["artist"] = song->get_artist();
-	context["link"] = song->get_link();
-	context["year"] = std::to_string(song->get_year());
-	context["likes"] = std::to_string(song->get_likes());
-	context["playlists"] = std::to_string(utunes->get_playlist_sys()->count_playlists_contain_song(song));
 	if(req->getSessionId() != "")
 	{
+		User* user = utunes->find_user_by_email(req->getSessionId());
 		context["logged_in"] = "true";
-		context["recommendation"] = get_recom(song);
-		context["like_button"] = get_like_button(song);
+		int id = 1;
+		if(req->getQueryParam("id") != "") id = stoi(req->getQueryParam("id"));
+		Song* song = utunes->find_song_by_id(id);
+		context["id"] = id;
+		context["title"] = song->get_title();
+		context["artist"] = song->get_artist();
+		context["link"] = song->get_link();
+		context["year"] = std::to_string(song->get_year());
+		context["likes"] = std::to_string(song->get_likes());
+		context["playlists"] = std::to_string(utunes->get_playlist_sys()->count_playlists_contain_song(song));
+		context["recommendation"] = get_recom(song,user);
+		context["like_button"] = get_like_button(song,user);
 	}
 	else context["logged_in"] = "false";
 	return context;
 }
 
-std::string SongController::get_like_button(Song* song)
+std::string SongController::get_like_button(Song* song,User* user)
 {
 	std::string html;
-	if(song->has_liked(utunes->get_current_user()))
+	if(song->has_liked(user))
 	{
 		html += "<a href='/like?id="+std::to_string(song->get_id())+"&operation=unlike'><img src='images/heart-red.png' width='50'> unlike</a>";
 	}
@@ -38,9 +37,9 @@ std::string SongController::get_like_button(Song* song)
 	return html;
 }
 
-std::string SongController::get_recom(Song* current_song)
+std::string SongController::get_recom(Song* current_song,User *user)
 {
-	std::vector<Song*> recommended = utunes->get_recommended_songs();
+	std::vector<Song*> recommended = utunes->get_recommended_songs(user);
 	std::string recom_html;
 	int count = 1;
 	for(int i = 0;i < recommended.size();i++)

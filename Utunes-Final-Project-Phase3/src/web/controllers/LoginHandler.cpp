@@ -5,14 +5,13 @@ Response* LoginHandler::callback(Request *req)
 	if(req->getSessionId() != "") return res;
 	string email = req->getBodyParam("email");
 	string password = req->getBodyParam("password");
-	try
+	if(utunes->users_exists(email,password))
 	{
-		utunes->login(email,password);
 		res->setSessionId(email);
 	}
-	catch(std::exception& excep)
+	else
 	{
-		std::string message = excep.what();
+		std::string message = "Bad Request";
 		res = Response::redirect("/login?error="+message);
 	}
 	return res;

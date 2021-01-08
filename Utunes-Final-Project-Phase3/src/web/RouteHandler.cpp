@@ -18,7 +18,7 @@ void RouteHandler::run()
 	srand(time(NULL));
 	try
 	{
-		UtunesServer* server = new UtunesServer(2024);
+		UtunesServer* server = new UtunesServer(2025);
 		server->setNotFoundErrPage(PUBLIC_DIR+"/404.html");
 		load_img(server);
 		load_css(server);

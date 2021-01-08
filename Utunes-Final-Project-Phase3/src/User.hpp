@@ -12,6 +12,7 @@ public:
 	bool is_username_equal(std::string _username);
 	void print_username();
 	std::string get_username(){return username;}
+	bool is_email_equal(std::string _email);
 private:
 	std::string email;
 	std::string username;

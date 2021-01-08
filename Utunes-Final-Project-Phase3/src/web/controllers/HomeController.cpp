@@ -1,4 +1,5 @@
 #include "HomeController.hpp"
+#include "../../FilterSystem.hpp"
 
 std::map<std::string,std::string> HomeController::handle(Request *req)
 {
@@ -37,12 +38,14 @@ std::string HomeController::get_filtered_songs(Request *req)
 	std::string max_likes = req->getQueryParam("max_likes");
 	std::string min_year = req->getQueryParam("min_year");
 	std::string max_year = req->getQueryParam("max_year");
-	if(artist != "") utunes->add_artist_filter(artist);
-	if(min_likes != "" && max_likes != "") utunes->add_likes_filter(std::stoi(min_likes),std::stoi(max_likes));
-	if(min_year != "" && max_year != "") utunes->add_publish_year_filter(std::stoi(min_year),std::stoi(max_year));
-	std::vector<Song*> songs = utunes->get_filtered_songs();
-	html = songs_html(songs);
-	utunes->delete_filters();
+	User* current_user = utunes->find_user_by_email(req->getSessionId());
+	std::vector<Song*> songs = utunes->get_songs_vector();
+	FilterSystem filter_sys = FilterSystem(current_user);
+	if(artist != "") filter_sys.add_artist_filter(artist);
+	if(min_likes != "" && max_likes != "") filter_sys.add_likes_filter(std::stoi(min_likes),std::stoi(max_likes));
+	if(min_year != "" && max_year != "") filter_sys.add_publish_year_filter(std::stoi(min_year),std::stoi(max_year));
+	std::vector<Song*> filtered_songs = filter_sys.get_filtered_songs(songs);
+	html = songs_html(filtered_songs);
 	return html;
 }
 
@@ -56,4 +59,3 @@ std::string HomeController::produce_row(int id,std::string song,std::string arti
 	result += "<td>" + std::to_string(year) + "</td></a></tr>";
 	return result;
 }
-

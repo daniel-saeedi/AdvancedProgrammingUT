@@ -9,7 +9,7 @@ Response* SignupHandler::callback(Request* req)
 	string password = req->getBodyParam("password");
 	try
 	{
-		utunes->signup(email,username,password);
+		utunes->create_new_user(email,username,password);
 		res->setSessionId(email);
 	}
 	catch(std::exception& excep)

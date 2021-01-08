@@ -6,6 +6,7 @@
 #include "../../../server/server.hpp"
 #include "../../Song.hpp"
 #include "../../Utunes.hpp"
+#include "../../User.hpp"
 class SongController : public TemplateHandler 
 {
 public:
@@ -14,7 +15,7 @@ public:
 private:
   Utunes *utunes;
   std::string recommendation_html(std::string title,std::string artist,int id,int year);
-  std::string get_recom(Song* current_song);
-  std::string get_like_button(Song* song);
+  std::string get_recom(Song* current_song,User *user);
+  std::string get_like_button(Song* song,User* user);
 };
 #endif

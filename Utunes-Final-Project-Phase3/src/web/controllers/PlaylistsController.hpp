@@ -13,7 +13,7 @@ public:
 	std::map<std::string,std::string> handle(Request *req);
 private:
 	Utunes *utunes;
-	std::string get_playlists();
+	std::string get_playlists(User* current_user);
 	std::string produce_row(int id,std::string title,bool privacy,std::string username);
 };
 #endif

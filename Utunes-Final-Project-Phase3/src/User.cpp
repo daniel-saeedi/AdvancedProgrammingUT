@@ -17,6 +17,11 @@ bool User::is_username_equal(std::string _username)
 	return false;
 }
 
+bool User::is_email_equal(std::string _email)
+{
+	if(email == _email) return true;
+	return false;
+}
 void User::print_username()
 {
 	std::cout << username << std::endl;

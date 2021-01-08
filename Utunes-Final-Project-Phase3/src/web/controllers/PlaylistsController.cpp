@@ -6,16 +6,16 @@ std::map<std::string,std::string> PlaylistsController::handle(Request *req)
 	if(req->getSessionId() != "")
 	{
 		context["logged_in"] = "true";
-		context["playlists"] = get_playlists();
+		User* user = utunes->find_user_by_email(req->getSessionId());
+		context["playlists"] = get_playlists(user);
 	}
 	else context["logged_in"] = "false";
 	return context;
 }
 
-std::string PlaylistsController::get_playlists()
+std::string PlaylistsController::get_playlists(User* current_user)
 {
 	PlaylistSystem* playlist_sys = utunes->get_playlist_sys();
-	User* current_user = utunes->get_current_user();
 	vector<Playlist*> playlists = playlist_sys->get_playlists(current_user);
 	std::string html;
 	for(int i = 0;i < playlists.size();i++)

@@ -468,5 +468,5 @@ void CommandHandler::handle_liked_songs(vector<string> raw,vector<string> header
 	string password = raw[find_index_in_vector(header,PASSWORD)];
 	if(!utunes->user_exists(username))
 		utunes->signup(email,username,password,DONT_PRINT_OK);
-	utunes->new_like(song_id,DONT_PRINT_OK);
+	utunes->new_like(song_id);
 }

@@ -17,14 +17,16 @@ public:
 	~Utunes();
 	void signup(std::string email,std::string username,std::string password,bool printok = true);
 	void login(std::string email,std::string password);
+	bool users_exists(std::string email,std::string password);
+	User* find_user_by_email(std::string email);
 	void logout(bool printok = true);
 	void check_login();
 	void get_songs();
 	void get_song(int id);
-	void new_like(int id,bool printok = true);
-	void delete_like(int song_id);
+	void new_like(int id,User* user = nullptr);
+	void delete_like(int song_id,User* user = nullptr);
 	void show_likes();
-	void add_playlist(std::string name,bool private_status);
+	void add_playlist(std::string name,bool private_status,User* user = nullptr);
 	void get_playlists(std::string username);
 	void add_song_to_playlist(int playlist_id,int song_id);
 	void get_playlist_songs(int playlist_id);
@@ -44,10 +46,11 @@ public:
 	Song* find_song_by_id(int id);
 	RecommendationSystem* get_recommendation_sys(){return recommendation_sys;}
 	PlaylistSystem* get_playlist_sys(){return playlist_sys;}
-	std::vector<Song*> get_recommended_songs();
+	std::vector<Song*> get_recommended_songs(User* current_user);
 	User* get_current_user(){return auth_sys->get_session()->get_user();}
-	vector<Song*> get_liked_songs();
+	vector<Song*> get_liked_songs(User *user = nullptr);
 	std::vector<Song*> get_filtered_songs();
+	void create_new_user(std::string email,std::string username,std::string password);
 private:
 	AuthenticationSystem *auth_sys;
 	PlaylistSystem *playlist_sys;
@@ -55,7 +58,6 @@ private:
 	vector<Song*> songs;
 	vector<User*> users;
 	bool email_username_exists(std::string email,std::string username);
-	void create_new_user(std::string email,std::string username,std::string password);
 	void print_ok();
 	void show_songs();
 	bool song_exists(int id);

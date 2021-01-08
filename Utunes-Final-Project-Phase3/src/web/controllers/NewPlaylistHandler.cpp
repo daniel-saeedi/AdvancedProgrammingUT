@@ -13,7 +13,8 @@ Response* NewPlaylistHandler::callback(Request *request)
 			is_private = true;
 		else
 			is_private = false;
-		utunes->add_playlist(name,is_private);
+		User* user = utunes->find_user_by_email(request->getSessionId());
+		utunes->add_playlist(name,is_private,user);
 	}
 	catch(std::exception& excep)
 	{

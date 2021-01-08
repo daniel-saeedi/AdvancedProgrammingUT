@@ -1,10 +1,10 @@
-artist=Mohammadreza Shajarian
-id=
-like_button=<a href='/like?id=2&operation=unlike'><img src='images/heart-red.png' width='50'> unlike</a>
-likes=13
-link=http://dl.teh-dl.ir/musicfarvardin95/Shajryan%20-%20Morghe%20Sahar%20320.mp3
+artist=Ed Sheeran
+id=
+like_button=<a href='/like?id=1&operation=unlike'><img src='images/heart-red.png' width='50'> unlike</a>
+likes=23
+link=http://dl.teh-dl.ir/music96/musicazar96/Ed%20Sheeran%20-%20Perfect.mp3
 logged_in=true
-playlists=1
-recommendation=<div class='block-21 mb-4 d-flex'><a class='blog-img mr-4' style='background-image: url(images/song.png);border-radius:50%;'></a><div class='text'><h3 class='heading'><a href='/song?id=1'>Perfect</a></h3><div class='meta'><div><a href='#'><span class='icon-calendar'></span>2017</a></div><div><a href='#'><span class='icon-calendar'></span>Ed Sheeran</a></div></div></div></div><div class='block-21 mb-4 d-flex'><a class='blog-img mr-4' style='background-image: url(images/song.png);border-radius:50%;'></a><div class='text'><h3 class='heading'><a href='/song?id=3'>Shape Of My Heart</a></h3><div class='meta'><div><a href='#'><span class='icon-calendar'></span>1993</a></div><div><a href='#'><span class='icon-calendar'></span>Sting</a></div></div></div></div><div class='block-21 mb-4 d-flex'><a class='blog-img mr-4' style='background-image: url(images/song.png);border-radius:50%;'></a><div class='text'><h3 class='heading'><a href='/song?id=16'>Swan Lake</a></h3><div class='meta'><div><a href='#'><span class='icon-calendar'></span>1875</a></div><div><a href='#'><span class='icon-calendar'></span>Pyotr Ilyich Tchaikovsky</a></div></div></div></div><div class='block-21 mb-4 d-flex'><a class='blog-img mr-4' style='background-image: url(images/song.png);border-radius:50%;'></a><div class='text'><h3 class='heading'><a href='/song?id=10'>Havaye Geryeh</a></h3><div class='meta'><div><a href='#'><span class='icon-calendar'></span>2003</a></div><div><a href='#'><span class='icon-calendar'></span>Homayoun Shajarian</a></div></div></div></div>
-title=Morghe Sahar
-year=1990
+playlists=0
+recommendation=<div class='block-21 mb-4 d-flex'><a class='blog-img mr-4' style='background-image: url(images/song.png);border-radius:50%;'></a><div class='text'><h3 class='heading'><a href='/song?id=3'>Shape Of My Heart</a></h3><div class='meta'><div><a href='#'><span class='icon-calendar'></span>1993</a></div><div><a href='#'><span class='icon-calendar'></span>Sting</a></div></div></div></div><div class='block-21 mb-4 d-flex'><a class='blog-img mr-4' style='background-image: url(images/song.png);border-radius:50%;'></a><div class='text'><h3 class='heading'><a href='/song?id=16'>Swan Lake</a></h3><div class='meta'><div><a href='#'><span class='icon-calendar'></span>1875</a></div><div><a href='#'><span class='icon-calendar'></span>Pyotr Ilyich Tchaikovsky</a></div></div></div></div><div class='block-21 mb-4 d-flex'><a class='blog-img mr-4' style='background-image: url(images/song.png);border-radius:50%;'></a><div class='text'><h3 class='heading'><a href='/song?id=11'>Symphony No. 5 in C Minor</a></h3><div class='meta'><div><a href='#'><span class='icon-calendar'></span>1808</a></div><div><a href='#'><span class='icon-calendar'></span>Ludwig van Beethoven</a></div></div></div></div><div class='block-21 mb-4 d-flex'><a class='blog-img mr-4' style='background-image: url(images/song.png);border-radius:50%;'></a><div class='text'><h3 class='heading'><a href='/song?id=2'>Morghe Sahar</a></h3><div class='meta'><div><a href='#'><span class='icon-calendar'></span>1990</a></div><div><a href='#'><span class='icon-calendar'></span>Mohammadreza Shajarian</a></div></div></div></div>
+title=Perfect
+year=2017

@@ -18,8 +18,11 @@ std::map<std::string,std::string> PlaylistController::get_info(Request* req)
 	int id = DEFAULT_ID;
 	if(req->getQueryParam("id") != "") id = stoi(req->getQueryParam("id"));
 	PlaylistSystem* playlist_sys = utunes->get_playlist_sys();
-	User* current_user = utunes->get_current_user();
+	User* current_user = utunes->find_user_by_email(req->getSessionId());
 	Playlist* playlist = playlist_sys->get_playlist_by_index(id,current_user);
+	context["playlist_id"] = std::to_string(id);
+	context["playlist_name"] = playlist->get_name();
+	context["logged_in"] = "true";
 	bool can_delete = true;
 	if(!playlist->is_user_equal(current_user))
 	{
@@ -33,9 +36,6 @@ std::map<std::string,std::string> PlaylistController::get_info(Request* req)
 	else
 		context["title"] = playlist->get_name() + "(Public)";
 	context["songs"] = songs_html(id,playlist->get_songs(),can_delete);
-	context["playlist_id"] = std::to_string(id);
-	context["playlist_name"] = playlist->get_name();
-	context["logged_in"] = "true";
 	return context;
 }
 

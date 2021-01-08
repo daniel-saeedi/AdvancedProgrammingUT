@@ -23,6 +23,17 @@ void AuthenticationSystem::login(std::vector<User*> users,std::string email,std:
 	create_new_session(user);
 }
 
+bool AuthenticationSystem::check_login(std::vector<User*> users,std::string email,std::string password)
+{
+	User *user = nullptr;
+	for(int i = 0;i < users.size();i++)
+	{
+		if(users[i]->check_email_password(email,password))
+			return true;
+	}
+	if(user == nullptr) return false;
+}
+
 void AuthenticationSystem::create_new_session(User *user)
 {
 	current_session = new Session(user);

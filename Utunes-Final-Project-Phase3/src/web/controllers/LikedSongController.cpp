@@ -5,16 +5,17 @@ std::map<std::string,std::string> LikedSongController::handle(Request *req)
 	std::map<std::string,std::string> context;
 	if(req->getSessionId() != "")
 	{
+		User* user = utunes->find_user_by_email(req->getSessionId());
 		context["logged_in"] = "true";
-		context["liked_songs"] = liked_songs_html();
+		context["liked_songs"] = liked_songs_html(user);
 	}
 	else context["logged_in"] = "false";
 	return context;
 }
 
-std::string LikedSongController::liked_songs_html()
+std::string LikedSongController::liked_songs_html(User* user)
 {
-	std::vector<Song*> songs = utunes->get_liked_songs();
+	std::vector<Song*> songs = utunes->get_liked_songs(user);
 	std::string html;
 	for(int i = 0;i < songs.size();i++)
 		html += produce_row(songs[i]->get_id(),songs[i]->get_title(),songs[i]->get_artist(),songs[i]->get_year());
