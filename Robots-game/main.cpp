@@ -57,7 +57,6 @@ double distance(Point p1,Point p2)
 
 int random_num(int min,int max)
 {
-    srand(time(NULL));
     int finalNum = rand()%(max-min+1)+min;
     return finalNum;
 }
@@ -116,6 +115,7 @@ public:
         moves_delta['n'] = Point(+1,+1);
         moves_delta['j'] = Point(+1,0);
         moves_delta['b'] = Point(+1,-1);
+        moves_delta['t'] = Point(0,0);
         result = _map;
         Point player_pos = find_player_pos();
         is_finished = false;
@@ -140,6 +140,8 @@ private:
     Point find_minimum_distance_point(Point robot_pos);
     vector<Point> find_robots();
     void check_game_status();
+    Point generate_random_cell();
+    void print_result();
     void print();
 };
 
@@ -148,24 +150,25 @@ void Game::run()
     player_pos = find_player_pos();
     for(int i = 0;i < operations.length();i++)
     {
+        check_game_status();
         if(is_finished) break;
         char operation = operations[i];
         if (operation == TELEPORT)
             teleport();
-        else
+        if(!is_invalid(player_pos))
         {
             Point delta = moves_delta[operation];
             move(delta);
         }
         print();
-        check_game_status();
     }
+    print_result();
 }
 
 void Game::move(Point delta)
 {
     Point new_player_pos = player_pos + delta;
-    if(!is_invalid(new_player_pos) && is_move_allowed(new_player_pos)) player_pos = new_player_pos;
+    if(!is_invalid(new_player_pos)) player_pos = new_player_pos;
     move_robots();
     move_player();
 }
@@ -173,30 +176,41 @@ void Game::move(Point delta)
 void Game::teleport()
 {
     Point current_player_pos = find_player_pos();
-    bool found = false;
-    Point dest;
-    while(!found)
-    {
-        dest.x = random_num(0,dim - 1);
-        dest.y = random_num(0,dim - 1);
-        if(result[dest.x][dest.y] == SPACE) found = true;
-    }
+    Point dest = generate_random_cell();
+    player_pos = dest;
     result[current_player_pos.x][current_player_pos.y] = SPACE;
-    result[dest.x][dest.y] = PLAYER;
+    if(result[dest.x][dest.y] == SPACE) result[dest.x][dest.y] = PLAYER;
+    else
+    {
+        player_pos = Point(-1,-1);
+        is_finished = true;
+    }
+}
+
+Point Game::generate_random_cell()
+{
+    Point cell;
+    int random = random_num(0,dim*dim - 1);
+    cell.x = random/dim;
+    cell.y = random%dim;
+    return cell;
 }
 
 void Game::move_player()
 {
     Point current_player_pos = find_player_pos();
-    Point new_player_pos = player_pos;
-    if(result[new_player_pos.x][new_player_pos.y] == ROBOT)
+    if(!is_invalid(current_player_pos))
     {
-        result[current_player_pos.x][current_player_pos.y] = SPACE;
-    }
-    else
-    {
-        result[current_player_pos.x][current_player_pos.y] = SPACE;
-        result[new_player_pos.x][new_player_pos.y] = PLAYER;
+        Point new_player_pos = player_pos;
+        if(result[new_player_pos.x][new_player_pos.y] == ROBOT || result[new_player_pos.x][new_player_pos.y] == GARBAGE)
+        {
+            result[current_player_pos.x][current_player_pos.y] = SPACE;
+        }
+        else
+        {
+            result[current_player_pos.x][current_player_pos.y] = SPACE;
+            result[new_player_pos.x][new_player_pos.y] = PLAYER;
+        }
     }
 }
 
@@ -213,20 +227,17 @@ void Game::move_robot(Point current_point)
     if(result[current_point.x][current_point.y] != ROBOT) return;
     Point min_dis_pos = find_minimum_distance_point(current_point);
     char dest = result[min_dis_pos.x][min_dis_pos.y];
-    if(dest == SPACE)
-    {
-        result[current_point.x][current_point.y] = SPACE;
-        result[min_dis_pos.x][min_dis_pos.y] = ROBOT;
-    }
-    else if(dest == GARBAGE || dest == ROBOT)
+    
+    if(dest == GARBAGE || dest == ROBOT)
     {
         result[current_point.x][current_point.y] = SPACE;
         result[min_dis_pos.x][min_dis_pos.y] = GARBAGE;
         map[min_dis_pos.x][min_dis_pos.y] = GARBAGE;
     }
-    else if(dest == PLAYER)
+    else
     {
-        is_finished = true;
+        result[current_point.x][current_point.y] = SPACE;
+        result[min_dis_pos.x][min_dis_pos.y] = ROBOT;
     }
 }
 
@@ -234,34 +245,24 @@ void Game::check_game_status()
 {
     Point player_pos = find_player_pos();
     vector<Point> robots = find_robots();
+    if(robots.size() == 0 || is_invalid(player_pos)) 
+        is_finished = true;
+}
+
+void Game::print_result()
+{
+    Point player_pos = find_player_pos();
+    vector<Point> robots = find_robots();
     if(robots.size() == 0) 
     {
-        is_finished = true;
         cout << PLAYER_WINS << endl;   
     }
-    else if(player_pos == Point(-1,-1) || is_finished)
+    else if(is_invalid(player_pos))
     {
         cout << ROBOTS_WIN << endl;
-        is_finished = true;
     }
 }
 
-Point Game::find_player_pos()
-{
-    Point position(-1,-1);
-    for(int i = 0;i < dim;i++)
-    {
-        for(int j = 0;j < dim;j++)
-        {
-            if(result[i][j] == PLAYER)
-            {
-                position = Point(i,j);
-                break;
-            }
-        }
-    }
-    return position;
-}
 
 Point Game::find_minimum_distance_point(Point robot_pos)
 {
@@ -277,6 +278,25 @@ Point Game::find_minimum_distance_point(Point robot_pos)
     }
     return min_dis_pos;
 }
+
+Point Game::find_player_pos()
+{
+    Point INVALID_POS = Point(-1,-1);
+    Point position = INVALID_POS;
+    for(int i = 0;i < dim;i++)
+    {
+        for(int j = 0;j < dim;j++)
+        {
+            if(result[i][j] == PLAYER)
+            {
+                position = Point(i,j);
+                break;
+            }
+        }
+    }
+    return position;
+}
+
 vector<Point> Game::find_robots()
 {
     vector<Point> robots;
@@ -314,8 +334,10 @@ void Game::print()
     cout << endl;
 }
 
-int main()
+int main(int argc, char const *argv[])
 {
+    int seed = atoi(argv[1]);
+    srand(seed);
     ReadData cmd_handler;
     cmd_handler.run();
     Game robots(cmd_handler.get_dim(),cmd_handler.get_moves(),cmd_handler.get_map());
