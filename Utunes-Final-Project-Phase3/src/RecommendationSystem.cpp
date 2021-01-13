@@ -50,7 +50,8 @@ std::vector<Song*> RecommendationSystem::get_recommended_songs(User *current_use
 	for(int i = 0;i < songs_confidence.size();i++)
 	{
 		Song* song = songs_confidence[i].first;
-		recom_songs.push_back(song);
+		if(!song->has_liked(current_user))
+			recom_songs.push_back(song);
 	}
 	return recom_songs;
 }
